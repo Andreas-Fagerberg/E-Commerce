@@ -32,7 +32,7 @@ public class HomeMenu : Menu
         Console.WriteLine(
             $"""
                 ┌─────────────────┬────────────────────┬┬───────────────────┬──────────────────┐
-                │  Search -  F1   │  Categories - F2   ││  Cart ({}) - F3   │  Checkout - F4   │             
+                │  Search - F1    │  Categories - F2   ││  Cart ({}) - F3   │  Checkout - F4   │             
                 ├─────────────────┴────────────────────┼┼───────────────────┴──────────────────┤
                 │ {}                                   ││ {}                                   │ 
                 │                                      ││                                      │                            
