@@ -18,12 +18,17 @@ public class User
     [EmailAddress] // Validation
     public string Email { get; set; }
 
+    // Create User Address?
+
     [Required]
     [MaxLength(100)]
     public string PasswordHash { get; set; }
 
     [Required]
     public DateTime CreatedAt { get; set; }
+
+    [Required]
+    public ICollection<Address> Addresses { get; set; }
 
     // FK: One-to-Many (one user can have many orders)
     public ICollection<Order> Orders { get; set; } // Can also be List<T>.
