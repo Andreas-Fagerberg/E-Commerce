@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace E_commerce_Databaser_i_ett_sammanhang;
 
 // A user can have multiple addresses. (one-to-many)

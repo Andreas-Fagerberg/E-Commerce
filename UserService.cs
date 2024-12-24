@@ -35,7 +35,7 @@ public class UserService
         // Check for duplicate email
         /* if (_dbContext.Users.Any(u => u.Email == dto.Email))
         {
-            throw new InvalidOperationException("A user with tha email aldready exists.");
+            throw new InvalidOperationException("A user with that email already exists.");
 
         }*/
 
@@ -54,8 +54,8 @@ public class UserService
         };
 
         // Save to database
-        _dbContext.Users.Add(user);
-        _dbContext.SaveChanges();
+        //_dbContext.Users.Add(user);
+        //_dbContext.SaveChanges();
 
         // Return the response (can be used in e.g. UI personalisation)
         return new UserResponse
@@ -68,7 +68,7 @@ public class UserService
     }
 
 
-    public bool LoginUser(UserLoginDTO dto)
+    public bool LoginUser(UserLoginDTO dto) // Email & Password
     {
         // Should these be made into helper methods? Multiple references.
         if (IsValidEmail(dto.Email) == false)
@@ -81,7 +81,18 @@ public class UserService
             throw new ArgumentException("Password must be at least 8 characters.");
         }
 
-        // TODO: Continue! :)
+        // Query the database
+        /* var user = _dbContext.Users.FirstOrDefault(u => u.Email == dto.Email);
+        if (u.Email == null)
+        {
+            throw new InvalidOperationException("User not found.");
+        }
+        */
+
+        if (!VerifyPassword(dto.Password, user.PasswordHash))
+        {
+            throw new ArgumentException("Invalid passsword.");
+        }
     }
 
 
@@ -105,13 +116,13 @@ public class UserService
 
     public string HashPassword(string password)
     {
-        return BCrypt.HashPassword(password);
+        return BCrypt.Net.BCrypt.HashPassword(password);
     }
 
     // To be used when logging in as an existing user. 
-    public bool VerifyPassword(string password)
+    public bool VerifyPassword(string password, string hashedPassword)
     {
-        return BCrypt.Verify(password, hashedPassword);
+        return BCrypt.Net.BCrypt.Verify(password, hashedPassword);
     }
 
 
