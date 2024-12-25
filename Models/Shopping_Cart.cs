@@ -1,0 +1,22 @@
+using Npgsql.EntityFrameworkCore.PostgreSQL.Infrastructure.Internal;
+
+namespace E_commerce_Databaser_i_ett_sammanhang.Models
+{
+    public class Shopping_Cart
+    {
+        public int User_id { get; private set; }
+        public int Products_Id { get; private set; }
+        public int Quantity { get; private set; }
+    }
+
+    public Shopping_Cart(int userId, int productsId, int quantity)
+    {
+        User_id = userId;
+        Products_Id = Products_Id;
+        Quantity = quantity;
+    }
+}
+
+//var allProducts = Context.Products.ToList();
+//var p = context.AllProducts.FirstOrDefault(p => p.Product == "TV");
+//var price = context.AllProducts.Where(p => p.Price < 100).ToList();
