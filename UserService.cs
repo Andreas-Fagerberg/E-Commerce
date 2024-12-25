@@ -5,7 +5,8 @@ namespace E_commerce_Databaser_i_ett_sammanhang;
 
 // POTENTIAL TODO: 
 // Move validation logic to a separate layer
-// ASync operations.
+// ASync operations
+// Improve error messages
 
 public class UserService
 {
@@ -64,7 +65,7 @@ public class UserService
     }
 
 
-    public bool LoginUser(UserLoginDTO dto) // Email & Password
+    public UserResponse LoginUser(UserLoginDTO dto) // Email & Password
     {
         if (IsValidEmail(dto.Email) == false)
         {
@@ -79,17 +80,34 @@ public class UserService
         var user = _ecommerceContext.Users.FirstOrDefault(u => u.Email == dto.Email);
         if (user == null)
         {
-            throw new InvalidOperationException("User not found.");
+            throw new InvalidOperationException("Invalid email or password");
         }
 
         if (!VerifyPassword(dto.Password, user.PasswordHash))
         {
-            throw new ArgumentException("Invalid passsword.");
+            throw new ArgumentException("Invalid email or passsword.");
         }
 
-        return true; // Successful login
+        return new UserResponse
+        {
+            UserId = user.UserId,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            Email = user.Email
+        };
     }
 
+
+    public Guid? LogoutUser(Guid? currentUserId)
+    {
+        if (currentUserId == null)
+        {
+            Console.WriteLine("No user is currently logged in.");
+            return null;
+        }
+        Console.WriteLine($"Logging out user with ID: {currentUserId}.");
+        return null;
+    }
 
 
 
