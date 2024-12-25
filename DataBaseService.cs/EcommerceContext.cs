@@ -1,3 +1,4 @@
+using System.Net.Sockets;
 using Microsoft.EntityFrameworkCore;
 
 namespace E_commerce_Databaser_i_ett_sammanhang;
@@ -9,6 +10,7 @@ public class EcommerceContext : DbContext
     public DbSet<Product> Products { get; set; }
     public DbSet<ShoppingCart> Shopping_carts { get; set; } // Characters correct?
     public DbSet<ProductOrders> Product_orders { get; set; } // Characters correct?
+    public DbSet<Address> Address { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder builder)
     {
