@@ -83,7 +83,7 @@ public class UserService
 
         // Query the database
         /* var user = _dbContext.Users.FirstOrDefault(u => u.Email == dto.Email);
-        if (u.Email == null)
+        if (user.Email == null)
         {
             throw new InvalidOperationException("User not found.");
         }
@@ -93,6 +93,8 @@ public class UserService
         {
             throw new ArgumentException("Invalid passsword.");
         }
+
+        return true; // Successful login
     }
 
 
