@@ -2,6 +2,8 @@
 
 public class CartMenu : Menu
 {
+    public CartMenu() { }
+
     public override void Display()
     {
         throw new NotImplementedException();

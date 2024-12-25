@@ -2,55 +2,43 @@
 
 public class HomeMenu : Menu
 {
+    private static int _currentPage = 1;
+    public HomeMenu
+    (
+        
+    )
+    {
+    }
     public override void Display()
     {
-        /* 
-        Concept of swapping displayed products on screen
-        
-        int pageNumber = 1; 
-
-            switch (input)
-            {
-
-                case ConsoleKey.LeftArrow or ConsoleKey.A:
-                    if (pageNumber > 1)
-                        Console.WriteLine("No pages left")
-                        break;
-                    pageNumber--;
-                        break;
-                    
-                case ConsoleKey.RightArrow or ConsoleKey.D:
-                    pageNumber--;
-                        break;
-                
-                default:
-                    Console.WriteLine("Please enter a valid command.")
-                    continue;
-            }
-        */
         // REMOVENOTE: Not fully symmetrical (if that matters?)
         Console.WriteLine(
-            $"""
+            $"""                                                                    
+                   LOG OUT - F5                   HELP - F6                    EXIT - F7/ESC 
                 ┌─────────────────┬────────────────────┬┬───────────────────┬──────────────────┐
-                │  Search - F1    │  Categories - F2   ││  Cart ({}) - F3   │  Checkout - F4   │             
+                │  Search - F1    │  Categories - F2   ││  Cart ({}) - F3   │  Checkout - F4   │
                 ├─────────────────┴────────────────────┼┼───────────────────┴──────────────────┤
-                │                                      ││                                      │ 
-                │                                      ││                                      │                            
-                │                                      ││                                      │            
-                │                                      ││                                      │            
-                │                                      ││                                      │            
-                │                                      ││                                      │            
-                │                                      ││                                      │            
-                │                                      ││                                      │            
-                │                                      ││                                      │            
-                │                                      ││                                      │            
-                │                                      ││                                      │            
-                │                                      ││                                      │                                        
+                │                                      ││                                      │
+                │                                      ││                                      │
+                │                                      ││                                      │
+                │                                      ││                                      │
+                │                                      ││                                      │
+                │                                      ││                                      │
+                │                                      ││                                      │
+                │                                      ││                                      │
+                │                                      ││                                      │
+                │                                      ││                                      │
+                │                                      ││                                      │
+                │                                      ││                                      │
                 ├──────────────────────────────────────┼┼──────────────────────────────────────┤
                 │   ← A/Left (Previous page)                           (Next page) D/Right →   │
                 └──────────────────────────────────────────────────────────────────────────────┘
             """
         );
+    }
+    public static int ChangePage()
+    {
+        throw new NotImplementedException();
     }
 }
 // // Box Drawing Characters (Unicode):

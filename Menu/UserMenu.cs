@@ -2,6 +2,8 @@
 
 public class UserMenu : Menu
 {
+    public UserMenu() { }
+
     public override void Display()
     {
         throw new NotImplementedException();

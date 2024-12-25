@@ -2,6 +2,8 @@
 
 public class PaymentMenu : Menu
 {
+    public PaymentMenu() { }
+
     public override void Display()
     {
         throw new NotImplementedException();
