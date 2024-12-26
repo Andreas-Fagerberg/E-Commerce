@@ -6,8 +6,9 @@ namespace E_commerce_Databaser_i_ett_sammanhang;
 // POTENTIAL TODO: 
 // [X] - Move validation logic to a separate layer
 // [ ] - UpdateUserDetails, DeleteAccount
-// [ ] -ASync operations
-// [ ] -Improve error messages
+// [ ] - Collect user address on registration?
+// [ ] - ASync operations
+// [ ] - Improve error messages
 
 public class UserService
 {
@@ -85,6 +86,7 @@ public class UserService
         Console.WriteLine($"Logging out user with ID: {currentUserId}.");
         return null;
     }
+
 
     #region Utility Methods
 
