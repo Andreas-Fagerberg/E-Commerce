@@ -2,10 +2,12 @@ namespace E_commerce_Databaser_i_ett_sammanhang;
 
 public static class UserValidation
 {
-    // Validates that a user is currently logged in. 
-    // Should be called in any method that requires a logged-in user to
-    // ensure proper authorization.
-    // Throws an exception if no user is logged in.
+
+    /* Validates that a user is currently logged in. 
+     Should be called in any method that requires a logged-in user to
+     ensure proper authorization. E.g. For user-specific operations in OrderService or 
+     CartService. Also when handling commands, specifically related to users.
+     */
     public static void CheckForValidUser(Guid? currentUserId)
     {
         if (currentUserId == null)
@@ -13,6 +15,7 @@ public static class UserValidation
             throw new InvalidOperationException("No user is logged in.Please login to proceed.");
         }
     }
+
 
     public static void ValidateRegistration(UserRegistrationDTO dto)
     {
@@ -32,6 +35,7 @@ public static class UserValidation
         }
     }
 
+
     public static void ValidateLogin(UserLoginDTO dto)
     {
         if (string.IsNullOrWhiteSpace(dto.Email))
@@ -47,6 +51,22 @@ public static class UserValidation
         if (string.IsNullOrWhiteSpace(dto.Password))
         {
             throw new ArgumentException("Password is required.");
+        }
+
+        ValidatePassword(dto.Password);
+    }
+
+
+    public static void ValidatePassword(string password)
+    {
+        if (string.IsNullOrWhiteSpace(password))
+        {
+            throw new ArgumentException("Password is required.");
+        }
+
+        if (password.Length < 8)
+        {
+            throw new ArgumentException("Password must be at least 8 characters.");
         }
     }
 

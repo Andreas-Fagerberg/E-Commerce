@@ -10,7 +10,7 @@ public class EcommerceContext : DbContext
     public DbSet<Product> Products { get; set; }
     public DbSet<ShoppingCart> Shopping_carts { get; set; } // Characters correct?
     public DbSet<ProductOrders> Product_orders { get; set; } // Characters correct?
-    public DbSet<Address> Address { get; set; }
+    public DbSet<Address> Addresses { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder builder)
     {
