@@ -1,4 +1,5 @@
 using System.Net.Sockets;
+using E_commerce_Databaser_i_ett_sammanhang.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace E_commerce_Databaser_i_ett_sammanhang;
@@ -8,7 +9,7 @@ public class EcommerceContext : DbContext
     public DbSet<User> Users { get; set; }
     public DbSet<Order> Orders { get; set; }
     public DbSet<Product> Products { get; set; }
-    public DbSet<ShoppingCart> Shopping_carts { get; set; } // Characters correct?
+    public DbSet<Shopping_Cart> Shopping_Cart { get; set; } // Characters correct?
     public DbSet<ProductOrders> Product_orders { get; set; } // Characters correct?
     public DbSet<Address> Address { get; set; }
 
