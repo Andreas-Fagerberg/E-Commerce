@@ -7,12 +7,13 @@ public static class UserValidation
      Should be called in any method that requires a logged-in user to
      ensure proper authorization. E.g. For user-specific operations in OrderService or 
      CartService. Also when handling commands, specifically related to users.
+     -- Commands will need to call this method to check validity of the user!
      */
     public static void CheckForValidUser(Guid? currentUserId)
     {
         if (currentUserId == null)
         {
-            throw new InvalidOperationException("No user is logged in.Please login to proceed.");
+            throw new InvalidOperationException("No user is logged in. Please login to proceed.");
         }
     }
 
