@@ -6,12 +6,16 @@ using E_commerce_Databaser_i_ett_sammanhang.Models;
 
 namespace E_commerce_Databaser_i_ett_sammanhang
 // If items in cart is changed to 0 remove said item or dont give the option to 0 and rather give the option to remove the item itself.
+//använd dictionary för att hantera quantity, kolla listan, finns redan item i dictionary plussa på.
+//Kolla cart från databasen efter inlogg.
+//skapa command för att populera lista som sen kopplas till dictionary. Kan ha flera, tex en där alla items finns, en där dne försöker lägga in items som är slut, etc.
 {
     public class PostgresShoppingCartService : IShoppingCartService
     {
         private List<Shopping_Cart> cartProducts;
+        Dictionary<int, int> Cart = new Dictionary<int, int>();
 
-        // private List<Product> productList;
+        //private List<Product> productList;
 
         public PostgresShoppingCartService()
         {
