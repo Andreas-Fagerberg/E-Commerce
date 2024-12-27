@@ -9,11 +9,12 @@ namespace E_commerce_Databaser_i_ett_sammanhang
 //använd dictionary för att hantera quantity, kolla listan, finns redan item i dictionary plussa på.
 //Kolla cart från databasen efter inlogg.
 //skapa command för att populera lista som sen kopplas till dictionary. Kan ha flera, tex en där alla items finns, en där dne försöker lägga in items som är slut, etc.
+//Lägga till felhantering
 {
     public class PostgresShoppingCartService : IShoppingCartService
     {
         private List<Shopping_Cart> cartProducts;
-        Dictionary<string, int> Cart = new Dictionary<string, int>();
+        Dictionary<Guid, int> Cart = new Dictionary<Guid, int>();
 
         //private List<Product> productList;
 
@@ -22,7 +23,7 @@ namespace E_commerce_Databaser_i_ett_sammanhang
             cartProducts = new List<Shopping_Cart>();
         }
 
-        public Shopping_Cart AddToShoppingCart(string userId, string productId, int quantity)
+        public Shopping_Cart AddToShoppingCart(Guid userId, Guid productId, int quantity)
         {
             if (Cart.ContainsKey(productId))
             {
@@ -38,16 +39,12 @@ namespace E_commerce_Databaser_i_ett_sammanhang
             return cartItem;
         }
 
-        public List<Shopping_Cart> HandleProductQuantity(
-            string userId,
-            string productId,
-            int quantity
-        )
+        public List<Shopping_Cart> HandleProductQuantity(Guid userId, Guid productId, int quantity)
         {
             throw new NotImplementedException();
         }
 
-        public List<Shopping_Cart> RemoveItemShoppingCart(string productid)
+        public List<Shopping_Cart> RemoveItemShoppingCart(Guid productid)
         {
             if (Cart.ContainsKey(productid))
             {
