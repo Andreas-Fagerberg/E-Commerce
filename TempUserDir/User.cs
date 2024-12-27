@@ -9,31 +9,28 @@ public class User
 
     [Required]
     [MaxLength(75)]
-    public string? FirstName { get; set; }
+    public required string FirstName { get; set; }
 
     [Required]
     [MaxLength(75)]
-    public string? LastName { get; set; }
+    public required string LastName { get; set; }
 
     [Required]
     [EmailAddress]
-    public string? Email { get; set; }
+    public required string Email { get; set; }
 
     [Required]
     [MaxLength(100)]
-    public string? PasswordHash { get; set; }
+    public required string PasswordHash { get; set; }
 
     [Required]
     public DateTime CreatedAt { get; set; }
 
-    [Required]
-    public ICollection<Address>? Addresses { get; set; }
-
+    // Navigation properties
+    // public ICollection<Address>? Addresses { get; set; } 
     // FK: One-to-Many (one user can have many orders)
-    // public ICollection<Order> Orders { get; set; } // Can also be List<T>.
+    // public ICollection<Order>? Orders { get; set; } 
 
     // FK: One-to-One (one user can have one cart)
-    // public Cart Cart { get; set; } -- waiting for Cart.cs
-
-    // Move this to dbContext file: public DbSet<User> Users { get; set; }
+    // public ShoppingCart? Cart { get; set; } 
 }

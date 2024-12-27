@@ -14,19 +14,14 @@ public class RegisterUserCommand : BaseCommand
     {
         while (true)
         {
-
             try
             {
-                // 1: Gather input 
                 var dto = InputHandler.GetRegistrationInput();
+                var response = await userService.RegisterUser(dto);
 
-                // 2: Register the user
-                var response = await Task.Run(() => userService.RegisterUser(dto));
-
-                //3: Display succes message.
                 Console.WriteLine($"User registered successfully!");
                 Console.WriteLine($"Welcome, {response.FirstName} {response.LastName}");
-                break; // Exit loop on success.
+                break;
             }
             catch (ArgumentException ex)
             {

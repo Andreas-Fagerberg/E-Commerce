@@ -15,8 +15,7 @@ public class LoginUserCommand : BaseCommand
         {
 
             var dto = InputHandler.GetLoginInput();
-
-            var response = await Task.Run(() => userService.LoginUser(dto));
+            var response = await userService.LoginUser(dto);
 
             Console.WriteLine($"User logged in successfully!");
             Console.WriteLine($"Good to see you, {response.FirstName} {response.LastName}!");

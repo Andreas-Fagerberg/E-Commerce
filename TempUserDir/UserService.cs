@@ -1,14 +1,8 @@
 using System.Security.Cryptography;
 using BCrypt.Net;
+using Microsoft.EntityFrameworkCore;
 
 namespace E_commerce_Databaser_i_ett_sammanhang;
-
-// POTENTIAL TODO: 
-// [X] - Move validation logic to a separate layer
-// [ ] - UpdateUserDetails, DeleteAccount
-// [ ] - Collect user address on registration?
-// [ ] - ASync operations
-// [ ] - Improve error messages
 
 public class UserService
 {
@@ -21,11 +15,11 @@ public class UserService
     }
 
 
-    public UserResponse RegisterUser(UserRegistrationDTO dto)
+    public async Task<UserResponse> RegisterUser(UserRegistrationDTO dto)
     {
         UserValidation.ValidateRegistration(dto);
 
-        if (_ecommerceContext.Users.Any(u => u.Email == dto.Email))
+        if (await _ecommerceContext.Users.AnyAsync(u => u.Email == dto.Email))
         {
             throw new InvalidOperationException("A user with that email already exists.");
         }
@@ -42,8 +36,8 @@ public class UserService
             CreatedAt = DateTime.UtcNow
         };
 
-        _ecommerceContext.Users.Add(user);
-        _ecommerceContext.SaveChanges();
+        await _ecommerceContext.Users.AddAsync(user);
+        await _ecommerceContext.SaveChangesAsync();
 
         return new UserResponse
         {
@@ -55,11 +49,11 @@ public class UserService
     }
 
 
-    public UserResponse LoginUser(UserLoginDTO dto)
+    public async Task<UserResponse> LoginUser(UserLoginDTO dto)
     {
         UserValidation.ValidateLogin(dto);
 
-        var user = _ecommerceContext.Users.FirstOrDefault(u => u.Email == dto.Email);
+        var user = await _ecommerceContext.Users.FirstOrDefaultAsync(u => u.Email == dto.Email);
         if (user == null)
         {
             throw new InvalidOperationException("Invalid email or password");

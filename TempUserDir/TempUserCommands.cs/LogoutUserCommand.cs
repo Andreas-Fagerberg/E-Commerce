@@ -10,13 +10,11 @@ public class LogoutUserCommand : BaseCommand
 
     }
 
-    public override async Task Execute(Guid? currentUserId)
+    public override Task Execute(Guid? currentUserId)
     {
         try
         {
-            // 2: Nullify the current user session --> Log out
-            currentUserId = await Task.Run(() => userService.LogoutUser(currentUserId));
-
+            currentUserId = userService.LogoutUser(currentUserId);
             Console.WriteLine($"Logout successful.");
         }
         catch (ArgumentException ex)
@@ -31,6 +29,8 @@ public class LogoutUserCommand : BaseCommand
         {
             Console.WriteLine($"An Unexpected error occurred: {ex.Message}");
         }
+
+        return Task.CompletedTask;
     }
 }
 

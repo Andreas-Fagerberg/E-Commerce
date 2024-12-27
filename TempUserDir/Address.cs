@@ -2,7 +2,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace E_commerce_Databaser_i_ett_sammanhang;
 
-// A user can have multiple addresses. (one-to-many)
 public class Address
 {
     [Key]
@@ -13,27 +12,24 @@ public class Address
 
     [Required]
     [MaxLength(100)]
-    public string Street { get; set; }
+    public required string Street { get; set; }
 
     [Required]
     [MaxLength(50)]
-    public string City { get; set; }
+    public required string City { get; set; }
 
     [Required]
     [MaxLength(50)]
-    public string Region { get; set; }
+    public required string Region { get; set; }
 
     [Required]
     [MaxLength(20)]
-    public string PostalCode { get; set; }
+    public required string PostalCode { get; set; }
 
     [Required]
     [MaxLength(50)]
-    public string Country { get; set; }
+    public required string Country { get; set; }
 
-    [Required]
-    public User User { get; set; } // Navigation property
-
-
-
+    // Navigation property
+    public required User User { get; set; }
 }
