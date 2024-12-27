@@ -9,5 +9,19 @@ public abstract class Menu
         commands.Add(command);
     }
 
+    public async Task ExecuteCommand(ConsoleKey input)
+    {
+        if (input.Equals(ConsoleKey.D5)) { }
+        foreach (ICommand command in commands)
+        {
+            if (command.TriggerKey.Equals(input))
+            {
+                await command.Execute(Guid? currentUserId);
+                return;
+            }
+        }
+        throw new Exception("Command not found.");
+    }
+
     public abstract void Display();
 }

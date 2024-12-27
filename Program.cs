@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 class Program
 {
-    static void Main(string[] args)
+    static async void Main(string[] args)
     {
         IMenuService menuService = new AppMenuService();
         while (true)
@@ -36,6 +36,16 @@ class Program
                     menuService.ChangeMenu(input);
                     continue;
                 }
+            }
+            try
+            {
+                await menuService.GetMenu().ExecuteCommand(input);
+            }
+            catch (Exception ex)
+            {
+                string message = string.IsNullOrEmpty(ex.Message)
+                    ? "Something went wrong, please try again."
+                    : ex.Message;
             }
         }
     }
