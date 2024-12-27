@@ -13,7 +13,7 @@ namespace E_commerce_Databaser_i_ett_sammanhang
     public class PostgresShoppingCartService : IShoppingCartService
     {
         private List<Shopping_Cart> cartProducts;
-        Dictionary<int, int> Cart = new Dictionary<int, int>();
+        Dictionary<string, int> Cart = new Dictionary<string, int>();
 
         //private List<Product> productList;
 
@@ -22,21 +22,37 @@ namespace E_commerce_Databaser_i_ett_sammanhang
             cartProducts = new List<Shopping_Cart>();
         }
 
-        public Shopping_Cart AddToShoppingCart(int userId, int productId, int quantity)
+        public Shopping_Cart AddToShoppingCart(string userId, string productId, int quantity)
         {
+            if (Cart.ContainsKey(productId))
+            {
+                Cart[productId] += quantity;
+            }
+            else
+            {
+                Cart[productId] = quantity;
+            }
+
             var cartItem = new Shopping_Cart(userId, productId, quantity);
             cartProducts.Add(cartItem);
             return cartItem;
         }
 
-        public List<Shopping_Cart> HandleProductQuantity(int userId, int productId, int quantity)
+        public List<Shopping_Cart> HandleProductQuantity(
+            string userId,
+            string productId,
+            int quantity
+        )
         {
             throw new NotImplementedException();
         }
 
-        public List<Shopping_Cart> RemoveItemShoppingCart(int porductid)
+        public List<Shopping_Cart> RemoveItemShoppingCart(string productid)
         {
-            throw new NotImplementedException();
+            if (Cart.ContainsKey(productid))
+            {
+                Cart.Remove(productid);
+            }
         }
 
         public void Checkout(int userId)

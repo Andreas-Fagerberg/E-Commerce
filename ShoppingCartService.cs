@@ -11,10 +11,10 @@ namespace E_commerce_Databaser_i_ett_sammanhang
     //AddToCart, removefromcart, savecart.
     public interface IShoppingCartService
     {
-        Shopping_Cart AddToShoppingCart(int userId, int productId, int quantity);
+        Shopping_Cart AddToShoppingCart(string userId, string productId, int quantity);
 
-        List<Shopping_Cart> RemoveItemShoppingCart(int porductid);
+        List<Shopping_Cart> RemoveItemShoppingCart(string porductid);
 
-        List<Shopping_Cart> HandleProductQuantity(int userId, int productId, int quantity);
+        List<Shopping_Cart> HandleProductQuantity(string userId, string productId, int quantity);
     }
 }
