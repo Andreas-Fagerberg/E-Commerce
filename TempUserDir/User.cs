@@ -2,6 +2,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace E_commerce_Databaser_i_ett_sammanhang;
 
+/// <summary>
+/// Represents a user in the e-commerce system.
+/// </summary>
 public class User
 {
     [Key]

@@ -1,13 +1,13 @@
-using System.Security.Cryptography;
-using BCrypt.Net;
 using Microsoft.EntityFrameworkCore;
 
 namespace E_commerce_Databaser_i_ett_sammanhang;
 
-public class UserService
+/// <summary>
+/// Implements the opeartions for managing user accounts in the e-commerce system.
+/// </summary>
+public class UserService : IUserService
 {
     private readonly EcommerceContext _ecommerceContext;
-
 
     public UserService(EcommerceContext ecommerceContext)
     {
@@ -74,20 +74,40 @@ public class UserService
     }
 
 
-    public Guid? LogoutUser(Guid? currentUserId)
+    public void LogoutUser(Guid? currentUserId)
     {
         UserValidation.CheckForValidUser(currentUserId);
         Console.WriteLine($"Logging out user with ID: {currentUserId}.");
-        return null;
     }
 
 
-    #region Utility Methods
+    public async Task<UserResponse> GetUserById(Guid userId)
+    {
+        var user = await _ecommerceContext.Users
+            .FirstOrDefaultAsync(u => u.UserId == userId);
+
+        if (user == null)
+        {
+            throw new InvalidOperationException("User not found");
+        }
+
+        return new UserResponse
+        {
+            UserId = user.UserId,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            Email = user.Email
+        };
+    }
+
+
+    #region Utility Methods 
 
     private string HashPassword(string password)
     {
         return BCrypt.Net.BCrypt.HashPassword(password);
     }
+
 
     private bool VerifyPassword(string password, string hashedPassword)
     {

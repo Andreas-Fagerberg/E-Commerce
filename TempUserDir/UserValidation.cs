@@ -1,14 +1,15 @@
 namespace E_commerce_Databaser_i_ett_sammanhang;
 
+/// <summary>
+/// Provides methods for validating user-related data and ensuring proper authorization.
+/// </summary>
 public static class UserValidation
 {
 
-    /* Validates that a user is currently logged in. 
-     Should be called in any method that requires a logged-in user to
-     ensure proper authorization. E.g. For user-specific operations in OrderService or 
-     CartService. Also when handling commands, specifically related to users.
-     -- Commands will need to call this method to check validity of the user!
-     */
+    /// <summary>
+    /// Validates that a user is currently logged in by checking their unique identifier.
+    /// This method should be called in any operation or command that requires user authorization.
+    /// </summary>
     public static void CheckForValidUser(Guid? currentUserId)
     {
         if (currentUserId == null)
@@ -18,6 +19,9 @@ public static class UserValidation
     }
 
 
+    /// <summary>
+    /// Validates user registration data, including names, email, and password.
+    /// </summary>
     public static void ValidateRegistration(UserRegistrationDTO dto)
     {
         if (string.IsNullOrWhiteSpace(dto.FirstName) || string.IsNullOrWhiteSpace(dto.LastName))
@@ -37,6 +41,9 @@ public static class UserValidation
     }
 
 
+    /// <summary>
+    /// Validates user login credentials, including email format and password requirements.
+    /// </summary>
     public static void ValidateLogin(UserLoginDTO dto)
     {
         if (string.IsNullOrWhiteSpace(dto.Email))
@@ -58,6 +65,9 @@ public static class UserValidation
     }
 
 
+    /// <summary>
+    /// Validates a password, ensuring it meets length and non-empty requirements.
+    /// </summary>
     public static void ValidatePassword(string password)
     {
         if (string.IsNullOrWhiteSpace(password))
@@ -71,6 +81,10 @@ public static class UserValidation
         }
     }
 
+
+    /// <summary>
+    /// Checks whether an email address is in a valid format.
+    /// </summary>
     public static bool IsValidEmail(string email)
     {
         try
@@ -82,5 +96,20 @@ public static class UserValidation
         {
             return false;
         }
+    }
+
+
+    /// <summary>
+    /// Checks whether a name contains only letters, spaces, or hyphens.
+    /// </summary>
+    public static bool IsValidName(string inputName)
+    {
+        if (string.IsNullOrWhiteSpace(inputName))
+        {
+            return false;
+        }
+        // Regex pattern: only letters, spaces and hyphens are allowed.
+        var validPattern = @"[a-zA-Z\s\-]+$";
+        return System.Text.RegularExpressions.Regex.IsMatch(inputName, validPattern);
     }
 }
