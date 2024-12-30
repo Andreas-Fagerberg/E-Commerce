@@ -3,41 +3,67 @@
 public class HomeMenu : Menu
 {
     private static int _currentPage = 1;
-    public HomeMenu
-    (
-        
-    )
+
+    public HomeMenu(IUserService userService)
     {
-        // AddCommand(new ICommand(ConsoleKey, IUserService));
-        AddCommand(new FakeCommand(ConsoleKey.A, userService));
+        AddCommand(new SelectCategoryCommand(ConsoleKey.F2, userService));
     }
+
+    // OPTION 1
     public override void Display()
     {
-        // REMOVENOTE: Not fully symmetrical (if that matters?)
+        // REMOVENOTE: Not fully symmetrical (if that matters?).
+        //Bygg scrollande meny,
         Console.WriteLine(
-            $"""                                                                    
-                   LOG OUT - F5                   HELP - F6                    EXIT - F7/ESC 
-                ┌─────────────────┬────────────────────┬┬───────────────────┬──────────────────┐
-                │  Search - F1    │  Categories - F2   ││  Cart ({}) - F3   │  Checkout - F4   │
-                ├─────────────────┴────────────────────┼┼───────────────────┴──────────────────┤
-                │                                      ││                                      │
-                │                                      ││                                      │
-                │                                      ││                                      │
-                │                                      ││                                      │
-                │                                      ││                                      │
-                │                                      ││                                      │
-                │                                      ││                                      │
-                │                                      ││                                      │
-                │                                      ││                                      │
-                │                                      ││                                      │
-                │                                      ││                                      │
-                │                                      ││                                      │
-                ├──────────────────────────────────────┼┼──────────────────────────────────────┤
-                │   ← A/Left (Previous page)                           (Next page) D/Right →   │
+            $"""
+                ┌──────────────────────────────────────────────────────────────────────────────┐
+                │                                                                              │
+                ├──────────────────────────────────────────────────────────────────────────────┤
+                │                                                                              │
+                │                                                                              │
+                │                                                                              │
+                │                                                                              │
+                │                                                                              │
+                │                                                                              │
+                │                                                                              │
+                │                                                                              │
+                │                                                                              │
+                │                                                                              │
+                │                                                                              │
+                │                                                                              │
+                ├──────────────────────────────────────────────────────────────────────────────┤
+                │                                                                              │
                 └──────────────────────────────────────────────────────────────────────────────┘
             """
         );
     }
+
+    // OPTION 2
+    // public override void Display2()
+    // {
+    //     Console.WriteLine(
+    //         $"""
+    //             ┌──────────────────────────────────────────────────────────────────────────────┐
+    //             │  Select an option:                                                           │
+    //             ├──────────────────────────────────────────────────────────────────────────────┤
+    //             │ 1. Select categories                                                         │
+    //             │ 2. HELP!!!                                                                   │
+    //             │ 3. Return to home menu                                                       │
+    //             │                                                                              │
+    //             │                                                                              │
+    //             │                                                                              │
+    //             │                                                                              │
+    //             │                                                                              │
+    //             │                                                                              │
+    //             │                                                                              │
+    //             │                                                                              │
+    //             │                                                                              │
+    //             ├──────────────────────────────────────────────────────────────────────────────┤
+    //             │   ← A/Left (Previous page)                           (Next page) D/Right →   │
+    //             └──────────────────────────────────────────────────────────────────────────────┘
+    //         """
+    //     );
+    // }
     public static int ChangePage()
     {
         throw new NotImplementedException();

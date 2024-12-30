@@ -10,17 +10,13 @@ public interface IMenuService
 
 public class AppMenuService : IMenuService
 {
-    private Menu menu = new HomeMenu();
+    private Menu menu = new HomeMenu(IUserService userService);
+    protected readonly IUserService userService;
 
-    public List<ConsoleKey> TriggerKeys = new List<ConsoleKey>
+    public AppMenuService(IUserService userService)
     {
-        ConsoleKey.F1,
-        ConsoleKey.F2,
-        ConsoleKey.F3,
-        ConsoleKey.F4,
-        ConsoleKey.F5,
-        ConsoleKey.F6,
-    };
+        this.userService = userService;
+    }
 
     public Menu GetMenu()
     {
@@ -32,38 +28,5 @@ public class AppMenuService : IMenuService
         this.menu = menu;
     }
 
-    public List<ConsoleKey> GetTriggerKeys()
-    {
-        return TriggerKeys;
-    }
 
-    public void ChangeMenu(ConsoleKey consoleKey)
-    {
-        switch (consoleKey)
-        {
-            case ConsoleKey.F1:
-                SetMenu(new SearchMenu());
-                break;
-
-            case ConsoleKey.F2:
-                SetMenu(new CategoryMenu());
-                break;
-
-            case ConsoleKey.F3:
-                SetMenu(new CartMenu());
-                break;
-
-            case ConsoleKey.F4:
-                SetMenu(new CheckoutMenu());
-                break;
-
-            case ConsoleKey.F5:
-                SetMenu(new LogOutMenu());
-                break;
-
-            case ConsoleKey.F6:
-                SetMenu(new HelpMenu());
-                break;
-        }
-    }
 }
