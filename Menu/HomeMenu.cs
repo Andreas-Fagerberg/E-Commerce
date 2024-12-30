@@ -8,6 +8,8 @@ public class HomeMenu : Menu
         
     )
     {
+        // AddCommand(new ICommand(ConsoleKey, IUserService));
+        AddCommand(new FakeCommand(ConsoleKey.A, userService));
     }
     public override void Display()
     {

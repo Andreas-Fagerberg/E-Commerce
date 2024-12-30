@@ -3,9 +3,9 @@
 public abstract class BaseCommand : ICommand
 {
     public ConsoleKey TriggerKey { get; init; }
-    protected readonly UserService userService;
+    protected readonly IUserService userService;
 
-    protected BaseCommand(ConsoleKey triggerKey, UserService userService)
+    protected BaseCommand(ConsoleKey triggerKey, IUserService userService)
     {
         TriggerKey = triggerKey;
         this.userService = userService;

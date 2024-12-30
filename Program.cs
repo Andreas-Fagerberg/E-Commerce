@@ -5,6 +5,7 @@ class Program
     static async void Main(string[] args)
     {
         IMenuService menuService = new AppMenuService();
+        menuService.SetMenu(new LoginMenu());
         while (true)
         {
             Console.Clear();
