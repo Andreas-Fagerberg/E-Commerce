@@ -47,6 +47,7 @@ public class CategoryMenu : Menu
             """
         );
     }
+
     //  Select categories:
 
     // TODO: Method to change display printout to print x or "".

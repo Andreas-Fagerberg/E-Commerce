@@ -2,12 +2,21 @@ namespace E_commerce_Databaser_i_ett_sammanhang;
 
 public class SelectCategoryCommand : BaseCommand
 {
-    public SelectCategoryCommand(ConsoleKey triggerKey, IUserService userService)
-        : base(triggerKey, userService) { }
+    private readonly IMenuService _menuService;
+
+    public SelectCategoryCommand(
+        ConsoleKey triggerKey,
+        IUserService userService,
+        IMenuService menuService
+    )
+        : base(triggerKey, userService)
+    {
+        _menuService = menuService;
+    }
 
     public override Task Execute(Guid? currentUserId)
     {
-        Menu categoryMenu = new CategoryMenu(userService);
+        Menu categoryMenu = new CategoryMenu(userService, _menuService);
         categoryMenu.Display();
         while (true)
         {
