@@ -11,7 +11,6 @@ public abstract class Menu
 
     public async Task ExecuteCommand(ConsoleKey input)
     {
-        if (input.Equals(ConsoleKey.D5)) { }
         foreach (ICommand command in commands)
         {
             if (command.TriggerKey.Equals(input))
