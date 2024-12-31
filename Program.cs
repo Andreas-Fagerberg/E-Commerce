@@ -4,7 +4,8 @@ class Program
 {
     static async void Main(string[] args)
     {
-        IMenuService menuService = new AppMenuService();
+        IUserService userService = new UserService();
+        IMenuService menuService = new AppMenuService(userService);
         menuService.SetMenu(new LoginMenu());
         while (true)
         {
@@ -27,14 +28,6 @@ class Program
                 or ConsoleKey.D:
 
                     continue;
-            }
-            foreach (ConsoleKey consoleKey in menuService.GetTriggerKeys())
-            {
-                if (input.Equals(consoleKey))
-                {
-                    menuService.ChangeMenu(input);
-                    continue;
-                }
             }
             try
             {
