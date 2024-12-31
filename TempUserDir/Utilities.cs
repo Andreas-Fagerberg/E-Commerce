@@ -7,4 +7,10 @@ public static class Utilities
         Console.Clear();
         Console.WriteLine(message);
     }
+
+    public static void WriteLineWithPause(string message, int millisecondsDelay = 1000)
+    {
+        Console.WriteLine(message);
+        Thread.Sleep(millisecondsDelay);
+    }
 }

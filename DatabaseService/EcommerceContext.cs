@@ -44,7 +44,8 @@ public class EcommerceContext : DbContext
 
             user.Property(u => u.CreatedAt)
                 .IsRequired()
-                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasColumnType("timestamp(0) with time zone");
 
             user.HasMany(u => u.Addresses)
                 .WithOne(a => a.User)

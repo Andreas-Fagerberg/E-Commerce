@@ -10,6 +10,7 @@ public interface IMenuService
 
 public class AppMenuService : IMenuService
 {
+    private readonly IUserService userService;
     private Menu menu = new HomeMenu();
 
     public List<ConsoleKey> TriggerKeys = new List<ConsoleKey>
@@ -21,6 +22,11 @@ public class AppMenuService : IMenuService
         ConsoleKey.F5,
         ConsoleKey.F6,
     };
+
+    public AppMenuService(IUserService userService)
+    {
+        this.userService = userService;
+    }
 
     public Menu GetMenu()
     {
@@ -58,7 +64,7 @@ public class AppMenuService : IMenuService
                 break;
 
             case ConsoleKey.F5:
-                SetMenu(new LogOutMenu());
+                SetMenu(new LogoutMenu(userService, this));
                 break;
 
             case ConsoleKey.F6:

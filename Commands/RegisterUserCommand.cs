@@ -20,12 +20,11 @@ public class RegisterUserCommand : BaseCommand
             try
             {
                 var dto = InputHandler.GetRegistrationInput();
-                Console.WriteLine("[DEBUG] RegisterUserCommand: #1");
                 var response = await userService.RegisterUser(dto);
-                Console.WriteLine("[DEBUG] RegisterUserCommand: #2");
 
                 Console.WriteLine($"User registered successfully!");
                 Console.WriteLine($"Welcome, {response.FirstName} {response.LastName}");
+                Console.ReadLine();
                 break;
             }
             catch (ArgumentException ex)
@@ -40,8 +39,7 @@ public class RegisterUserCommand : BaseCommand
             {
                 Console.WriteLine($"An unexpected error occurred: {ex.Message}");
             }
-
-            Console.WriteLine("[DEBUG] RegisterUserCommand: #3");
+            Console.WriteLine("[DEBUG]");
             Console.ReadLine(); // TEMP: Breaker
         }
     }

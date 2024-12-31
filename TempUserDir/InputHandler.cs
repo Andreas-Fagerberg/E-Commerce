@@ -98,7 +98,7 @@ public static class InputHandler
 
         while (true)
         {
-            string email = ReadNonEmptyStrings("Email is required.");
+            string email = ReadNonEmptyStrings("Email is required.").ToLower();
 
             if (UserValidation.IsValidEmail(email) == true)
             {
