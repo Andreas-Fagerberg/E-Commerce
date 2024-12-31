@@ -20,9 +20,53 @@ public class EcommerceContext : DbContext
     //Om man vill konfigurera modellerna lite extra: fler constraints exempelvis, då kan man använda 'OnModelCreating'.
     protected override void OnModelCreating(ModelBuilder builder)
     {
+        // User configuration
         builder
             .Entity<User>()
             .Property(User => User.CreatedAt)
             .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+        // Product configuration
+        builder.Entity<Product>().Property(Product => Product.Id).UseIdentityColumn();
+
+        builder.Entity<Product>().Property(Product => Product.Name).IsRequired().HasMaxLength(100);
+
+        builder
+            .Entity<Product>()
+            .Property(Product => Product.Category)
+            .IsRequired()
+            .HasMaxLength(50);
+
+        builder.Entity<Product>().Property(Product => Product.Description).HasMaxLength(1000);
+
+        builder
+            .Entity<Product>()
+            .Property(Product => Product.Price)
+            .IsRequired()
+            .HasPrecision(10, 2)
+            .HasDefaultValue(0.00m);
+
+        builder
+            .Entity<Product>()
+            .Property(Product => Product.Rating)
+            .IsRequired()
+            .HasDefaultValue(0);
+
+        builder
+            .Entity<Product>()
+            .Property(Product => Product.available)
+            .IsRequired()
+            .HasDefaultValue(true);
+
+        // Relationship and Index need their own Entity<Product>()
+        builder
+            .Entity<Product>()
+            .HasOne(Product => Product.user)
+            .WithMany()
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<Product>().HasIndex(Product => Product.Name);
+        builder.Entity<Product>().HasIndex(Product => Product.Category);
     }
 }
