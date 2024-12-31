@@ -14,7 +14,20 @@ public class EcommerceContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder builder)
     {
-        builder.UseNpgsql("Host=localhost;Database=ECommerce;Username=postgres;Password=password");
+        try
+        {
+            builder.UseNpgsql(
+                "Host=localhost;Database=ECommerce;Username=postgres;Password=password"
+            );
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error connecting to the database: {ex.Message}");
+            throw new InvalidOperationException(
+                "Failed to connect to database, try again later.",
+                ex
+            );
+        }
     }
 
     //Om man vill konfigurera modellerna lite extra: fler constraints exempelvis, då kan man använda 'OnModelCreating'.
