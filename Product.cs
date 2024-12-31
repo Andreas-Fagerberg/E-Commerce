@@ -1,4 +1,4 @@
-using Npgsql.EntityFrameworkCore.PostgreSQL.Infrastructure.Internal;
+namespace E_commerce_Databaser_i_ett_sammanhang;
 
 public class Product
 {
@@ -9,7 +9,7 @@ public class Product
     public decimal Price { get; set; }
     public int Rating { get; set; }
     public bool available;
-    public User user{ get; set; } // Build a relationsship 
+    public User User { get; set; } // Build a relationsship 
     // between User and Product (Many-to-One)
 
 }

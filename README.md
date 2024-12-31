@@ -1,4 +1,4 @@
-    ## Instruktioner: Test av databas
+    ## Instruktioner: Test av databas/migration
     För att sätta upp en databas genom projektet och ansluta den lokalt behöver du:
     - Skapa en tom databas i psql (ecommerce/database=[name] i connectionString)
     - Justera anslutningssträngen efter lokala behov.

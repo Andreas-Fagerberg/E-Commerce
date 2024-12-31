@@ -4,8 +4,9 @@ using Microsoft.EntityFrameworkCore;
 
 class Program
 {
-    static async void Main(string[] args)
+    static async Task Main(string[] args)
     {
+        Guid? currentUserId = null;
         IMenuService menuService = new AppMenuService();
         menuService.SetMenu(new LoginMenu());
         while (true)
@@ -40,7 +41,7 @@ class Program
             }
             try
             {
-                await menuService.GetMenu().ExecuteCommand(input);
+                await menuService.GetMenu().ExecuteCommand(input, currentUserId);
             }
             catch (Exception ex)
             {
