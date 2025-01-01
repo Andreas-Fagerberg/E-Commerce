@@ -8,7 +8,7 @@ namespace E_commerce_Databaser_i_ett_sammanhang;
 public class Address
 {
     public Guid AddressId { get; set; }
-    public Guid UserId { get; set; }
+    public Guid? UserId { get; set; }
     public required string Street { get; set; }
     public required string City { get; set; }
     public required string Region { get; set; }
@@ -16,6 +16,6 @@ public class Address
     public required string Country { get; set; }
 
     // Navigation property
-    public User User { get; set; } = null!;
+    public User? User { get; set; }
 }
 

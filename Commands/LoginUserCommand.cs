@@ -7,9 +7,7 @@ public class LoginUserCommand : BaseCommand
 {
     public UserResponse? LoggedInUser { get; private set; }
     public LoginUserCommand(ConsoleKey triggerkey, IUserService userService)
-        : base(triggerkey, userService)
-    {
-    }
+        : base(triggerkey, userService) { }
 
     public override async Task Execute(Guid? currentUserId)
     {

@@ -47,11 +47,12 @@ public class EcommerceContext : DbContext
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("timestamp(0) with time zone");
 
-            user.HasMany(u => u.Addresses)
+            user.HasOne(u => u.Address)
                 .WithOne(a => a.User)
-                .HasForeignKey(a => a.UserId)
-                .IsRequired()
+                .HasForeignKey<Address>(a => a.UserId)
+                // .IsRequired(false)
                 .OnDelete(DeleteBehavior.Cascade);
+
         });
 
 
@@ -83,10 +84,11 @@ public class EcommerceContext : DbContext
                 .HasMaxLength(50);
 
             address.HasOne(a => a.User)
-                .WithMany(u => u.Addresses)
-                .HasForeignKey(a => a.UserId)
-                .IsRequired()
+                .WithOne(u => u.Address)
+                .HasForeignKey<User>(a => a.UserId)
+                // .IsRequired(false)
                 .OnDelete(DeleteBehavior.Cascade);
+
         });
 
     }

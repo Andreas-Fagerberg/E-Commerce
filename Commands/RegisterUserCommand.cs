@@ -7,9 +7,7 @@ public class RegisterUserCommand : BaseCommand
 {
 
     public RegisterUserCommand(ConsoleKey triggerKey, IUserService userService)
-        : base(triggerKey, userService)
-    {
-    }
+        : base(triggerKey, userService) { }
 
     public override async Task Execute(Guid? currentUserId)
     {
@@ -38,9 +36,12 @@ public class RegisterUserCommand : BaseCommand
             catch (Exception ex)
             {
                 Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+                if (ex.InnerException != null)
+                {
+                    Console.WriteLine($"Inner Exception: {ex.InnerException.Message}");
+                }
             }
-            Console.WriteLine("[DEBUG]");
-            Console.ReadLine(); // TEMP: Breaker
+            Console.ReadLine();
         }
     }
 }

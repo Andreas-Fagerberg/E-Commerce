@@ -71,7 +71,7 @@ public static class InputHandler
     }
 
 
-    #region Utility Methods
+    #region Helper Methods
 
     /// <summary>
     /// Reads user input and ensures it is non-empty, providing an error message if necessary.

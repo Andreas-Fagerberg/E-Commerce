@@ -15,7 +15,7 @@ public class User
     public DateTime CreatedAt { get; set; }
 
     // Navigation properties (WIP)
-    public ICollection<Address> Addresses { get; set; } = new List<Address>();
+    public Address? Address { get; set; }
     // public ICollection<Order>? Orders { get; set; }
     // ShoppingCart
 

@@ -6,10 +6,7 @@ namespace E_commerce_Databaser_i_ett_sammanhang;
 public class LogoutUserCommand : BaseCommand
 {
     public LogoutUserCommand(ConsoleKey triggerkey, IUserService userService, IMenuService menuService)
-        : base(triggerkey, userService, menuService)
-    {
-
-    }
+        : base(triggerkey, userService, menuService) { }
 
     /// <summary>
     /// Executes the user logout process. The caller is responsible for nullifying the currentUserId after the method call.
@@ -18,6 +15,8 @@ public class LogoutUserCommand : BaseCommand
     {
         try
         {
+            UserValidation.CheckForValidUser(currentUserId);
+
             userService.LogoutUser(currentUserId);
             Utilities.WriteLineWithPause($"Logout successful.");
             currentUserId = null;
