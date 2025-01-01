@@ -99,8 +99,8 @@ public static class InputHandler
     {
         while (true)
         {
-            Console.Write($"Enter {fieldName}: ");
-            string input = ReadNonEmptyStrings($"{fieldName} is required");
+
+            string input = ReadNonEmptyStrings(fieldName, $"{fieldName} is required");
 
             if (UserValidation.IsValidName(input))
             {
@@ -117,11 +117,9 @@ public static class InputHandler
     /// </summary>
     private static string ReadAndValidateEmail()
     {
-        Console.Write("Enter Email Address: ");
-
         while (true)
         {
-            string email = ReadNonEmptyStrings("Email is required.").ToLower();
+            string email = ReadNonEmptyStrings("Email Address", "Email is required.").ToLower();
 
             if (UserValidation.IsValidEmail(email) == true)
             {
