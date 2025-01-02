@@ -7,10 +7,10 @@ public class EcommerceContext : DbContext
 {
     public DbSet<User> Users { get; set; }
     public DbSet<Product> Products { get; set; }
-    // public DbSet<ShoppingCart> ShoppingCarts { get; set; }
     public DbSet<Order> Orders { get; set; }
     public DbSet<OrderProduct> OrderProducts { get; set; }
     public DbSet<Address> Addresses { get; set; }
+    // public DbSet<ShoppingCart> ShoppingCarts { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder builder)
     {
@@ -115,6 +115,8 @@ public class EcommerceContext : DbContext
         {
             orderProduct.HasKey(op => new { op.OrderId, op.ProductId });
 
+            orderProduct.HasIndex(op => op.ProductId);
+
             orderProduct.Property(op => op.Quantity)
                         .IsRequired();
 
@@ -128,8 +130,7 @@ public class EcommerceContext : DbContext
             orderProduct.HasOne(op => op.Product)
                         .WithMany()
                         .HasForeignKey(op => op.ProductId)
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
         });
-
     }
 }
