@@ -1,5 +1,6 @@
 using System.Net.Sockets;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace E_commerce_Databaser_i_ett_sammanhang;
 
@@ -16,14 +17,16 @@ public class EcommerceContext : DbContext
     {
         try
         {
-            builder.UseNpgsql("Host=localhost;Database=ECommerce;Username=postgres;Password=password");
+            IConfiguration config = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json")
+            .Build();
+
+            string? connectionString = config.GetConnectionString("Default");
+            builder.UseNpgsql(connectionString);
         }
         catch (Exception ex)
         {
-            throw new InvalidOperationException
-            (
-                "Failed to connect to database, try again later.",ex
-            );
+            throw new InvalidOperationException("Failed to connect to database, try again later.", ex);
         }
     }
 
@@ -42,30 +45,30 @@ public class EcommerceContext : DbContext
             product.Property(p => p.Category)
                 .IsRequired()
                 .HasMaxLength(30);
-            
+
             product.Property(p => p.Description)
                 .HasMaxLength(50);
-            
+
             product.Property(p => p.Price)
                 .IsRequired()
                 .HasPrecision(10, 2)
                 .HasDefaultValue(0.00m);
-            
+
             product.Property(p => p.Rating)
                 .IsRequired()
                 .HasDefaultValue(0);
-            
+
             product.Property(p => p.available)
                 .IsRequired()
                 .HasDefaultValue(true);
-            
+
             product.HasOne(p => p.user)
                 .WithMany()
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Cascade);
-            
+
             product.HasIndex(p => p.Name);
-            
+
             product.HasIndex(p => p.Category);
         });
     }
