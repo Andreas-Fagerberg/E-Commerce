@@ -12,7 +12,7 @@ public static class UserValidation
     /// </summary>
     public static void CheckForValidUser(Guid? currentUserId)
     {
-        if (currentUserId == null)
+        if (currentUserId == null || currentUserId == Guid.Empty)
         {
             throw new InvalidOperationException("No user is logged in. Please login to proceed.");
         }

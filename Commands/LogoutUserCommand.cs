@@ -5,11 +5,8 @@ namespace E_commerce_Databaser_i_ett_sammanhang;
 /// </summary>
 public class LogoutUserCommand : BaseCommand
 {
-    public LogoutUserCommand(ConsoleKey triggerkey, IUserService userService)
-        : base(triggerkey, userService)
-    {
-
-    }
+    public LogoutUserCommand(ConsoleKey triggerkey, IUserService userService, IMenuService menuService)
+        : base(triggerkey, userService, menuService) { }
 
     /// <summary>
     /// Executes the user logout process. The caller is responsible for nullifying the currentUserId after the method call.
@@ -18,8 +15,11 @@ public class LogoutUserCommand : BaseCommand
     {
         try
         {
+            UserValidation.CheckForValidUser(currentUserId);
+
             userService.LogoutUser(currentUserId);
-            Console.WriteLine($"Logout successful.");
+            Utilities.WriteLineWithPause($"Logout successful.");
+            currentUserId = null;
         }
         catch (ArgumentException ex)
         {
@@ -34,6 +34,8 @@ public class LogoutUserCommand : BaseCommand
             Console.WriteLine($"An Unexpected error occurred: {ex.Message}");
         }
 
+        Console.Clear();
+        menuService?.SetMenu(new LoginMenu(userService));
         return Task.CompletedTask;
     }
 }

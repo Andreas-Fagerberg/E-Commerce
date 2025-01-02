@@ -5,11 +5,11 @@ public class HomeMenu : Menu
     private static int _currentPage = 1;
     public HomeMenu
     (
-        
+
     )
     {
         // AddCommand(new ICommand(ConsoleKey, IUserService));
-        AddCommand(new FakeCommand(ConsoleKey.A, userService));
+        // AddCommand(new FakeCommand(ConsoleKey.A, userService));
     }
     public override void Display()
     {
@@ -18,7 +18,7 @@ public class HomeMenu : Menu
             $"""                                                                    
                    LOG OUT - F5                   HELP - F6                    EXIT - F7/ESC 
                 ┌─────────────────┬────────────────────┬┬───────────────────┬──────────────────┐
-                │  Search - F1    │  Categories - F2   ││  Cart ({}) - F3   │  Checkout - F4   │
+                │  Search - F1    │  Categories - F2   ││  Cart () - F3   │  Checkout - F4   │
                 ├─────────────────┴────────────────────┼┼───────────────────┴──────────────────┤
                 │                                      ││                                      │
                 │                                      ││                                      │

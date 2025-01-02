@@ -10,7 +10,7 @@ public static class InputHandler
 {
 
     /// <summary>
-    /// Collects and validates user input for registration, including name, email, and password.
+    /// Collects and performs basic validation on user input for registration details, including name, email, and password.
     /// </summary>
     public static UserRegistrationDTO GetRegistrationInput()
     {
@@ -33,7 +33,7 @@ public static class InputHandler
 
 
     /// <summary>
-    /// Collects and validates user input for login, including email and password.
+    /// Collects and performs basic validation on user input for login details, including email and password.
     /// </summary>
     public static UserLoginDTO GetLoginInput()
     {
@@ -48,16 +48,39 @@ public static class InputHandler
         };
     }
 
+    /// <summary>
+    /// Collects and performs basic validation on user input for address details.
+    /// </summary>
+    public static RegisterAddressDTO GetAddressInput(Guid currentUserId)
+    {
+        string street = ReadNonEmptyStrings("Street", "Street cannot be empty");
+        string city = ReadNonEmptyStrings("City", "City cannot be empty");
+        string region = ReadNonEmptyStrings("Region", "Region cannot be empty");
+        string postalCode = ReadNonEmptyStrings("Postal Code", "Postal Code cannot be empty");
+        string country = ReadNonEmptyStrings("Country", "Country cannot be empty");
 
-    #region Utility Methods
+        return new RegisterAddressDTO
+        {
+            UserId = currentUserId,
+            Street = street,
+            City = city,
+            Region = region,
+            PostalCode = postalCode,
+            Country = country
+        };
+    }
+
+
+    #region Helper Methods
 
     /// <summary>
     /// Reads user input and ensures it is non-empty, providing an error message if necessary.
     /// </summary>
-    private static string ReadNonEmptyStrings(string errorMessage)
+    private static string ReadNonEmptyStrings(string fieldName, string errorMessage)
     {
         while (true)
         {
+            Console.Write($"Enter {fieldName}: ");
             string input = Console.ReadLine()?.Trim()!;
             if (string.IsNullOrEmpty(input) == false)
             {
@@ -76,8 +99,8 @@ public static class InputHandler
     {
         while (true)
         {
-            Console.Write($"Enter {fieldName}: ");
-            string input = ReadNonEmptyStrings($"{fieldName} is required");
+
+            string input = ReadNonEmptyStrings(fieldName, $"{fieldName} is required");
 
             if (UserValidation.IsValidName(input))
             {
@@ -94,11 +117,9 @@ public static class InputHandler
     /// </summary>
     private static string ReadAndValidateEmail()
     {
-        Console.Write("Enter Email Address: ");
-
         while (true)
         {
-            string email = ReadNonEmptyStrings("Email is required.");
+            string email = ReadNonEmptyStrings("Email Address", "Email is required.").ToLower();
 
             if (UserValidation.IsValidEmail(email) == true)
             {

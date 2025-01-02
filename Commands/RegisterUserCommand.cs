@@ -7,9 +7,7 @@ public class RegisterUserCommand : BaseCommand
 {
 
     public RegisterUserCommand(ConsoleKey triggerKey, IUserService userService)
-        : base(triggerKey, userService)
-    {
-    }
+        : base(triggerKey, userService) { }
 
     public override async Task Execute(Guid? currentUserId)
     {
@@ -20,12 +18,11 @@ public class RegisterUserCommand : BaseCommand
             try
             {
                 var dto = InputHandler.GetRegistrationInput();
-                Console.WriteLine("[DEBUG] RegisterUserCommand: #1");
                 var response = await userService.RegisterUser(dto);
-                Console.WriteLine("[DEBUG] RegisterUserCommand: #2");
 
                 Console.WriteLine($"User registered successfully!");
                 Console.WriteLine($"Welcome, {response.FirstName} {response.LastName}");
+                Console.ReadLine();
                 break;
             }
             catch (ArgumentException ex)
@@ -39,10 +36,12 @@ public class RegisterUserCommand : BaseCommand
             catch (Exception ex)
             {
                 Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+                if (ex.InnerException != null)
+                {
+                    Console.WriteLine($"Inner Exception: {ex.InnerException.Message}");
+                }
             }
-
-            Console.WriteLine("[DEBUG] RegisterUserCommand: #3");
-            Console.ReadLine(); // TEMP: Breaker
+            Console.ReadLine();
         }
     }
 }
