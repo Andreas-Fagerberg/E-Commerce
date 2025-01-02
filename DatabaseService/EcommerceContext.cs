@@ -1,5 +1,6 @@
 using System.Net.Sockets;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace E_commerce_Databaser_i_ett_sammanhang;
 
@@ -14,7 +15,20 @@ public class EcommerceContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder builder)
     {
-        builder.UseNpgsql("Host=localhost;Database=ECommerce;Username=postgres;Password=password");
+        try
+        {
+            IConfiguration config = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("AppSettings.json")
+            .Build();
+
+            string? connectionString = config.GetConnectionString("Default");
+            builder.UseNpgsql(connectionString);
+        }
+        catch (Exception ex)
+        {
+            throw new InvalidOperationException("Failed to connect to database, try again later.", ex);
+        }
     }
 
     // Om man vill konfigurera modellerna med constraints:
@@ -80,6 +94,40 @@ public class EcommerceContext : DbContext
             address.Property(a => a.Country)
                 .IsRequired()
                 .HasMaxLength(50);
+        });
+
+        builder.Entity<Product>(product =>
+        {
+            product.Property(p => p.Id)
+                .UseIdentityColumn();
+
+            product.Property(p => p.Name)
+                .IsRequired()
+                .HasMaxLength(30);
+
+            product.Property(p => p.Category)
+                .IsRequired()
+                .HasMaxLength(30);
+
+            product.Property(p => p.Description)
+                .HasMaxLength(50);
+
+            product.Property(p => p.Price)
+                .IsRequired()
+                .HasPrecision(10, 2)
+                .HasDefaultValue(0.00m);
+
+            product.Property(p => p.Rating)
+                .IsRequired()
+                .HasDefaultValue(0);
+
+            product.Property(p => p.Available)
+                .IsRequired()
+                .HasDefaultValue(true);
+
+            product.HasIndex(p => p.Name);
+
+            product.HasIndex(p => p.Category);
         });
 
 
