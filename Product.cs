@@ -9,6 +9,6 @@ public class Product
     public decimal Price { get; set; }
     public int Rating { get; set; }
     public bool available;
-    public User user { get; set; } // Build a relationsship
-    // between User and Product (Many-to-One)
+    public OrderProduct rderProduct { get; set; } // Build a relationsship
+    // between OrderProduct and Product (Many-to-One)
 }
