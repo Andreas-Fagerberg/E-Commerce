@@ -10,11 +10,12 @@ namespace E_commerce_Databaser_i_ett_sammanhang
 //Kolla cart från databasen efter inlogg.
 //skapa command för att populera lista som sen kopplas till dictionary. Kan ha flera, tex en där alla items finns, en där dne försöker lägga in items som är slut, etc.
 //Lägga till felhantering
+//Kanske ta bort listan, lägga till direkt i dictionary.
 {
     public class PostgresShoppingCartService : IShoppingCartService
     {
         private List<Shopping_Cart> cartProducts;
-        Dictionary<Guid, int> Cart = new Dictionary<Guid, int>();
+        Dictionary<int, int> Cart = new Dictionary<int, int>();
 
         //private List<Product> productList;
 
@@ -23,7 +24,7 @@ namespace E_commerce_Databaser_i_ett_sammanhang
             cartProducts = new List<Shopping_Cart>();
         }
 
-        public Shopping_Cart AddToShoppingCart(Guid userId, Guid productId, int quantity)
+        public Shopping_Cart AddToShoppingCart(Guid userId, int productId, int quantity)
         {
             if (Cart.ContainsKey(productId))
             {
@@ -39,17 +40,33 @@ namespace E_commerce_Databaser_i_ett_sammanhang
             return cartItem;
         }
 
-        public List<Shopping_Cart> HandleProductQuantity(Guid userId, Guid productId, int quantity)
+        public List<Shopping_Cart> HandleProductQuantity(Guid userId, int productId, int quantity)
         {
-            throw new NotImplementedException();
+            if (!Cart.ContainsKey(productId))
+            {
+                Cart.Add(productId, quantity);
+            }
+            else
+            {
+                Cart[productId] += 1;
+            }
+            return cartProducts;
         }
 
-        public List<Shopping_Cart> RemoveItemShoppingCart(Guid productid)
+        public List<Shopping_Cart> RemoveItemShoppingCart(int productid)
         {
             if (Cart.ContainsKey(productid))
             {
                 Cart.Remove(productid);
             }
+            for (int i = 0; i < cartProducts.Count; i++)
+            {
+                if (cartProducts[i].Product_Id.Equals(productid))
+                {
+                    cartProducts.RemoveAt(i);
+                }
+            }
+            return cartProducts;
         }
 
         public void Checkout(int userId)

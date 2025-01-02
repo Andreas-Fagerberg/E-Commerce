@@ -28,5 +28,4 @@ public class AppMenuService : IMenuService
         this.menu = menu;
     }
 
-
 }
