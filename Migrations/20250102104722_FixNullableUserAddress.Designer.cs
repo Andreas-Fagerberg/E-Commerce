@@ -3,6 +3,7 @@ using System;
 using E_commerce_Databaser_i_ett_sammanhang;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace E_commerce_Databaser_i_ett_sammanhang.Migrations
 {
     [DbContext(typeof(EcommerceContext))]
-    partial class EcommerceContextModelSnapshot : ModelSnapshot
+    [Migration("20250102104722_FixNullableUserAddress")]
+    partial class FixNullableUserAddress
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -58,9 +61,6 @@ namespace E_commerce_Databaser_i_ett_sammanhang.Migrations
 
                     b.HasKey("AddressId");
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
                     b.ToTable("Addresses");
                 });
 
@@ -100,7 +100,6 @@ namespace E_commerce_Databaser_i_ett_sammanhang.Migrations
             modelBuilder.Entity("E_commerce_Databaser_i_ett_sammanhang.User", b =>
                 {
                     b.Property<Guid>("UserId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
@@ -136,16 +135,6 @@ namespace E_commerce_Databaser_i_ett_sammanhang.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("E_commerce_Databaser_i_ett_sammanhang.Address", b =>
-                {
-                    b.HasOne("E_commerce_Databaser_i_ett_sammanhang.User", "User")
-                        .WithOne("Address")
-                        .HasForeignKey("E_commerce_Databaser_i_ett_sammanhang.Address", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("E_commerce_Databaser_i_ett_sammanhang.Product", b =>
                 {
                     b.HasOne("E_commerce_Databaser_i_ett_sammanhang.User", "User")
@@ -159,7 +148,17 @@ namespace E_commerce_Databaser_i_ett_sammanhang.Migrations
 
             modelBuilder.Entity("E_commerce_Databaser_i_ett_sammanhang.User", b =>
                 {
+                    b.HasOne("E_commerce_Databaser_i_ett_sammanhang.Address", "Address")
+                        .WithOne("User")
+                        .HasForeignKey("E_commerce_Databaser_i_ett_sammanhang.User", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.Navigation("Address");
+                });
+
+            modelBuilder.Entity("E_commerce_Databaser_i_ett_sammanhang.Address", b =>
+                {
+                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }

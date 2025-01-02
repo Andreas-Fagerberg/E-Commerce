@@ -50,18 +50,16 @@ public class EcommerceContext : DbContext
             user.HasOne(u => u.Address)
                 .WithOne(a => a.User)
                 .HasForeignKey<Address>(a => a.UserId)
-                // .IsRequired(false)
+                .IsRequired(false)
                 .OnDelete(DeleteBehavior.Cascade);
-
         });
-
 
         builder.Entity<Address>(address =>
         {
             address.HasKey(a => a.AddressId);
 
             address.Property(a => a.UserId)
-                .IsRequired();
+                .IsRequired(false);
 
             address.Property(a => a.Street)
                 .IsRequired()
@@ -82,14 +80,8 @@ public class EcommerceContext : DbContext
             address.Property(a => a.Country)
                 .IsRequired()
                 .HasMaxLength(50);
-
-            address.HasOne(a => a.User)
-                .WithOne(u => u.Address)
-                .HasForeignKey<User>(a => a.UserId)
-                // .IsRequired(false)
-                .OnDelete(DeleteBehavior.Cascade);
-
         });
+
 
     }
 }
