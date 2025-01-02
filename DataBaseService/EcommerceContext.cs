@@ -27,7 +27,7 @@ public class EcommerceContext : DbContext
         }
     }
 
-    //Om man vill konfigurera modellerna lite extra: fler constraints exempelvis, då kan man använda 'OnModelCreating'.
+    //Om man vill konfigurera modellerna lite extra: fler constraints exempelvis, då kan man använda 'OnModelCreating'..
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.Entity<Product>(product =>
