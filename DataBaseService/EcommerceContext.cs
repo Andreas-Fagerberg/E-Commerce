@@ -22,7 +22,6 @@ public class EcommerceContext : DbContext
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error connecting to the database: {ex.Message}");
             throw new InvalidOperationException(
                 "Failed to connect to database, try again later.",
                 ex
