@@ -16,15 +16,13 @@ public class EcommerceContext : DbContext
     {
         try
         {
-            builder.UseNpgsql(
-                "Host=localhost;Database=ECommerce;Username=postgres;Password=password"
-            );
+            builder.UseNpgsql("Host=localhost;Database=ECommerce;Username=postgres;Password=password");
         }
         catch (Exception ex)
         {
-            throw new InvalidOperationException(
-                "Failed to connect to database, try again later.",
-                ex
+            throw new InvalidOperationException
+            (
+                "Failed to connect to database, try again later.",ex
             );
         }
     }
@@ -32,53 +30,43 @@ public class EcommerceContext : DbContext
     //Om man vill konfigurera modellerna lite extra: fler constraints exempelvis, då kan man använda 'OnModelCreating'.
     protected override void OnModelCreating(ModelBuilder builder)
     {
-        // User configuration
-        builder
-            .Entity<User>()
-            .Property(User => User.CreatedAt)
-            .HasDefaultValueSql("CURRENT_TIMESTAMP");
+        builder.Entity<Product>(product =>
+        {
+            product.Property(p => p.Id)
+                .UseIdentityColumn();
 
-        // Product configuration
-        builder.Entity<Product>().Property(Product => Product.Id).UseIdentityColumn();
+            product.Property(p => p.Name)
+                .IsRequired()
+                .HasMaxLength(30);
 
-        builder.Entity<Product>().Property(Product => Product.Name).IsRequired().HasMaxLength(100);
-
-        builder
-            .Entity<Product>()
-            .Property(Product => Product.Category)
-            .IsRequired()
-            .HasMaxLength(50);
-
-        builder.Entity<Product>().Property(Product => Product.Description).HasMaxLength(1000);
-
-        builder
-            .Entity<Product>()
-            .Property(Product => Product.Price)
-            .IsRequired()
-            .HasPrecision(10, 2)
-            .HasDefaultValue(0.00m);
-
-        builder
-            .Entity<Product>()
-            .Property(Product => Product.Rating)
-            .IsRequired()
-            .HasDefaultValue(0);
-
-        builder
-            .Entity<Product>()
-            .Property(Product => Product.available)
-            .IsRequired()
-            .HasDefaultValue(true);
-
-        // Relationship and Index need their own Entity<Product>()
-        builder
-            .Entity<Product>()
-            .HasOne(Product => Product.user)
-            .WithMany()
-            .IsRequired()
-            .OnDelete(DeleteBehavior.Cascade);
-
-        builder.Entity<Product>().HasIndex(Product => Product.Name);
-        builder.Entity<Product>().HasIndex(Product => Product.Category);
+            product.Property(p => p.Category)
+                .IsRequired()
+                .HasMaxLength(30);
+            
+            product.Property(p => p.Description)
+                .HasMaxLength(50);
+            
+            product.Property(p => p.Price)
+                .IsRequired()
+                .HasPrecision(10, 2)
+                .HasDefaultValue(0.00m);
+            
+            product.Property(p => p.Rating)
+                .IsRequired()
+                .HasDefaultValue(0);
+            
+            product.Property(p => p.available)
+                .IsRequired()
+                .HasDefaultValue(true);
+            
+            product.HasOne(p => p.user)
+                .WithMany()
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade);
+            
+            product.HasIndex(p => p.Name);
+            
+            product.HasIndex(p => p.Category);
+        });
     }
 }
