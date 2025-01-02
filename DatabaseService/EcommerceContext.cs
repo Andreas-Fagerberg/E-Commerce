@@ -6,10 +6,10 @@ namespace E_commerce_Databaser_i_ett_sammanhang;
 public class EcommerceContext : DbContext
 {
     public DbSet<User> Users { get; set; }
-    // public DbSet<Order> Orders { get; set; }
     public DbSet<Product> Products { get; set; }
     // public DbSet<ShoppingCart> ShoppingCarts { get; set; }
-    // public DbSet<ProductOrders> ProductOrders { get; set; }
+    public DbSet<Order> Orders { get; set; }
+    public DbSet<OrderProduct> OrderProducts { get; set; }
     public DbSet<Address> Addresses { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder builder)
@@ -47,6 +47,7 @@ public class EcommerceContext : DbContext
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("timestamp(0) with time zone");
 
+            // Relationship configuration
             user.HasOne(u => u.Address)
                 .WithOne(a => a.User)
                 .HasForeignKey<Address>(a => a.UserId)
@@ -82,6 +83,53 @@ public class EcommerceContext : DbContext
                 .HasMaxLength(50);
         });
 
+        builder.Entity<Order>(order =>
+        {
+            order.HasKey(o => o.OrderId);
+
+            order.HasIndex(o => o.UserId);
+
+            order.Property(o => o.CreatedAt)
+                .IsRequired()
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasColumnType("timestamp(0) with time zone");
+
+            order.Property(o => o.Status)
+                .IsRequired()
+                .HasConversion<string>()
+                .HasDefaultValueSql("Pending");
+
+            order.Property(o => o.TotalCost)
+                .IsRequired()
+                .HasColumnType("decimal(10, 2)");
+
+            // Relationship configuration
+            order.HasOne(o => o.User)
+                .WithMany(u => u.Orders)
+                .HasForeignKey(o => o.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+
+        builder.Entity<OrderProduct>(orderProduct =>
+        {
+            orderProduct.HasKey(op => new { op.OrderId, op.ProductId });
+
+            orderProduct.Property(op => op.Quantity)
+                        .IsRequired();
+
+            // Relationship with Order
+            orderProduct.HasOne(op => op.Order)
+                        .WithMany(o => o.OrderProducts)
+                        .HasForeignKey(op => op.OrderId)
+                        .OnDelete(DeleteBehavior.Cascade);
+
+            // Relationship with Product
+            orderProduct.HasOne(op => op.Product)
+                        .WithMany()
+                        .HasForeignKey(op => op.ProductId)
+                        .OnDelete(DeleteBehavior.Cascade);
+        });
 
     }
 }
