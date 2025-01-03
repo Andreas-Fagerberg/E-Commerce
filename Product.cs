@@ -8,8 +8,8 @@ public class Product
     public string? Description { get; set; }
     public decimal Price { get; set; }
     public int Rating { get; set; }
-    public bool available;
-    public User User { get; set; } // Build a relationsship 
-    // between User and Product (Many-to-One)
-
+    public bool Available { get; set; } = false;
+    // public ICollection<OrderProduct> OrderProducts = [];
+    // Build a relationsship 
+    // between Product and OrderProduct (Many-to-One)
 }
