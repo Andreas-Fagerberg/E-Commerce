@@ -4,18 +4,18 @@ public interface IMenuService
 {
     void SetMenu(Menu menu);
     Menu GetMenu();
-    void ChangeMenu(ConsoleKey consoleKey);
-    List<ConsoleKey> GetTriggerKeys();
+
 }
 
 public class AppMenuService : IMenuService
 {
-    private Menu menu = new HomeMenu(IUserService userService);
+    private Menu menu;
     protected readonly IUserService userService;
 
     public AppMenuService(IUserService userService)
     {
         this.userService = userService;
+        menu = new LoginMenu(userService, this);
     }
 
     public Menu GetMenu()

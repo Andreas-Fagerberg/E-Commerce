@@ -15,7 +15,7 @@ public abstract class Menu
         {
             if (command.TriggerKey.Equals(input))
             {
-                await command.Execute(Guid? currentUserId);
+                await command.Execute();
                 return;
             }
         }

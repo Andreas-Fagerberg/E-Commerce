@@ -1,4 +1,6 @@
-﻿namespace E_commerce_Databaser_i_ett_sammanhang;
+﻿using Npgsql.Replication;
+
+namespace E_commerce_Databaser_i_ett_sammanhang;
 
 class Program
 {
@@ -6,7 +8,6 @@ class Program
     {
         IUserService userService = new UserService();
         IMenuService menuService = new AppMenuService(userService);
-        menuService.SetMenu(new LoginMenu());
         while (true)
         {
             Console.Clear();

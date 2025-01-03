@@ -3,7 +3,7 @@ namespace E_commerce_Databaser_i_ett_sammanhang;
 public class ProductsCommand : BaseCommand
 {
     private IMenuService _menuService;
-    private ProductsMenu _productMenu;
+    private ProductMenu _productMenu;
 
     // Store products in lists of 9 items per list.
     private List<string> products;
@@ -22,12 +22,13 @@ public class ProductsCommand : BaseCommand
 
     public override Task Execute(Guid? currentUserId)
     {
-        _productMenu = new ProductsMenu();
+        _productMenu = new ProductMenu();
         _menuService.SetMenu(_productMenu);
 
-        while (true)
-        {
-            _productMenu.ChangeContent(products);
-        }
+        // while (true)
+        // {
+        //     _productMenu.ChangeContent(products);
+        // }
+        return Task.CompletedTask;
     }
 }

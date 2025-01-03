@@ -2,72 +2,69 @@
 
 public class HomeMenu : Menu
 {
-    private static int _currentPage = 1;
+    List<string> options = new List<string> { "Search", "Category", "Cart", "Checkout", "Log out" };
 
-    public HomeMenu(IUserService userService)
+    public HomeMenu(IUserService userService, IMenuService menuService)
     {
-        AddCommand(new SelectCategoryCommand(ConsoleKey.F2, userService));
+        AddCommand(new SearchCommand(ConsoleKey.F1, userService, menuService));
+        AddCommand(new SelectCategoryCommand(ConsoleKey.F2, userService, menuService));
     }
 
-    // List 0,1,2
-    // -> = index 1  
-    // OPTION 1
     public override void Display()
     {
-        // REMOVENOTE: Not fully symmetrical (if that matters?).
-        //Bygg scrollande meny,
-        Console.WriteLine(
-            $"""
-                ┌──────────────────────────────────────────────────────────────────────────────┐
-                │                                                                       AAAL © │
-                ├──────────────────────────────────────────────────────────────────────────────┤
-                │                                                                              │
-                │    1. {}                                                                     │
-                │    2. {}                                                                     │
-                │    3. {}                                                                     │
-                │    4. {}                                                                     │
-                │    5. {}                                                                     │
-                │    6. {}                                                                     │
-                │    7. {}                                                                     │
-                │    8. {}                                                                     │
-                │    9. {}                                                                     │                                                                           
-                │                                                                              │                                                                           
-                ├──────────────────────────────────────────────────────────────────────────────┤
-                │                                                                              │
-                └──────────────────────────────────────────────────────────────────────────────┘
-            """
-        );
-    }
+        int boxWidth = 79;
+        string optionText1 = "Select an option below:";
 
-    // OPTION 2
-    // public override void Display2()
-    // {
-    //     Console.WriteLine(
-    //         $"""
-    //             ┌──────────────────────────────────────────────────────────────────────────────┐
-    //             │  Select an option:                                                           │
-    //             ├──────────────────────────────────────────────────────────────────────────────┤
-    //             │ 1. Select categories                                                         │
-    //             │ 2. HELP!!!                                                                   │
-    //             │ 3. Return to home menu                                                       │
-    //             │                                                                              │
-    //             │                                                                              │
-    //             │                                                                              │
-    //             │                                                                              │
-    //             │                                                                              │
-    //             │                                                                              │
-    //             │                                                                              │
-    //             │                                                                              │
-    //             │                                                                              │
-    //             ├──────────────────────────────────────────────────────────────────────────────┤
-    //             │   ← A/Left (Previous page)                           (Next page) D/Right →   │
-    //             └──────────────────────────────────────────────────────────────────────────────┘
-    //         """
-    //     );
-    // }
-    public static int ChangePage()
-    {
-        throw new NotImplementedException();
+        // Viktigt
+
+        Console.WriteLine("┌" + new string('─', boxWidth) + "┐");
+        Console.WriteLine(
+            "│ " + optionText1 + new string(' ', boxWidth - (optionText1.Length + 8)) + "AAAL © │"
+        );
+        Console.WriteLine("├" + new string('─', boxWidth) + "┤");
+
+        for (int i = 0; i < 40; i++)
+        {
+            if (i > options.Count)
+            {
+                break;
+            }
+            if (options.Count > i && i < 9)
+            {
+                Console.WriteLine(
+                    "│  "
+                        + (i + 1)
+                        + ". "
+                        + options[i]
+                        + new string(' ', boxWidth - (options[i].Length + 6))
+                        + " │"
+                );
+                continue;
+            }
+            if (options.Count > i)
+            {
+                Console.WriteLine(
+                    "│ "
+                        + (i + 1)
+                        + ". "
+                        + options[i]
+                        + new string(' ', boxWidth - (options[i].Length + 6))
+                        + " │"
+                );
+                continue;
+            }
+            Console.WriteLine(
+                """
+                │                                                                               │
+                │ ESC. Exit application                                                         │
+                """
+            );
+            // Console.WriteLine("│" + new string(' ', boxWidth) + "│");
+        }
+
+        Console.WriteLine("├" + new string('─', boxWidth) + "┤");
+        Console.WriteLine("│" + new string(' ', boxWidth) + "│");
+        Console.WriteLine("└" + new string('─', boxWidth) + "┘");
     }
 }
 // // Box Drawing Characters (Unicode):

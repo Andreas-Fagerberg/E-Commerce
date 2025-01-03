@@ -1,38 +1,82 @@
 namespace E_commerce_Databaser_i_ett_sammanhang;
 
-public class ProductsMenu : Menu
+public class ProductMenu : Menu
 {
-    private List<string> p = new List<string>();
-    // csharpier-ignore-start
+    public ProductMenu() { }
+
     public override void Display()
     {
-        // Format menu later.
+        int index = 0;
+        List<ProductForMenu> products = ProductList.GetProducts(index);
+
+        int boxWidth = 79;
+        string optionText1 = "Select a product below:";
+        string optionText2 =
+            "← A/Left (Previous page)                                (Next page) D/Right →";
+
+        // Viktigt
+
+        Console.WriteLine("┌" + new string('─', boxWidth) + "┐");
         Console.WriteLine(
-            $"""
-                ┌──────────────────────────────────────────────────────────────────────────────┐
-                │ Select an item to add to your cart:                                   AAAL © │
-                ├──────────────────────────────────────────────────────────────────────────────┤
-                │                                                                              │
-                │    1. {p[0]}              ★☆                                                │
-                │    2. {p[1]}                                                                 │
-                │    3. {p[2]}                                                                 │
-                │    4. {p[3]}                                                                 │
-                │    5. {p[4]}                                                                 │
-                │    6. {p[5]}                                                                 │
-                │    7. {p[6]}                                                                 │
-                │    8. {p[7]}                                                                 │
-                │    9. {p[8]}                                                                 │
-                │                                                                              │
-                ├──────────────────────────────────────────────────────────────────────────────┤
-                │    ← Previous Page (Left Arrow)                 (Right Arrow) Next Page →    │
-                └──────────────────────────────────────────────────────────────────────────────┘
-            """
+            "│ " + optionText1 + new string(' ', boxWidth - (optionText1.Length + 8)) + "AAAL © │"
         );
-    }
-    // csharpier-ignore-end
-    public void ChangeContent(List<string> products)
-    {
-        p = products;
-        return;
+        Console.WriteLine("├" + new string('─', boxWidth) + "┤");
+        Console.WriteLine(
+            "│ Name:                                           │ Price:          │ Rating:   │"
+        );
+
+        for (int i = 0; i < 40; i++)
+        {
+            if (i > products.Count)
+            {
+                break;
+            }
+            if (products.Count > i && i < 9)
+            {
+                Console.WriteLine(
+                    "│  "
+                        + (i + 1)
+                        + ". "
+                        + products[i].Name
+                        + new string(' ', 44 - products[i].Name.Length)
+                        + "│ "
+                        + products[i].Price
+                        + new string(' ', 16 - products[i].Price.ToString().Length)
+                        + "│ "
+                        + products[i].DisplayRating
+                        + new string(' ', 10 - products[i].DisplayRating.Length)
+                        + "│"
+                );
+                continue;
+
+                { }
+            }
+            if (products.Count > i)
+            {
+                Console.WriteLine(
+                    "│ "
+                        + (i + 1)
+                        + ". "
+                        + products[i].Name
+                        + new string(' ', 44 - products[i].Name.Length)
+                        + "│ "
+                        + products[i].Price
+                        + new string(' ', 16 - products[i].Price.ToString().Length)
+                        + "│ "
+                        + products[i].DisplayRating
+                        + new string(' ', 10 - products[i].DisplayRating.Length)
+                        + "│"
+                );
+                continue;
+            }
+
+            // Console.WriteLine("│" + new string(' ', boxWidth) + "│");
+        }
+
+        Console.WriteLine("├" + new string('─', boxWidth) + "┤");
+        Console.WriteLine(
+            "│ " + optionText2 + new string(' ', boxWidth - (optionText2.Length + 1)) + "│"
+        );
+        Console.WriteLine("└" + new string('─', boxWidth) + "┘");
     }
 }
