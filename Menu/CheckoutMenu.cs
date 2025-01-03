@@ -6,6 +6,6 @@ public class CheckoutMenu : Menu
 
     public override void Display()
     {
-        throw new NotImplementedException();
+       
     }
 }
