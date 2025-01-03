@@ -6,7 +6,7 @@ namespace E_commerce_Databaser_i_ett_sammanhang.Models
     {
         //public int Cart_Id {get; private set;}
         public Guid User_id { get; private set; }
-        public int Product_Id { get; private set;}
+        public int Product_Id { get; private set; }
         public int Quantity { get; private set; }
 
         public Shopping_Cart(Guid userId, int productId, int quantity)
