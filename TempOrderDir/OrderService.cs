@@ -17,19 +17,10 @@ public class OrderService : IOrderService
     public async Task<OrderResponse> CreateOrder(CreateOrderDTO dto)
     {
         UserValidation.CheckForValidUser(dto.UserId);
+        OrderValidation.ValidateOrder(dto);
 
-        // Validate the input data (orderDTO).
-        if (dto.Products.Any() == false)
-        {
-            throw new InvalidOperationException("The order list does not contain any products.");
-        }
-
-        // Materialize the product IDs.
-        var productIds = new List<Guid>();
-        foreach (var product in dto.Products)
-        {
-            productIds.Add(product.ProductId);
-        }
+        // Extract all ProductIds from dto.Products and store them in a list.
+        var productIds = dto.Products.Select(p => p.ProductId).ToList();
 
         // Retrieve product prices from the database.
         var productPrices = await ecommerceContext.Products
@@ -38,18 +29,14 @@ public class OrderService : IOrderService
 
         decimal totalCost = 0;
 
+        OrderValidation.ValidateProducts(dto.Products, productPrices);
+
         foreach (var product in dto.Products)
         {
-            // Ensure ProductId exists in the dictionary.
-            if (productPrices.ContainsKey(product.ProductId) == false)
-            {
-                throw new InvalidOperationException($"Product with ID {product.ProductId} not found in the database.");
-            }
-
             totalCost += productPrices[product.ProductId] * product.Quantity;
         }
 
-        // Create Order object.
+        // Create and save the Order object to the database.
         var order = new Order
         {
             OrderId = Guid.NewGuid(),
@@ -59,10 +46,17 @@ public class OrderService : IOrderService
             TotalCost = totalCost
         };
 
-        // Save the order object to the database.
-        await ecommerceContext.Orders.AddAsync(order);
-        await ecommerceContext.SaveChangesAsync();
+        try
+        {
+            await ecommerceContext.Orders.AddAsync(order);
+            await ecommerceContext.SaveChangesAsync();
+        }
+        catch (Exception ex)
+        {
+            throw new InvalidOperationException($"An error occurred while saving the order: {ex.Message}");
+        }
 
+        // Return the order response for accessibility.
         return new OrderResponse
         {
             OrderId = order.OrderId,
@@ -70,6 +64,8 @@ public class OrderService : IOrderService
             Status = order.Status.ToString(),
             TotalCost = totalCost
         };
+
+        // Possibly add more data for the order. E.g. products and their details unit price etc.
     }
 
     /// <summary>
