@@ -10,7 +10,7 @@ class Program
         IUserService userService = new UserService(new EcommerceContext());
         IMenuService menuService = new AppMenuService(userService);
 
-        menuService.SetMenu(new LoginMenu(userService));
+        menuService.SetMenu(new LoginMenu(userService, menuService));
 
         while (true)
         {
@@ -48,7 +48,7 @@ class Program
                         // Update the currentUserId
                         currentUserId = loggedInUserId;
                         // Switch to HomeMenu after successful login. (I assume this is what we prefer?)
-                        menuService.SetMenu(new HomeMenu());
+                        menuService.SetMenu(new HomeMenu(userService, menuService));
                     }
                 }
             }

@@ -9,9 +9,9 @@ namespace E_commerce_Databaser_i_ett_sammanhang.Models
         public int ProductId { get; private set; }
         public int Quantity { get; private set; }
 
-        public int TotalPrice { get; private set; }
+        public decimal TotalPrice { get; private set; }
 
-        public ShoppingCart(Guid userId, int productId, int quantity, int totalPrice)
+        public ShoppingCart(Guid userId, int productId, int quantity, decimal totalPrice)
         {
             UserId = userId;
             ProductId = productId;

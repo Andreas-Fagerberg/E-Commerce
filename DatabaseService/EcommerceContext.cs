@@ -145,7 +145,7 @@ public class EcommerceContext : DbContext
 
             cart.Property(c => c.ProductId).UseIdentityColumn();
 
-            cart.Property(c => c.Quantity).IsRequired().HasPrecision(10, 2).HasDefaultValue(0);
+            cart.Property(c => c.Quantity).IsRequired().HasPrecision(10).HasDefaultValue(0);
 
             cart.Property(c => c.TotalPrice).IsRequired().HasPrecision(10, 2).HasDefaultValue(0);
         });
