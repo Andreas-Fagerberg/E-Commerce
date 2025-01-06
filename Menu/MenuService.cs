@@ -18,6 +18,11 @@ public class AppMenuService : IMenuService
         menu = new LoginMenu(userService, this);
     }
 
+    public AppMenuService(IUserService userService)
+    {
+        this.userService = userService;
+    }
+
     public Menu GetMenu()
     {
         return menu;

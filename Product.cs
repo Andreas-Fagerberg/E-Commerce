@@ -1,4 +1,4 @@
-using Npgsql.EntityFrameworkCore.PostgreSQL.Infrastructure.Internal;
+namespace E_commerce_Databaser_i_ett_sammanhang;
 
 public class Product
 {
