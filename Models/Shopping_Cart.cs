@@ -2,18 +2,21 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Infrastructure.Internal;
 
 namespace E_commerce_Databaser_i_ett_sammanhang.Models
 {
-    public class Shopping_Cart
+    public class ShoppingCart
     {
         //public int Cart_Id {get; private set;}
-        public Guid User_id { get; private set; }
-        public int Product_Id { get; private set; }
+        public Guid UserId { get; private set; }
+        public int ProductId { get; private set; }
         public int Quantity { get; private set; }
 
-        public Shopping_Cart(Guid userId, int productId, int quantity)
+        public int TotalPrice { get; private set; }
+
+        public ShoppingCart(Guid userId, int productId, int quantity, int totalPrice)
         {
-            User_id = userId;
-            Product_Id = productId;
+            UserId = userId;
+            ProductId = productId;
             Quantity = quantity;
+            TotalPrice = totalPrice;
         }
     }
 }
