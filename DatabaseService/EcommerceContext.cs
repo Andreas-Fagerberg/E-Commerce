@@ -25,7 +25,7 @@ public class EcommerceContext : DbContext
         builder.UseNpgsql("Host=localhost;Database=ECommerce;Username=postgres;Password=password");
     }
 
-    // Om man vill konfigurera modellerna med constraints:
+    // Om man vill konfigurera modellerna med constraints.:
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.Entity<User>(user =>
