@@ -8,28 +8,6 @@ public class CategoryMenu : Menu
         string[] selections = new string[categories.Count];
         Array.Fill(selections, "[ ]");
 
-        // Console.WriteLine(
-        //     $"""
-        //         ┌──────────────────────────────────────────────────────────────────────────────┐
-        //         │  Select categories:                                                          │
-        //         ├──────────────────────────────────────────────────────────────────────────────┤
-        //         │                                                                              │
-        //         │ 1. electronics [{c["1"]}]                                                    │
-        //         │ 2. cleaning    [{c["2"]}]                                                    │
-        //         │ 3.                                                                           │
-        //         │ 4.                                                                           │
-        //         │ 5.                                                                           │
-        //         │ 6.                                                                           │
-        //         │ 7.                                                                           │
-        //         │ 8.                                                                           │
-        //         │ 9.                                                                           │
-        //         │                                                                              │
-        //         ├──────────────────────────────────────────────────────────────────────────────┤
-        //         │                                                                              │
-        //         └──────────────────────────────────────────────────────────────────────────────┘
-        //     """
-        // );
-
         int boxWidth = 79;
         string optionText1 = "Select a category below:";
         string optionText2 =
@@ -118,7 +96,7 @@ public class CategoryMenu : Menu
     {
         throw new NotImplementedException();
     }
-    
+
     //  Select categories:
 
     // TODO: Method to change display printout to print x or "".
@@ -138,6 +116,3 @@ public class CategoryMenu : Menu
         throw new NotImplementedException();
     }
 }
-
-    
-    
