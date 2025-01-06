@@ -3,6 +3,7 @@
 public class CartMenu : Menu
 {
     List<string> options = new List<string> { "Search", "Category", "Cart", "Checkout", "Log out" };
+    public CartMenu() { }
 
     public override void Display()
     {
