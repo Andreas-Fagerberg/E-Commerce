@@ -31,7 +31,7 @@ public class EcommerceContext : DbContext
         }
     }
 
-    // Om man vill konfigurera modellerna med constraints:
+    // Om man vill konfigurera modellerna med constraints.:
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.Entity<User>(user =>
