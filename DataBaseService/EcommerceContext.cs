@@ -1,4 +1,5 @@
 using System.Net.Sockets;
+using E_commerce_Databaser_i_ett_sammanhang.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
@@ -101,6 +102,20 @@ public class EcommerceContext : DbContext
             product.HasIndex(p => p.Name);
 
             product.HasIndex(p => p.Category);
+        });
+
+        builder.Entity<Shopping_Cart>(cart =>
+        {
+            cart.Property(c => c.UserId).UseIdentityColumn();
+
+            cart.Property(c => c.ProductId).UseIdentityColumn();
+
+            cart.Property(c => c.Quantity).IsRequired().HasDefaultValue(0);
+
+            cart.Property(c => c.SummedPrice)
+                .IsRequired()
+                .HasPrecision(10, 2)
+                .HasDefaultValue(0.00m);
         });
     }
 }

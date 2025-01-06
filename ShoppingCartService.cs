@@ -20,7 +20,7 @@ namespace E_commerce_Databaser_i_ett_sammanhang
             cartProducts = new List<Shopping_Cart>();
         }
 
-        public Shopping_Cart AddToShoppingCart(Guid userId, int productId, int quantity , int price)
+        public Shopping_Cart AddToShoppingCart(Guid userId, int productId, int quantity, int price)
         {
             if (Cart.ContainsKey(productId))
             {
@@ -31,7 +31,7 @@ namespace E_commerce_Databaser_i_ett_sammanhang
                 Cart[productId] = quantity;
             }
 
-            var cartItem = new Shopping_Cart(userId, productId, quantity);
+            var cartItem = new Shopping_Cart(userId, productId, quantity, price);
             cartProducts.Add(cartItem);
             return cartItem;
         }
@@ -78,7 +78,6 @@ namespace E_commerce_Databaser_i_ett_sammanhang
             // cartProducts.Clear();
         }
 
-     
         // skapa metod för att summera priser i carten.
     }
 }

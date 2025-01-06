@@ -8,7 +8,7 @@ public class Product
     public string? Description { get; set; }
     public decimal Price { get; set; }
     public int Rating { get; set; }
-    public bool available;
+    public bool Available;
     public User user { get; set; } // Build a relationsship
     // between User and Product (Many-to-One)
 }

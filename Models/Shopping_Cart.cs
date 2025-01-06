@@ -5,15 +5,18 @@ namespace E_commerce_Databaser_i_ett_sammanhang.Models
     public class Shopping_Cart
     {
         //public int Cart_Id {get; private set;}
-        public Guid User_id { get; private set; }
-        public int Product_Id { get; private set; }
+        public Guid UserId { get; private set; }
+        public int ProductId { get; private set; }
         public int Quantity { get; private set; }
 
-        public Shopping_Cart(Guid userId, int productId, int quantity)
+        public int SummedPrice {get; private set;}
+
+        public Shopping_Cart(Guid userId, int productId, int quantity, int summedPrice)
         {
-            User_id = userId;
-            Product_Id = productId;
+            UserId = userId;
+            ProductId = productId;
             Quantity = quantity;
+            SummedPrice = summedPrice;
         }
     }
 }
