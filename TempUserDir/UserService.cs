@@ -90,7 +90,6 @@ public class UserService : IUserService
         Console.WriteLine($"Logging out user with ID: {currentUserId}.");
     }
 
-
     /// <summary>
     /// Retrieves user details by their unique identifier, typically for profile management, 
     /// authorization, or UI personalization.

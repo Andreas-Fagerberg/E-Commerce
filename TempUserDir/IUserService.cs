@@ -11,4 +11,5 @@ public interface IUserService
     Task<UserResponse> GetUser(Guid userId);
     Task<AddressResponse> SaveUserAddress(RegisterAddressDTO dto);
     Task<AddressResponse> GetUserAddress(Guid userId);
+    Task<AddressResponse> UpdateUserAddress(RegisterAddressDTO dto);
 }
