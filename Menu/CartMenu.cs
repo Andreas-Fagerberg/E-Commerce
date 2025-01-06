@@ -2,8 +2,7 @@
 
 public class CartMenu : Menu
 {
-   
-     List<string> options = new List<string> { "Search", "Category", "Cart", "Checkout", "Log out" };
+    List<string> options = new List<string> { "Search", "Category", "Cart", "Checkout", "Log out" };
 
     public override void Display()
     {
@@ -61,5 +60,4 @@ public class CartMenu : Menu
         Console.WriteLine("│" + new string(' ', boxWidth) + "│");
         Console.WriteLine("└" + new string('─', boxWidth) + "┘");
     }
-    }
-
+}

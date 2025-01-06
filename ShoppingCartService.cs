@@ -20,7 +20,7 @@ namespace E_commerce_Databaser_i_ett_sammanhang
             cartProducts = new List<Shopping_Cart>();
         }
 
-        public Shopping_Cart AddToShoppingCart(Guid userId, int productId, int quantity)
+        public Shopping_Cart AddToShoppingCart(Guid userId, int productId, int quantity , int price)
         {
             if (Cart.ContainsKey(productId))
             {
@@ -77,5 +77,8 @@ namespace E_commerce_Databaser_i_ett_sammanhang
             }
             // cartProducts.Clear();
         }
+
+     
+        // skapa metod för att summera priser i carten.
     }
 }
