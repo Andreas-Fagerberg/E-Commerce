@@ -9,14 +9,14 @@ namespace E_commerce_Databaser_i_ett_sammanhang.Models
         public int ProductId { get; private set; }
         public int Quantity { get; private set; }
 
-        public int SummedPrice {get; private set;}
+        public int TotalPrice { get; private set; }
 
-        public ShoppingCart(Guid userId, int productId, int quantity, int summedPrice)
+        public ShoppingCart(Guid userId, int productId, int quantity, int totalPrice)
         {
             UserId = userId;
             ProductId = productId;
             Quantity = quantity;
-            SummedPrice = summedPrice;
+            TotalPrice = totalPrice;
         }
     }
 }

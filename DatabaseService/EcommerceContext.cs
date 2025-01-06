@@ -8,6 +8,7 @@ namespace E_commerce_Databaser_i_ett_sammanhang;
 using System.Net.Sockets;
 using E_commerce_Databaser_i_ett_sammanhang.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 public class EcommerceContext : DbContext
 {
@@ -22,7 +23,23 @@ public class EcommerceContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder builder)
     {
-        builder.UseNpgsql("Host=localhost;Database=ECommerce;Username=postgres;Password=password");
+        try
+        {
+            IConfiguration config = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("AppSettings.json")
+                .Build();
+
+            string? connectionString = config.GetConnectionString("Default");
+            builder.UseNpgsql(connectionString);
+        }
+        catch (Exception ex)
+        {
+            throw new InvalidOperationException(
+                "Failed to connect to database, try again later.",
+                ex
+            );
+        }
     }
 
     // Om man vill konfigurera modellerna med constraints.:
@@ -126,21 +143,11 @@ public class EcommerceContext : DbContext
         {
             cart.Property(c => c.UserId).UseIdentityColumn();
 
-            cart.Property(c => c.Name).IsRequired().HasMaxLength(30);
+            cart.Property(c => c.ProductId).UseIdentityColumn();
 
-            cart.Property(c => c.Category).IsRequired().HasMaxLength(30);
+            cart.Property(c => c.Quantity).IsRequired().HasPrecision(10, 2).HasDefaultValue(0);
 
-            cart.Property(c => c.Description).HasMaxLength(50);
-
-            cart.Property(c => c.Price).IsRequired().HasPrecision(10, 2).HasDefaultValue(0.00m);
-
-            cart.Property(c => c.Rating).IsRequired().HasDefaultValue(0);
-
-            cart.Property(c => c.Available).IsRequired().HasDefaultValue(true);
-
-            cart.HasIndex(c => c.Name);
-
-            cart.HasIndex(c => c.Category);
+            cart.Property(c => c.TotalPrice).IsRequired().HasPrecision(10, 2).HasDefaultValue(0);
         });
     }
 }
