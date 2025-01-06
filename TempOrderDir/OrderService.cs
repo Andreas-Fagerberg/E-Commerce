@@ -6,6 +6,7 @@ namespace E_commerce_Databaser_i_ett_sammanhang;
 public class OrderService : IOrderService
 {
     private readonly EcommerceContext ecommerceContext;
+
     public OrderService(EcommerceContext ecommerceContext)
     {
         this.ecommerceContext = ecommerceContext;
@@ -22,10 +23,7 @@ public class OrderService : IOrderService
         // Extract all ProductIds from dto.Products and store them in a list.
         var productIds = dto.Products.Select(p => p.ProductId).ToList();
 
-        // Retrieve product prices from the database.
-        var productPrices = await ecommerceContext.Products
-            .Where(p => productIds.Contains(p.ProductId)) // Filters by ProductId
-            .ToDictionaryAsync(p => p.ProductId, p => p.Price); // Key: ProductId, Value: Price
+        var productPrices = await GetProductPrices(productIds);
 
         decimal totalCost = 0;
 
@@ -68,21 +66,80 @@ public class OrderService : IOrderService
         // Possibly add more data for the order. E.g. products and their details unit price etc.
     }
 
+
     /// <summary>
-    /// Retrieve details of a specific order by its ID.
+    /// Retrieve details of a specific order by its ID. 
+    /// Can be used to e.g. display order confirmation in the UI.
     /// </summary>  
-    public Task<OrderResponse> GetOrderDetails(Guid orderId)
+    public async Task<OrderResponse> GetOrderDetails(Guid orderId)
     {
-        throw new NotImplementedException();
+        // Fetch the order and related data
+        var order = await ecommerceContext.Orders
+            .Include(o => o.OrderProducts)
+            .ThenInclude(op => op.Product)
+            .FirstOrDefaultAsync(o => o.OrderId == orderId);
+
+        if (order == null)
+        {
+            throw new InvalidOperationException($"Order with ID {orderId} not found.");
+        }
+
+        // Map product details
+        var productDetails = order.OrderProducts.Select(op => new OrderProductResponse
+        {
+            ProductName = op.Product?.Name ?? "Unknown Product", // Handle potential null Product
+            Quantity = op.Quantity,
+            UnitPrice = op.Product?.Price ?? 0.0M
+        }).ToList();
+
+        // Create and return the OrderResponse
+        return new OrderResponse
+        {
+            OrderId = order.OrderId,
+            CreatedAt = order.CreatedAt,
+            Status = order.Status.ToString(),
+            TotalCost = order.TotalCost,
+            Products = productDetails
+        };
     }
 
     /// <summary>
-    /// Retrieve all orders for a specific user.
+    /// Retrieve all orders associated with a specific user
+    /// and provides a summary of each order.
     /// </summary>
-    public Task<IEnumerable<OrderResponse>> GetUserOrders(Guid userId)
+    public async Task<List<OrderResponse>> GetUserOrders(Guid userId)
     {
-        throw new NotImplementedException();
+        UserValidation.CheckForValidUser(userId);
+
+        // Fetch all orders for the User.
+        var orders = await ecommerceContext.Orders
+            .Where(o => o.UserId == userId)
+            .OrderByDescending(o => o.CreatedAt)
+            .ToListAsync();
+
+        if (orders.Any() == false)
+        {
+            return new List<OrderResponse>();
+        }
+        // Map orders to OrderResponse
+        var orderResponses = orders.Select(order => new OrderResponse
+        {
+            OrderId = order.OrderId,
+            CreatedAt = order.CreatedAt,
+            Status = order.Status.ToString(),
+            TotalCost = order.TotalCost
+        }).ToList();
+
+        return orderResponses;
     }
 
+    #region Helper Methods
 
+    private async Task<Dictionary<Guid, decimal>> GetProductPrices(IEnumerable<Guid> productIds)
+    {
+        return await ecommerceContext.Products
+            .Where(p => productIds.Contains(p.ProductId))
+            .ToDictionaryAsync(p => p.ProductId, p => p.Price);
+    }
+    #endregion
 }

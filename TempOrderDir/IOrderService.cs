@@ -4,5 +4,5 @@ public interface IOrderService
 {
     Task<OrderResponse> CreateOrder(CreateOrderDTO orderDTO);
     Task<OrderResponse> GetOrderDetails(Guid orderId);
-    Task<IEnumerable<OrderResponse>> GetUserOrders(Guid userId);
+    Task<List<OrderResponse>> GetUserOrders(Guid userId);
 }
