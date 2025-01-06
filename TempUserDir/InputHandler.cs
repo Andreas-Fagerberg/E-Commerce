@@ -169,12 +169,15 @@ public static class InputHandler
 
             if (key == ConsoleKey.Backspace && password.Length > 0)
             {
-                Console.Write("\b \b"); // Erase the last character.
+                // Erase the last character.
+                Console.Write("\b \b");
                 password.Length--;
             }
-            else if (char.IsControl(keyInfo.KeyChar) == false) // Checks that the key pressed is a valid printable char.
+            // Checks that the key pressed is a valid printable char.
+            else if (char.IsControl(keyInfo.KeyChar) == false)
             {
-                Console.Write("*"); // Display masking character.
+                // Display masking character.
+                Console.Write("*");
                 password.Append(keyInfo.KeyChar);
             }
         }
