@@ -149,5 +149,40 @@ public class EcommerceContext : DbContext
 
             cart.Property(c => c.TotalPrice).IsRequired().HasPrecision(10, 2).HasDefaultValue(0);
         });
+
+        builder.Entity<Product>(product =>
+        {
+            product.Property(p => p.ProductId)
+                .UseIdentityColumn();
+
+            product.Property(p => p.Name)
+                .IsRequired()
+                .HasMaxLength(30);
+
+            product.Property(p => p.Category)
+                .IsRequired()
+                .HasMaxLength(30);
+
+            product.Property(p => p.Description)
+                .HasMaxLength(50);
+
+            product.Property(p => p.Price)
+                .IsRequired()
+                .HasPrecision(10, 2)
+                .HasDefaultValue(0.00m);
+
+            product.Property(p => p.Rating)
+                .IsRequired()
+                .HasDefaultValue(0);
+
+            product.Property(p => p.Available)
+                .IsRequired()
+                .HasDefaultValue(true);
+
+            product.HasIndex(p => p.Name);
+
+            product.HasIndex(p => p.Category);
+        });
+
     }
 }
