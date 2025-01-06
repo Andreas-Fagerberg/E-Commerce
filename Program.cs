@@ -1,6 +1,6 @@
-﻿namespace E_commerce_Databaser_i_ett_sammanhang;
+﻿using Npgsql.Replication;
 
-using Microsoft.EntityFrameworkCore;
+namespace E_commerce_Databaser_i_ett_sammanhang;
 
 class Program
 {
@@ -33,14 +33,6 @@ class Program
                 or ConsoleKey.D:
 
                     continue;
-            }
-            foreach (ConsoleKey consoleKey in menuService.GetTriggerKeys())
-            {
-                if (input.Equals(consoleKey))
-                {
-                    menuService.ChangeMenu(input);
-                    continue;
-                }
             }
             try
             {

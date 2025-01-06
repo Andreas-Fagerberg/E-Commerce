@@ -2,26 +2,68 @@ namespace E_commerce_Databaser_i_ett_sammanhang;
 
 public class LoginMenu : Menu
 {
-    private readonly LoginUserCommand loginCommand;
-    public LoginMenu(IUserService userService)
+    List<string> options = new List<string> { "Search", "Category", "Cart", "Checkout", "Log out" };
+
+    public LoginMenu(IUserService userService, IMenuService menuService)
     {
-        loginCommand = new LoginUserCommand(ConsoleKey.D1, userService);
-        AddCommand(loginCommand);
-        AddCommand(new RegisterUserCommand(ConsoleKey.D2, userService));
+        AddCommand(new SearchCommand(ConsoleKey.F1, userService, menuService));
+        AddCommand(new SelectCategoryCommand(ConsoleKey.F2, userService, menuService));
     }
 
-    public Guid? GetLoggedInUserId()
-    {
-        return loginCommand.GetCurrentUserId();
-    }
     public override void Display()
-    {
-        Utilities.ClearAndWriteLine(
-            """
-            [Login Menu]
-            [1] Login
-            [2] Register
-            [Esc] Exit
-            """);
+    { 
+        int boxWidth = 79;
+        string optionText1 = "Select an option below:";
+
+        // Viktigt
+
+        Console.WriteLine("┌" + new string('─', boxWidth) + "┐");
+        Console.WriteLine(
+            "│ " + optionText1 + new string(' ', boxWidth - (optionText1.Length + 8)) + "AAAL © │"
+        );
+        Console.WriteLine("├" + new string('─', boxWidth) + "┤");
+
+        for (int i = 0; i < 40; i++)
+        {
+            if (i > options.Count)
+            {
+                break;
+            }
+            if (options.Count > i && i < 9)
+            {
+                Console.WriteLine(
+                    "│  "
+                        + (i + 1)
+                        + ". "
+                        + options[i]
+                        + new string(' ', boxWidth - (options[i].Length + 6))
+                        + " │"
+                );
+                continue;
+            }
+            if (options.Count > i)
+            {
+                Console.WriteLine(
+                    "│ "
+                        + (i + 1)
+                        + ". "
+                        + options[i]
+                        + new string(' ', boxWidth - (options[i].Length + 6))
+                        + " │"
+                );
+                continue;
+            }
+            Console.WriteLine(
+                """
+                │                                                                               │
+                │ ESC. Exit application                                                         │
+                """
+            );
+            // Console.WriteLine("│" + new string(' ', boxWidth) + "│");
+        }
+
+        Console.WriteLine("├" + new string('─', boxWidth) + "┤");
+        Console.WriteLine("│" + new string(' ', boxWidth) + "│");
+        Console.WriteLine("└" + new string('─', boxWidth) + "┘");
     }
 }
