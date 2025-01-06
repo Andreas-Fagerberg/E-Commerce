@@ -10,17 +10,18 @@ namespace E_commerce_Databaser_i_ett_sammanhang
 {
     public class ShoppingCartService : IShoppingCartService
     {
-        private List<Shopping_Cart> cartProducts;
-        Dictionary<int, int> Cart = new Dictionary<int, int>();
+        private List<ShoppingCart> CartProducts;
+        private Dictionary<int, int> Cart;
 
         //private List<Product> productList;
 
         public ShoppingCartService()
         {
-            cartProducts = new List<Shopping_Cart>();
+            CartProducts = new List<ShoppingCart>();
+            Cart = new Dictionary<int, int>();
         }
 
-        public Shopping_Cart AddToShoppingCart(Guid userId, int productId, int quantity, int price)
+        public async Task AddToShoppingCart(Guid userId, int productId, int quantity, int price)
         {
             if (Cart.ContainsKey(productId))
             {
@@ -31,12 +32,16 @@ namespace E_commerce_Databaser_i_ett_sammanhang
                 Cart[productId] = quantity;
             }
 
-            var cartItem = new Shopping_Cart(userId, productId, quantity, price);
-            cartProducts.Add(cartItem);
-            return cartItem;
+            var cartItem = new ShoppingCart(userId, productId, quantity, price);
+            CartProducts.Add(cartItem);
+            await Task.CompletedTask;
         }
 
-        public List<Shopping_Cart> HandleProductQuantity(Guid userId, int productId, int quantity)
+        public async Task<List<ShoppingCart>> HandleProductQuantity(
+            Guid userId,
+            int productId,
+            int quantity
+        )
         {
             if (!Cart.ContainsKey(productId))
             {
@@ -46,32 +51,32 @@ namespace E_commerce_Databaser_i_ett_sammanhang
             {
                 Cart[productId] += 1;
             }
-            return cartProducts;
+            return CartProducts;
         }
 
-        public List<Shopping_Cart> RemoveItemShoppingCart(int productid)
+        public async Task<List<ShoppingCart>> RemoveItemShoppingCart(int productid)
         {
             if (Cart.ContainsKey(productid))
             {
                 Cart.Remove(productid);
             }
-            for (int i = 0; i < cartProducts.Count; i++)
+            for (int i = 0; i < CartProducts.Count; i++)
             {
-                if (cartProducts[i].Product_Id.Equals(productid))
+                if (CartProducts[i].ProductId.Equals(productid))
                 {
-                    cartProducts.RemoveAt(i);
+                    CartProducts.RemoveAt(i);
                 }
             }
-            return cartProducts;
+            return CartProducts;
         }
 
-        public void Checkout(int userId)
+        public async Task Checkout(int userId)
         {
             using (var context = new EcommerceContext())
             {
-                foreach (var item in cartProducts)
+                foreach (var item in CartProducts)
                 {
-                    context.Shopping_Cart.Add(item);
+                    context.ShoppingCart.Add(item);
                 }
                 context.SaveChanges();
             }

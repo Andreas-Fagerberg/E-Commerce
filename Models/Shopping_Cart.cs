@@ -2,7 +2,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Infrastructure.Internal;
 
 namespace E_commerce_Databaser_i_ett_sammanhang.Models
 {
-    public class Shopping_Cart
+    public class ShoppingCart
     {
         //public int Cart_Id {get; private set;}
         public Guid UserId { get; private set; }
@@ -11,7 +11,7 @@ namespace E_commerce_Databaser_i_ett_sammanhang.Models
 
         public int SummedPrice {get; private set;}
 
-        public Shopping_Cart(Guid userId, int productId, int quantity, int summedPrice)
+        public ShoppingCart(Guid userId, int productId, int quantity, int summedPrice)
         {
             UserId = userId;
             ProductId = productId;
