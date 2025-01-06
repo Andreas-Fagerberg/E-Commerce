@@ -7,11 +7,11 @@ namespace E_commerce_Databaser_i_ett_sammanhang;
 /// </summary>
 public class UserService : IUserService
 {
-    private readonly EcommerceContext _ecommerceContext;
+    private readonly EcommerceContext ecommerceContext;
 
     public UserService(EcommerceContext ecommerceContext)
     {
-        _ecommerceContext = ecommerceContext;
+        this.ecommerceContext = ecommerceContext;
     }
 
 
@@ -22,7 +22,7 @@ public class UserService : IUserService
     {
         UserValidation.ValidateRegistration(dto);
 
-        if (await _ecommerceContext.Users.AnyAsync(u => u.Email == dto.Email))
+        if (await ecommerceContext.Users.AnyAsync(u => u.Email == dto.Email))
         {
             throw new InvalidOperationException("A user with that email already exists.");
         }
@@ -39,8 +39,8 @@ public class UserService : IUserService
             CreatedAt = DateTime.UtcNow
         };
 
-        await _ecommerceContext.Users.AddAsync(user);
-        await _ecommerceContext.SaveChangesAsync();
+        await ecommerceContext.Users.AddAsync(user);
+        await ecommerceContext.SaveChangesAsync();
 
         return new UserResponse
         {
@@ -59,7 +59,7 @@ public class UserService : IUserService
     {
         UserValidation.ValidateLogin(dto);
 
-        var user = await _ecommerceContext.Users.FirstOrDefaultAsync(u => u.Email == dto.Email);
+        var user = await ecommerceContext.Users.FirstOrDefaultAsync(u => u.Email == dto.Email);
         if (user == null)
         {
             throw new InvalidOperationException("Invalid email or password");
@@ -97,7 +97,7 @@ public class UserService : IUserService
     public async Task<UserResponse> GetUser(Guid userId)
     {
         UserValidation.CheckForValidUser(userId);
-        var user = await _ecommerceContext.Users
+        var user = await ecommerceContext.Users
             .FirstOrDefaultAsync(u => u.UserId == userId);
 
         if (user == null)
@@ -124,7 +124,7 @@ public class UserService : IUserService
         UserValidation.CheckForValidUser(dto.UserId);
 
         // Check if the user already has an address
-        var existingAddress = await _ecommerceContext.Addresses
+        var existingAddress = await ecommerceContext.Addresses
             .FirstOrDefaultAsync(a => a.UserId == dto.UserId);
 
         if (existingAddress != null)
@@ -145,8 +145,8 @@ public class UserService : IUserService
         };
 
         // Save to the database
-        await _ecommerceContext.Addresses.AddAsync(address);
-        await _ecommerceContext.SaveChangesAsync();
+        await ecommerceContext.Addresses.AddAsync(address);
+        await ecommerceContext.SaveChangesAsync();
 
         // Return the response
         return new AddressResponse
@@ -170,7 +170,7 @@ public class UserService : IUserService
     {
         UserValidation.CheckForValidUser(userId);
 
-        var address = await _ecommerceContext.Addresses
+        var address = await ecommerceContext.Addresses
             .FirstOrDefaultAsync(a => a.UserId == userId);
 
         if (address == null)
