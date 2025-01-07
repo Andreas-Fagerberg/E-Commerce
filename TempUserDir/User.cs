@@ -18,6 +18,7 @@ public class User
     // Navigation properties (WIP)
     public Address? Address { get; set; }
     public ICollection<Order> Orders = [];
+    public ShoppingCart? ShoppingCart { get; set; }
     // ShoppingCart
     // More..?
 

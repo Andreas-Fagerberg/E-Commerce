@@ -25,10 +25,10 @@ public class ProductsCommand : BaseCommand
         _productMenu = new ProductMenu();
         _menuService.SetMenu(_productMenu);
 
-        // while (true)
-        // {
-        //     _productMenu.ChangeContent(products);
-        // }
+        while (true)
+        {
+            _productMenu.ChangeContent(products);
+        }
         return Task.CompletedTask;
     }
 }
