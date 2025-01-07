@@ -2,12 +2,14 @@ namespace E_commerce_Databaser_i_ett_sammanhang;
 
 public class ProductMenu : Menu
 {
+    int index = 0;
     public ProductMenu() { }
+
+    List<List<Product>> _allProducts;
 
     public override void Display()
     {
-        int index = 0;
-        List<ProductForMenu> products = ProductList.GetProducts(index);
+        List<Product> currentProducts = _allProducts[index];
 
         int boxWidth = 79;
         string headerText = "Select a product below:";
@@ -18,7 +20,7 @@ public class ProductMenu : Menu
 
         Console.WriteLine("┌" + new string('─', boxWidth) + "┐");
         Console.WriteLine(
-            "│ " + optionText1 + new string(' ', boxWidth - (optionText1.Length + 8)) + "AAAL © │"
+            "│ " + headerText + new string(' ', boxWidth - (headerText.Length + 8)) + "AAAL © │"
         );
         Console.WriteLine("├" + new string('─', boxWidth) + "┤");
         Console.WriteLine(
@@ -27,44 +29,44 @@ public class ProductMenu : Menu
 
         for (int i = 0; i < 40; i++)
         {
-            if (i > products.Count)
+            if (i > currentProducts.Count)
             {
                 break;
             }
-            if (products.Count > i && i < 9)
+            if (currentProducts.Count > i && i < 9)
             {
                 Console.WriteLine(
                     "│  "
                         + (i + 1)
                         + ". "
-                        + products[i].Name
-                        + new string(' ', 44 - products[i].Name.Length)
+                        + currentProducts[i].Name
+                        + new string(' ', 44 - currentProducts[i].Name.Length)
                         + "│ "
-                        + products[i].Price
-                        + new string(' ', 16 - products[i].Price.ToString().Length)
+                        + currentProducts[i].Price
+                        + new string(' ', 16 - currentProducts[i].Price.ToString().Length)
                         + "│ "
-                        + products[i].DisplayRating
-                        + new string(' ', 10 - products[i].DisplayRating.Length)
+                        + currentProducts[i].DisplayRating
+                        + new string(' ', 10 - currentProducts[i].DisplayRating.Length)
                         + "│"
                 );
                 continue;
 
                 { }
             }
-            if (products.Count > i)
+            if (currentProducts.Count > i)
             {
                 Console.WriteLine(
                     "│ "
                         + (i + 1)
                         + ". "
-                        + products[i].Name
-                        + new string(' ', 44 - products[i].Name.Length)
+                        + currentProducts[i].Name
+                        + new string(' ', 44 - currentProducts[i].Name.Length)
                         + "│ "
-                        + products[i].Price
-                        + new string(' ', 16 - products[i].Price.ToString().Length)
+                        + currentProducts[i].Price
+                        + new string(' ', 16 - currentProducts[i].Price.ToString().Length)
                         + "│ "
-                        + products[i].DisplayRating
-                        + new string(' ', 10 - products[i].DisplayRating.Length)
+                        + currentProducts[i].DisplayRating
+                        + new string(' ', 10 - currentProducts[i].DisplayRating.Length)
                         + "│"
                 );
                 continue;
@@ -79,4 +81,24 @@ public class ProductMenu : Menu
         );
         Console.WriteLine("└" + new string('─', boxWidth) + "┘");
     }
+
+    public void EditContent(List<Product> allProducts)
+    {
+        List<Product> tempList = new List<Product>();
+        int i = 0;
+        foreach (Product product in allProducts)
+        {
+            if (i >= 39)
+            {
+                _allProducts.Add(tempList);
+                i = 0;
+                tempList.Clear();
+                tempList.Add(product);
+            }
+            tempList.Add(product);
+            i++;
+        }
+    }
+
+    public void SetPage() { }
 }

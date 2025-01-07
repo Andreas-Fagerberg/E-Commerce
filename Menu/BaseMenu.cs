@@ -1,11 +1,12 @@
-public class BaseMenu
+namespace E_commerce_Databaser_i_ett_sammanhang;
+public class BaseMenu : Menu
 {
     private string _headerContent = string.Empty;
     private List<string> _menuContent = new List<string>();
 
-    public CheckoutMenu() { }
+    public BaseMenu() { }
 
-    public void Display()
+    public override void Display()
     {
         int boxWidth = 79;
 

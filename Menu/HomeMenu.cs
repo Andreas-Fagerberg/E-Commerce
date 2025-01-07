@@ -2,13 +2,15 @@
 
 public class HomeMenu : Menu
 {
-    List<string> options = new List<string> { "Search", "Category", "Cart", "Checkout", "Log out" };
+    private List<string> _menuContent = new List<string> { "Products", "Cart", "Checkout", "Log out" };
 
     public HomeMenu(IUserService userService, IMenuService menuService)
     {
-        AddCommand(new SearchCommand(ConsoleKey.D1, userService, menuService));
-        AddCommand(new SelectCategoryCommand(ConsoleKey.D2, userService, menuService));
-        AddCommand(new ProductCommand(ConsoleKey.D3))
+        AddCommand(new ProductCommand(ConsoleKey.D1, userService, menuService));
+        // AddCommand()
+        // AddCommand()
+        // AddCommand()
+        
     }
 
     public override void Display()
