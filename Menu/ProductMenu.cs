@@ -10,7 +10,7 @@ public class ProductMenu : Menu
         List<ProductForMenu> products = ProductList.GetProducts(index);
 
         int boxWidth = 79;
-        string optionText1 = "Select a product below:";
+        string headerText = "Select a product below:";
         string optionText2 =
             "← A/Left (Previous page)                                (Next page) D/Right →";
 
