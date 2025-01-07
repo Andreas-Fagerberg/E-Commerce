@@ -3,7 +3,8 @@ namespace E_commerce_Databaser_i_ett_sammanhang;
 public class ProductsCommand : BaseCommand
 {
     private IMenuService _menuService;
-   // private ProductMenu _productMenu;
+
+    // private ProductMenu _productMenu;
 
     // Store products in lists of 9 items per list.
     private List<string> products;
