@@ -15,7 +15,7 @@ public class EcommerceContext : DbContext
     public DbSet<User> Users { get; set; }
     public DbSet<Product> Products { get; set; }
     public DbSet<Order> Orders { get; set; }
-    public DbSet<ShoppingCart> Cart { get; set; }
+    public DbSet<ShoppingCart> Carts { get; set; }
     public DbSet<OrderProduct> OrderProducts { get; set; }
     public DbSet<Address> Addresses { get; set; }
 
@@ -70,6 +70,10 @@ public class EcommerceContext : DbContext
                 .HasForeignKey<Address>(a => a.UserId)
                 .IsRequired(false)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            user.HasOne(u => u.Cart)
+                 .WithOne(c => c.User)
+                 .HasForeignKey<ShoppingCart>(c => c.UserId);
         });
 
         builder.Entity<Address>(address =>
@@ -139,15 +143,20 @@ public class EcommerceContext : DbContext
                 .HasForeignKey(op => op.ProductId)
                 .OnDelete(DeleteBehavior.Restrict);
         });
-        builder.Entity<ShoppingCart>(cart =>
+        builder.Entity<ShoppingCart>(carts =>
         {
-            cart.Property(c => c.UserId).UseIdentityColumn();
+            // carts.HasKey(o => o.UserId);
+            // carts.HasKey(o => o.ProductId);
+            carts.HasKey(c => c.Cart_Id);
+            carts.Property(c => c.UserId).UseIdentityColumn();
 
-            cart.Property(c => c.ProductId).UseIdentityColumn();
+            carts.Property(c => c.ProductId).UseIdentityColumn();
 
-            cart.Property(c => c.Quantity).IsRequired().HasPrecision(10).HasDefaultValue(0);
+            carts.Property(c => c.Quantity).IsRequired().HasPrecision(10).HasDefaultValue(0);
 
-            cart.Property(c => c.TotalPrice).IsRequired().HasPrecision(10, 2).HasDefaultValue(0);
+            carts.Property(c => c.TotalPrice).IsRequired().HasPrecision(10, 2).HasDefaultValue(0);
+
+            carts.HasOne(u => u.Cart).WithOne(c => c.User).HasForeignKey(c => c.UserId)
         });
     }
 }

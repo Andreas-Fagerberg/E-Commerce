@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using E_commerce_Databaser_i_ett_sammanhang.Models;
 
 namespace E_commerce_Databaser_i_ett_sammanhang;
 
@@ -17,6 +18,8 @@ public class User
     // Navigation properties (WIP)
     public Address? Address { get; set; }
     public ICollection<Order> Orders = [];
+
+    public ShoppingCart Cart {get; set;}
     // ShoppingCart
     // More..?
 

@@ -35,7 +35,7 @@ public class LogoutUserCommand : BaseCommand
         }
 
         Console.Clear();
-        menuService?.SetMenu(new LoginMenu(userService));
+       // menuService?.SetMenu(new LoginMenu(userService));
         return Task.CompletedTask;
     }
 }

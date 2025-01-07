@@ -7,7 +7,7 @@ public class HomeMenu : Menu
     public HomeMenu(IUserService userService, IMenuService menuService)
     {
         AddCommand(new SearchCommand(ConsoleKey.F1, userService, menuService));
-        AddCommand(new SelectCategoryCommand(ConsoleKey.F2, userService, menuService));
+       // AddCommand(new SelectCategoryCommand(ConsoleKey.F2, userService, menuService));
     }
 
     public override void Display()

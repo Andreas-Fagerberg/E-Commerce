@@ -82,7 +82,7 @@ namespace E_commerce_Databaser_i_ett_sammanhang
         )
         {
             var shoppingCartItems = await _context
-                .Cart.Where(sc => sc.UserId == userId)
+                .Carts.Where(sc => sc.UserId == userId)
                 .ToListAsync();
 
             return shoppingCartItems;
@@ -94,7 +94,7 @@ namespace E_commerce_Databaser_i_ett_sammanhang
             {
                 foreach (var item in CartProducts)
                 {
-                    context.Cart.Add(item);
+                    context.Carts.Add(item);
                 }
                 context.SaveChanges();
             }

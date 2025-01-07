@@ -4,12 +4,15 @@ namespace E_commerce_Databaser_i_ett_sammanhang.Models
 {
     public class ShoppingCart
     {
-        //public int Cart_Id {get; private set;}
-        public Guid UserId { get; private set; }
-        public int ProductId { get; private set; }
-        public int Quantity { get; private set; }
+        public int Cart_Id { get; set; }
+        public Guid UserId { get; set; }
+        public int ProductId { get; set; }
+        public int Quantity { get; set; }
 
-        public decimal TotalPrice { get; private set; }
+        public decimal TotalPrice { get; set; }
+
+        public User? User { get; set; }
+        public Product Product { get; set; }
 
         public ShoppingCart(Guid userId, int productId, int quantity, decimal totalPrice)
         {
