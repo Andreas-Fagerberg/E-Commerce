@@ -6,8 +6,8 @@ namespace E_commerce_Databaser_i_ett_sammanhang;
 public class OrderProduct
 {
     public Guid OrderId { get; set; } // CK
-    public Guid ProductId { get; set; } // CK
-    public int Quantity { get; set; } // Ensure that this is greater than 0 during object creation as Fluent API cannot handle this directly.
+    public int ProductId { get; set; } // CK
+    public int Quantity { get; set; }
 
     // Navigation properties (WIP)
     public Order? Order { get; set; }

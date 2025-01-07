@@ -9,7 +9,7 @@ public class Order
     public Guid UserId { get; set; }
     public DateTime CreatedAt { get; set; }
     public Status Status { get; set; } = Status.Pending;
-    public decimal TotalCost { get; set; } // Needs to be calculated
+    public decimal TotalCost { get; set; }
 
     // Navigation properties (WIP)
     public User? User { get; set; }

@@ -17,7 +17,7 @@ public static class OrderValidation
     /// <summary>
     /// Validates that the products in the DTO exists in the database.
     /// </summary>
-    public static void ValidateProducts(IEnumerable<OrderProductDTO> products, Dictionary<Guid, decimal> productPrices)
+    public static void ValidateProducts(IEnumerable<OrderProductDTO> products, Dictionary<int, decimal> productPrices)
     {
         foreach (var product in products)
         {

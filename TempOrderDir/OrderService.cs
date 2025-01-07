@@ -135,7 +135,7 @@ public class OrderService : IOrderService
 
     #region Helper Methods
 
-    private async Task<Dictionary<Guid, decimal>> GetProductPrices(IEnumerable<Guid> productIds)
+    private async Task<Dictionary<int, decimal>> GetProductPrices(IEnumerable<int> productIds)
     {
         return await ecommerceContext.Products
             .Where(p => productIds.Contains(p.ProductId))
