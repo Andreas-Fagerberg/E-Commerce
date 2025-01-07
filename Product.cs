@@ -10,5 +10,6 @@ public class Product
     public int Rating { get; set; }
     public bool Available = false;
     public OrderProduct OrderProduct { get; set; } // Build a relationsship
+
     // between OrderProduct and Product (Many-to-One)
 }

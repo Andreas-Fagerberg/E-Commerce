@@ -1,4 +1,4 @@
-using E_commerce_Databaser_i_ett_sammanhang.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace E_commerce_Databaser_i_ett_sammanhang
 // If items in cart is changed to 0 remove said item or dont give the option to 0 and rather give the option to remove the item itself.
@@ -13,15 +13,18 @@ namespace E_commerce_Databaser_i_ett_sammanhang
         private List<ShoppingCart> CartProducts;
         private Dictionary<int, int> Cart;
 
+        private readonly EcommerceContext _context;
+
         //private List<Product> productList;
 
-        public ShoppingCartService()
+        public ShoppingCartService(EcommerceContext context)
         {
             CartProducts = new List<ShoppingCart>();
             Cart = new Dictionary<int, int>();
+            _context = context;
         }
 
-        public async Task AddToShoppingCart(Guid userId, int productId, int quantity, int price)
+        public async Task AddToShoppingCart(Guid userId, int productId, int quantity, decimal price)
         {
             if (Cart.ContainsKey(productId))
             {
@@ -70,13 +73,27 @@ namespace E_commerce_Databaser_i_ett_sammanhang
             return CartProducts;
         }
 
-        public async Task Checkout(int userId)
+        public async Task<List<ShoppingCart>> GetShoppingCart(
+            Guid userId,
+            int productId,
+            int quantity,
+            decimal price
+        )
+        {
+            var shoppingCartItems = await _context
+                .Carts.Where(sc => sc.UserId == userId)
+                .ToListAsync();
+
+            return shoppingCartItems;
+        }
+
+        public async Task Checkout(Guid userId)
         {
             using (var context = new EcommerceContext())
             {
                 foreach (var item in CartProducts)
                 {
-                    context.ShoppingCart.Add(item);
+                    context.Carts.Add(item);
                 }
                 context.SaveChanges();
             }

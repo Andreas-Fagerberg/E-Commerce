@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 namespace E_commerce_Databaser_i_ett_sammanhang;
 
 using System.Net.Sockets;
-using E_commerce_Databaser_i_ett_sammanhang.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
@@ -15,7 +14,7 @@ public class EcommerceContext : DbContext
     public DbSet<User> Users { get; set; }
     public DbSet<Product> Products { get; set; }
     public DbSet<Order> Orders { get; set; }
-    public DbSet<ShoppingCart> Cart { get; set; }
+    public DbSet<ShoppingCart> Carts { get; set; }
     public DbSet<OrderProduct> OrderProducts { get; set; }
     public DbSet<Address> Addresses { get; set; }
 
@@ -139,15 +138,31 @@ public class EcommerceContext : DbContext
                 .HasForeignKey(op => op.ProductId)
                 .OnDelete(DeleteBehavior.Restrict);
         });
-        builder.Entity<ShoppingCart>(cart =>
+        builder.Entity<ShoppingCart>(carts =>
         {
-            cart.Property(c => c.UserId).UseIdentityColumn();
+            // carts.HasKey(o => o.UserId);
+            // carts.HasKey(o => o.ProductId);
+            carts.HasKey(u => u.Cart_Id);
 
-            cart.Property(c => c.ProductId).UseIdentityColumn();
+            carts.Property(c => c.Cart_Id).UseIdentityColumn();
+            carts.Property(c => c.UserId).UseIdentityColumn();
 
-            cart.Property(c => c.Quantity).IsRequired().HasPrecision(10, 2).HasDefaultValue(0);
+            carts.Property(c => c.ProductId).UseIdentityColumn();
 
-            cart.Property(c => c.TotalPrice).IsRequired().HasPrecision(10, 2).HasDefaultValue(0);
+            carts.Property(c => c.Quantity).IsRequired().HasPrecision(10).HasDefaultValue(0);
+
+            carts.Property(c => c.TotalPrice).IsRequired().HasPrecision(10, 2).HasDefaultValue(0);
+
+            carts
+                .HasOne(c => c.User)
+                .WithOne(u => u.ShoppingCart)
+                .HasForeignKey<ShoppingCart>(c => c.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+            carts
+                .HasOne(c => c.Product)
+                .WithOne(p => p.ShoppingCart)
+                .HasForeignKey<ShoppingCart>(c => c.ProductId)
+                .OnDelete(DeleteBehavior.Restrict);
         });
 
         builder.Entity<Product>(product =>
