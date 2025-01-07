@@ -6,3 +6,9 @@ public enum Status
     Completed,
     Cancelled
 }
+
+public enum Role
+{
+    User, // Default
+    Admin
+}
