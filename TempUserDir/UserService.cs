@@ -236,16 +236,7 @@ public class UserService : IUserService
 
     public async Task<List<UserResponse>> GetAllUsers(Guid adminUserId)
     {
-        UserValidation.CheckForValidUser(adminUserId);
-
-        var adminUser = await ecommerceContext.Users.FindAsync(adminUserId);
-
-        if (adminUser == null)
-        {
-            throw new InvalidOperationException("Admin user not found.");
-        }
-
-        UserValidation.ValidateUserRole(adminUser.Role, Role.Admin);
+        var adminUser = ValidateAdminUser(adminUserId);
 
         return await ecommerceContext.Users
             .Select(user => new UserResponse
@@ -265,6 +256,7 @@ public class UserService : IUserService
 
 
 
+
     #region Helper Methods 
 
     private string HashPassword(string password)
@@ -276,6 +268,26 @@ public class UserService : IUserService
     private bool VerifyPassword(string password, string hashedPassword)
     {
         return BCrypt.Net.BCrypt.Verify(password, hashedPassword);
+    }
+
+    /// <summary>
+    /// Combines CheckForValidUser and ValidateUserRole with an additional database operation 
+    /// to make sure that the user is valid.
+    /// /// </summary>
+    public async Task<User> ValidateAdminUser(Guid? userId)
+    {
+        UserValidation.CheckForValidUser(userId);
+
+        var user = await ecommerceContext.Users.FindAsync(userId);
+
+        if (user == null)
+        {
+            throw new InvalidOperationException("User not found.");
+        }
+
+        UserValidation.ValidateUserRole(user.Role, Role.Admin);
+
+        return user;
     }
 
     #endregion
