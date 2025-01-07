@@ -14,7 +14,7 @@ namespace E_commerce_Databaser_i_ett_sammanhang.Models
         public User? User { get; set; }
         public Product Product { get; set; }
 
-        public ShoppingCart(Guid userId, int productId, int quantity, decimal totalPrice)
+        public ShoppingCart(Guid userId,  int productId, int quantity, decimal totalPrice)
         {
             UserId = userId;
             ProductId = productId;

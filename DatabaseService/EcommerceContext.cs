@@ -71,9 +71,10 @@ public class EcommerceContext : DbContext
                 .IsRequired(false)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            user.HasOne(u => u.Cart)
-                 .WithOne(c => c.User)
-                 .HasForeignKey<ShoppingCart>(c => c.UserId);
+            user.HasOne(u => u.ShoppingCart)
+                .WithOne(c => c.User)
+                .HasForeignKey<ShoppingCart>(c => c.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
         builder.Entity<Address>(address =>
@@ -147,7 +148,9 @@ public class EcommerceContext : DbContext
         {
             // carts.HasKey(o => o.UserId);
             // carts.HasKey(o => o.ProductId);
-            carts.HasKey(c => c.Cart_Id);
+            carts.HasKey(u => u.Cart_Id);
+
+            carts.Property(c => c.Cart_Id).UseIdentityColumn();
             carts.Property(c => c.UserId).UseIdentityColumn();
 
             carts.Property(c => c.ProductId).UseIdentityColumn();
@@ -156,7 +159,42 @@ public class EcommerceContext : DbContext
 
             carts.Property(c => c.TotalPrice).IsRequired().HasPrecision(10, 2).HasDefaultValue(0);
 
-            carts.HasOne(u => u.Cart).WithOne(c => c.User).HasForeignKey(c => c.UserId)
+            carts
+                .HasOne(c => c.User)
+                .WithOne(u => u.ShoppingCart)
+                .HasForeignKey<ShoppingCart>(c => c.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+            carts
+                .HasOne(c => c.Product)
+                .WithOne(p => p.ShoppingCart)
+                .HasForeignKey<ShoppingCart>(c => c.ProductId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        builder.Entity<Product>(product =>
+        {
+            product.Property(p => p.ProductId).UseIdentityColumn();
+
+            product.Property(p => p.Name).IsRequired().HasMaxLength(30);
+
+            product.Property(p => p.Category).IsRequired().HasMaxLength(30);
+
+            product.Property(p => p.Description).HasMaxLength(50);
+
+            product.Property(p => p.Price).IsRequired().HasPrecision(10, 2).HasDefaultValue(0.00m);
+
+            product.Property(p => p.Rating).IsRequired().HasDefaultValue(0);
+
+            product.Property(p => p.Available).IsRequired().HasDefaultValue(true);
+
+            product.HasIndex(p => p.Name);
+
+            product.HasIndex(p => p.Category);
+            product
+                .HasOne(p => p.ShoppingCart)
+                .WithOne(c => c.Product)
+                .HasForeignKey<ShoppingCart>(c => c.ProductId)
+                .OnDelete(DeleteBehavior.Restrict);
         });
     }
 }

@@ -19,9 +19,7 @@ public class User
     public Address? Address { get; set; }
     public ICollection<Order> Orders = [];
 
-    public ShoppingCart Cart {get; set;}
+    public ShoppingCart? ShoppingCart { get; set; }
     // ShoppingCart
     // More..?
-
 }
-
