@@ -59,6 +59,10 @@ public class EcommerceContext : DbContext
 
             user.Property(u => u.PasswordHash).IsRequired().HasMaxLength(100);
 
+            user.Property(u => u.Role)
+                .IsRequired()
+                .HasDefaultValueSql("User");
+
             user.Property(u => u.CreatedAt)
                 .IsRequired()
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")

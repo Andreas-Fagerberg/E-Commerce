@@ -37,6 +37,7 @@ public class UserService : IUserService
             LastName = dto.LastName,
             Email = dto.Email,
             PasswordHash = hashedPassword,
+            Role = Role.User,
             CreatedAt = DateTime.UtcNow
         };
 
@@ -45,10 +46,12 @@ public class UserService : IUserService
 
         return new UserResponse
         {
+
             UserId = user.UserId,
             FirstName = user.FirstName,
             LastName = user.LastName,
-            Email = user.Email
+            Email = user.Email,
+            Role = user.Role
         };
     }
 
@@ -76,7 +79,8 @@ public class UserService : IUserService
             UserId = user.UserId,
             FirstName = user.FirstName,
             LastName = user.LastName,
-            Email = user.Email
+            Email = user.Email,
+            Role = user.Role
         };
     }
 
@@ -110,7 +114,8 @@ public class UserService : IUserService
             UserId = user.UserId,
             FirstName = user.FirstName,
             LastName = user.LastName,
-            Email = user.Email
+            Email = user.Email,
+            Role = user.Role
         };
     }
 
@@ -226,6 +231,35 @@ public class UserService : IUserService
         };
     }
 
+
+    #region Admin Methods
+
+    public async Task<List<UserResponse>> GetAllUsers(Guid adminUserId)
+    {
+        UserValidation.CheckForValidUser(adminUserId);
+
+        var adminUser = await ecommerceContext.Users.FindAsync(adminUserId);
+
+        if (adminUser == null)
+        {
+            throw new InvalidOperationException("Admin user not found.");
+        }
+
+        UserValidation.ValidateUserRole(adminUser.Role, Role.Admin);
+
+        return await ecommerceContext.Users
+            .Select(user => new UserResponse
+            {
+                UserId = user.UserId,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                Role = user.Role
+            }).ToListAsync();
+    }
+
+
+    #endregion
 
 
 
