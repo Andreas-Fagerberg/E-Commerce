@@ -56,14 +56,18 @@ public class BaseMenu
                 │ ESC. Exit application                                                         │
                 """
             );
-            // Console.WriteLine("│" + new string(' ', boxWidth) + "│");
         }
 
         Console.WriteLine("├" + new string('─', boxWidth) + "┤");
         Console.WriteLine("│" + new string(' ', boxWidth) + "│");
         Console.WriteLine("└" + new string('─', boxWidth) + "┘");
     }
-
+    /// <summary>
+    ///  Adds content to the BaseMenu display. Default headerContent is: "Select an option below:"
+    ///  menuContent must have atleast one string to function.
+    /// </summary>
+    /// <param name="menuContent"></param>
+    /// <param name="headerContent"></param>
     public void EditContent(List<string> menuContent, string headerContent = "")
     {
         _menuContent = menuContent;
