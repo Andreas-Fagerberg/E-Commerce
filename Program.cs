@@ -10,7 +10,7 @@ class Program
         IUserService userService = new UserService(new EcommerceContext());
         IMenuService menuService = new AppMenuService(userService);
 
-        menuService.SetMenu(new LoginMenu(userService));
+        menuService.SetMenu(new LoginMenu(userService, menuService));
 
         while (true)
         {
