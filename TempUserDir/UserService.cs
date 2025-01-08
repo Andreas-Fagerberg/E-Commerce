@@ -1,5 +1,6 @@
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Update;
 
 namespace E_commerce_Databaser_i_ett_sammanhang;
 
@@ -46,7 +47,6 @@ public class UserService : IUserService
 
         return new UserResponse
         {
-
             UserId = user.UserId,
             FirstName = user.FirstName,
             LastName = user.LastName,
@@ -234,9 +234,13 @@ public class UserService : IUserService
 
     #region Admin Methods
 
+    /// <summary>
+    /// Retrieves a list of all users in the system. This method is restricted to admin users only 
+    /// and validates the admin user's credentials and role before execution.
+    /// </summary>
     public async Task<List<UserResponse>> GetAllUsers(Guid adminUserId)
     {
-        var adminUser = ValidateAdminUser(adminUserId);
+        var adminUser = await ValidateAdminUser(adminUserId);
 
         return await ecommerceContext.Users
             .Select(user => new UserResponse
@@ -249,6 +253,45 @@ public class UserService : IUserService
             }).ToListAsync();
     }
 
+    /// <summary>
+    /// Allows admin users to search for specific users based on criteria
+    /// such as email or role. Further search-criteria can be added to this method
+    /// but make sure to adjust the input method accordingly.
+    /// </summary>
+    public async Task<List<UserResponse>> SearchUsers(AdminUserSearchDTO dto, Guid adminUserId)
+    {
+        var adminUser = await ValidateAdminUser(adminUserId);
+
+        var query = ecommerceContext.Users.AsQueryable();
+
+        if (string.IsNullOrWhiteSpace(dto.Email) == false)
+        {
+            query = query.Where(u => u.Email.Contains(dto.Email));
+        }
+
+        if (dto.Role.HasValue)
+        {
+            query = query.Where(u => u.Role == dto.Role.Value);
+        }
+
+        var results = await query
+            .Select(user => new UserResponse
+            {
+                UserId = user.UserId,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                Role = user.Role
+            }).ToListAsync();
+
+        return results;
+    }
+
+    public async void UpdateUserRole(UpdateUserRoleDTO)
+    {
+
+
+    }
 
     #endregion
 
@@ -271,14 +314,14 @@ public class UserService : IUserService
     }
 
     /// <summary>
-    /// Combines CheckForValidUser and ValidateUserRole with an additional database operation 
-    /// to make sure that the user is valid.
+    /// This ensures that the adminUserId belongs to an admin user in the system.
+    /// If the user ID is invalid or doesn't belong to an admin, an exception is thrown. 
     /// /// </summary>
-    public async Task<User> ValidateAdminUser(Guid? userId)
+    private async Task<User> ValidateAdminUser(Guid? adminUserId)
     {
-        UserValidation.CheckForValidUser(userId);
+        UserValidation.CheckForValidUser(adminUserId);
 
-        var user = await ecommerceContext.Users.FindAsync(userId);
+        var user = await ecommerceContext.Users.FindAsync(adminUserId);
 
         if (user == null)
         {
