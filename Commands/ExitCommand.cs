@@ -12,7 +12,7 @@ public class ExitCommand : BaseCommand
 
     public override Task Execute(Guid? currentUserId)
     {
-        _menuService.SetMenu(new HomeMenu(userService));
+       // _menuService.SetMenu(new HomeMenu(userService));
         return Task.CompletedTask;
     }
 }

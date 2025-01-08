@@ -4,5 +4,5 @@ public interface ICommand
 {
     ConsoleKey TriggerKey { get; }
     Task Execute(Guid? currentUserId);
-    Task Execute();
+  
 }

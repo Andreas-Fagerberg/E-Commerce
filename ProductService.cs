@@ -11,13 +11,11 @@ public class ProductService : IProductService
         _ecommerceContext = ecommerceContext;
     }
 
-
     public async Task<List<Product>> GetAllProducts()
     {
         try
         {
-            var products = await _ecommerceContext.Products
-                .ToListAsync();
+            var products = await _ecommerceContext.Products.ToListAsync();
 
             return products;
         }
@@ -27,8 +25,10 @@ public class ProductService : IProductService
         }
     }
 
-
-    public async Task<List<Product>> SearchProducts(string? productName = null, string? category = null)
+    public async Task<List<Product>> SearchProducts(
+        string? productName = null,
+        string? category = null
+    )
     {
         try
         {
@@ -36,17 +36,19 @@ public class ProductService : IProductService
 
             if (!string.IsNullOrWhiteSpace(productName))
             {
-                searchProduct = searchProduct.Where(p => p.Name.ToLower().Contains(productName.ToLower()));
+                searchProduct = searchProduct.Where(p =>
+                    p.Name.ToLower().Contains(productName.ToLower())
+                );
             }
 
             if (!string.IsNullOrWhiteSpace(category))
             {
-                searchProduct = searchProduct.Where(p => p.Category.ToLower().Contains(category.ToLower()));
+                searchProduct = searchProduct.Where(p =>
+                    p.Category.ToLower().Contains(category.ToLower())
+                );
             }
 
-            var products = await searchProduct
-
-                .ToListAsync();
+            var products = await searchProduct.ToListAsync();
 
             return products;
         }

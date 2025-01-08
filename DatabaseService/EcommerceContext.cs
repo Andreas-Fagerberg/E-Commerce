@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 namespace E_commerce_Databaser_i_ett_sammanhang;
 
 using System.Net.Sockets;
-using E_commerce_Databaser_i_ett_sammanhang.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
@@ -15,7 +14,7 @@ public class EcommerceContext : DbContext
     public DbSet<User> Users { get; set; }
     public DbSet<Product> Products { get; set; }
     public DbSet<Order> Orders { get; set; }
-    public DbSet<ShoppingCart> Cart { get; set; }
+    public DbSet<ShoppingCart> Carts { get; set; }
     public DbSet<OrderProduct> OrderProducts { get; set; }
     public DbSet<Address> Addresses { get; set; }
 
@@ -139,50 +138,52 @@ public class EcommerceContext : DbContext
                 .HasForeignKey(op => op.ProductId)
                 .OnDelete(DeleteBehavior.Restrict);
         });
-        builder.Entity<ShoppingCart>(cart =>
+        builder.Entity<ShoppingCart>(carts =>
         {
-            cart.Property(c => c.UserId).UseIdentityColumn();
+            // carts.HasKey(o => o.UserId);
+            // carts.HasKey(o => o.ProductId);
+            carts.HasKey(u => u.Cart_Id);
 
-            cart.Property(c => c.ProductId).UseIdentityColumn();
+            carts.Property(c => c.Cart_Id).UseIdentityColumn();
+            carts.Property(c => c.UserId).UseIdentityColumn();
 
-            cart.Property(c => c.Quantity).IsRequired().HasPrecision(10, 2).HasDefaultValue(0);
+            carts.Property(c => c.ProductId).UseIdentityColumn();
 
-            cart.Property(c => c.TotalPrice).IsRequired().HasPrecision(10, 2).HasDefaultValue(0);
+            carts.Property(c => c.Quantity).IsRequired().HasPrecision(10).HasDefaultValue(0);
+
+            carts.Property(c => c.TotalPrice).IsRequired().HasPrecision(10, 2).HasDefaultValue(0);
+
+            carts
+                .HasOne(c => c.User)
+                .WithOne(u => u.ShoppingCart)
+                .HasForeignKey<ShoppingCart>(c => c.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+            carts
+                .HasOne(c => c.Product)
+                .WithOne(p => p.ShoppingCart)
+                .HasForeignKey<ShoppingCart>(c => c.ProductId)
+                .OnDelete(DeleteBehavior.Restrict);
         });
 
         builder.Entity<Product>(product =>
         {
-            product.Property(p => p.ProductId)
-                .UseIdentityColumn();
+            product.Property(p => p.ProductId).UseIdentityColumn();
 
-            product.Property(p => p.Name)
-                .IsRequired()
-                .HasMaxLength(30);
+            product.Property(p => p.Name).IsRequired().HasMaxLength(30);
 
-            product.Property(p => p.Category)
-                .IsRequired()
-                .HasMaxLength(30);
+            product.Property(p => p.Category).IsRequired().HasMaxLength(30);
 
-            product.Property(p => p.Description)
-                .HasMaxLength(50);
+            product.Property(p => p.Description).HasMaxLength(50);
 
-            product.Property(p => p.Price)
-                .IsRequired()
-                .HasPrecision(10, 2)
-                .HasDefaultValue(0.00m);
+            product.Property(p => p.Price).IsRequired().HasPrecision(10, 2).HasDefaultValue(0.00m);
 
-            product.Property(p => p.Rating)
-                .IsRequired()
-                .HasDefaultValue(0);
+            product.Property(p => p.Rating).IsRequired().HasDefaultValue(0);
 
-            product.Property(p => p.Available)
-                .IsRequired()
-                .HasDefaultValue(true);
+            product.Property(p => p.Available).IsRequired().HasDefaultValue(true);
 
             product.HasIndex(p => p.Name);
 
             product.HasIndex(p => p.Category);
         });
-
     }
 }

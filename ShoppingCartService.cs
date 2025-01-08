@@ -1,4 +1,4 @@
-using E_commerce_Databaser_i_ett_sammanhang.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace E_commerce_Databaser_i_ett_sammanhang
 // If items in cart is changed to 0 remove said item or dont give the option to 0 and rather give the option to remove the item itself.
@@ -10,79 +10,101 @@ namespace E_commerce_Databaser_i_ett_sammanhang
 {
     public class ShoppingCartService : IShoppingCartService
     {
-        private List<ShoppingCart> CartProducts;
-        private Dictionary<int, int> Cart;
+        private Dictionary<int, (int Quantity, decimal Price)> Cart;
 
-        //private List<Product> productList;
+        private readonly EcommerceContext _context;
 
-        public ShoppingCartService()
+        public ShoppingCartService(EcommerceContext context)
         {
-            CartProducts = new List<ShoppingCart>();
-            Cart = new Dictionary<int, int>();
+            Cart = new Dictionary<int, (int Quantity, decimal Price)>();
+            _context = context;
         }
 
-        public async Task AddToShoppingCart(Guid userId, int productId, int quantity, int price)
+        //Called when adding a product to the cart, updates quantity if item already exist.
+
+        public async Task AddToShoppingCart(int productId, int quantity, decimal price)
         {
             if (Cart.ContainsKey(productId))
             {
-                Cart[productId] += quantity;
+                var currentItem = Cart[productId];
+                Cart[productId] = (currentItem.Quantity + quantity, price);
             }
             else
             {
-                Cart[productId] = quantity;
+                Cart[productId] = (quantity, price);
             }
 
-            var cartItem = new ShoppingCart(userId, productId, quantity, price);
-            CartProducts.Add(cartItem);
             await Task.CompletedTask;
         }
 
-        public async Task<List<ShoppingCart>> HandleProductQuantity(
+        //For the user to manually change the quantity of a certain item in the shoppingcart, removing the item if the quantity changes to zero
+        public async Task<Dictionary<int, (int Quantity, decimal Price)>> HandleProductQuantity(
             Guid userId,
             int productId,
             int quantity
         )
         {
-            if (!Cart.ContainsKey(productId))
+            if (quantity <= 0)
             {
-                Cart.Add(productId, quantity);
+                await RemoveItemShoppingCart(productId);
             }
-            else
+            else if (Cart.ContainsKey(productId))
             {
-                Cart[productId] += 1;
+                var currentItem = Cart[productId];
+                Cart[productId] = (quantity, currentItem.Price);
             }
-            return CartProducts;
+            return Cart;
         }
 
-        public async Task<List<ShoppingCart>> RemoveItemShoppingCart(int productid)
+        public async Task<Dictionary<int, (int Quantity, decimal Price)>> RemoveItemShoppingCart(
+            int productId
+        )
         {
-            if (Cart.ContainsKey(productid))
+            if (Cart.ContainsKey(productId))
             {
-                Cart.Remove(productid);
+                Cart.Remove(productId);
             }
-            for (int i = 0; i < CartProducts.Count; i++)
-            {
-                if (CartProducts[i].ProductId.Equals(productid))
-                {
-                    CartProducts.RemoveAt(i);
-                }
-            }
-            return CartProducts;
+
+            return Cart;
         }
 
-        public async Task Checkout(int userId)
+        public async Task<Dictionary<int, (int Quantity, decimal Price)>> GetShoppingCart(
+            Guid userId
+        )
         {
-            using (var context = new EcommerceContext())
+            var dbCart = await _context.Carts.Where(sc => sc.UserId == userId).ToListAsync();
+            Cart.Clear();
+            foreach (var item in dbCart)
             {
-                foreach (var item in CartProducts)
-                {
-                    context.ShoppingCart.Add(item);
-                }
-                context.SaveChanges();
+                Cart[item.ProductId] = (item.Quantity, item.Price);
             }
-            // cartProducts.Clear();
+
+            return Cart;
         }
 
-        // skapa metod för att summera priser i carten.
+        public async Task Checkout(Guid userId)
+        {
+            var cartItems = Cart.Select(item => new ShoppingCart
+            {
+                UserId = userId,
+                ProductId = item.Key,
+                Quantity = item.Value.Quantity,
+                Price = item.Value.Price,
+                TotalPrice = item.Value.Quantity * item.Value.Price,
+            });
+
+            await _context.Carts.AddRangeAsync(cartItems);
+            await _context.SaveChangesAsync();
+
+            Cart.Clear();
+        }
+
+        //Method that can be used to sum total cost in cart.
+        public decimal TotalCost()
+        {
+            return Cart.Sum(item => item.Value.Quantity * item.Value.Price);
+        }
+
+        //Make a method to turn the cart(dictionary) to a list of list holding the products.
     }
 }
