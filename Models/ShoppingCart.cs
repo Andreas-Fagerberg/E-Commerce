@@ -15,13 +15,14 @@ namespace E_commerce_Databaser_i_ett_sammanhang
         public User? User { get; set; }
         public Product Product { get; set; }
 
-        public ShoppingCart(Guid userId, int productId, int quantity, decimal totalPrice)
-        {
-            UserId = userId;
-            ProductId = productId;
-            Quantity = quantity;
-            TotalPrice = totalPrice;
-        }
+        // public ShoppingCart(Guid userId, int productId, int quantity, decimal price, decimal totalPrice)
+        // {
+        //     UserId = userId;
+        //     ProductId = productId;
+        //     Quantity = quantity;
+        //     Price = price;
+        //     TotalPrice = totalPrice;
+        // }
     }
 }
 

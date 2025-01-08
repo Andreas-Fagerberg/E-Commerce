@@ -37,13 +37,13 @@ public class CartCommand : BaseCommand
             switch (choice)
             {
                 case 1:
-                    _shoppingCartService.AddToShoppingCart();
+                     _shoppingCartService.RemoveItemShoppingCart();
                     break;
                 case 2:
                 _shoppingCartService.RemoveItemShoppingCart();
                     break;
                 case 3:
-                _shoppingCartService.GetShoppingCart();
+               
                     break;
                 case 4:
                 _shoppingCartService.
@@ -52,7 +52,7 @@ public class CartCommand : BaseCommand
             }
             catch (Exception ex)
             {
-                
+
 
             }
         }

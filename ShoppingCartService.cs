@@ -20,6 +20,8 @@ namespace E_commerce_Databaser_i_ett_sammanhang
             _context = context;
         }
 
+        //Called when adding a product to the cart, updates quantity if item already exist.
+
         public async Task AddToShoppingCart(Guid userId, int productId, int quantity, decimal price)
         {
             if (Cart.ContainsKey(productId))
@@ -35,6 +37,7 @@ namespace E_commerce_Databaser_i_ett_sammanhang
             await Task.CompletedTask;
         }
 
+        //For the user to manually change the quantity of a certain item in the shoppingcart, removing the item if the quantity changes to zero
         public async Task<Dictionary<int, (int Quantity, decimal Price)>> HandleProductQuantity(
             Guid userId,
             int productId,
@@ -81,14 +84,25 @@ namespace E_commerce_Databaser_i_ett_sammanhang
 
         public async Task Checkout(Guid userId)
         {
-            // cartProducts.Clear();
+            var cartItems = Cart.Select(item => new ShoppingCart
+            {
+                UserId = userId,
+                ProductId = item.Key,
+                Quantity = item.Value.Quantity,
+                Price = item.Value.Price,
+                TotalPrice = item.Value.Quantity * item.Value.Price,
+            });
+
+            await _context.Carts.AddRangeAsync(cartItems);
+            await _context.SaveChangesAsync();
+
+            Cart.Clear();
         }
 
+        //Method that can be used to sum total cost in cart.
         public decimal TotalCost()
         {
             return Cart.Sum(item => item.Value.Quantity * item.Value.Price);
         }
-
-        // skapa metod för att summera priser i carten.
     }
 }
