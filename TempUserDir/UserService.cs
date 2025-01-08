@@ -238,7 +238,7 @@ public class UserService : IUserService
     /// Retrieves a list of all users in the system. This method is restricted to admin users only 
     /// and validates the admin user's credentials and role before execution.
     /// </summary>
-    public async Task<List<UserResponse>> GetAllUsers(Guid adminUserId)
+    public async Task<List<UserResponse>> GetAllUsers(Guid? adminUserId)
     {
         await ValidateAdminUser(adminUserId);
 
@@ -258,7 +258,7 @@ public class UserService : IUserService
     /// such as email or role. Further search-criteria can be added to this method
     /// but make sure to adjust the input method accordingly.
     /// </summary>
-    public async Task<List<UserResponse>> SearchUsers(AdminUserSearchDTO dto, Guid adminUserId)
+    public async Task<List<UserResponse>> SearchUsers(AdminUserSearchDTO dto, Guid? adminUserId)
     {
         await ValidateAdminUser(adminUserId);
 
@@ -290,7 +290,7 @@ public class UserService : IUserService
     /// <summary>
     /// Updates the role of a specified user. Accessible only by admin users.
     /// </summary>
-    public async Task UpdateUserRole(UpdateUserRoleDTO dto, Guid adminUserId)
+    public async Task UpdateUserRole(UpdateUserRoleDTO dto, Guid? adminUserId)
     {
         await ValidateAdminUser(adminUserId);
 
@@ -332,11 +332,11 @@ public class UserService : IUserService
     /// This ensures that the adminUserId belongs to an admin user in the system.
     /// If the user ID is invalid or doesn't belong to an admin, an exception is thrown. 
     /// /// </summary>
-    private async Task<User> ValidateAdminUser(Guid? adminUserId)
+    public async Task<User> ValidateAdminUser(Guid? userId)
     {
-        UserValidation.CheckForValidUser(adminUserId);
+        UserValidation.CheckForValidUser(userId);
 
-        var user = await ecommerceContext.Users.FindAsync(adminUserId);
+        var user = await ecommerceContext.Users.FindAsync(userId);
 
         if (user == null)
         {

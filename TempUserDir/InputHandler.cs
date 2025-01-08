@@ -51,8 +51,7 @@ public static class InputHandler
     }
 
     /// <summary>
-    /// Collects and validates input for searching users in the admin command.
-    /// Allows filtering by email and/or role, with options to skip filters.
+    /// Collects and performs basic validation on user input for address details.
     /// </summary>
     public static RegisterAddressDTO GetAddressInput(Guid currentUserId)
     {
@@ -74,7 +73,8 @@ public static class InputHandler
     }
 
     /// <summary>
-    /// Collects and performs basic validation on input for the related Admin command.
+    /// Collects and validates input for searching users in the admin command.
+    /// Allows filtering by email and/or role, with options to skip filters.
     /// </summary>
     public static AdminUserSearchDTO GetAdminSearchInput()
     {
@@ -127,7 +127,7 @@ public static class InputHandler
     /// <summary>
     /// Collects and validates input for updating a user's role.
     /// Ensures the provided User ID is in the correct format and allows
-    /// the user to select a new role from predefined options.
+    /// the Admin to select a new role from predefined options.
     /// </summary>
     public static UpdateUserRoleDTO GetRoleUpdateInput()
     {

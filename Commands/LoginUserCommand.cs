@@ -35,6 +35,7 @@ public class LoginUserCommand : BaseCommand
         }
     }
 
+    // Helper method to this has been removed. In review..
     public Guid? GetCurrentUserId()
     {
         return LoggedInUser?.UserId;

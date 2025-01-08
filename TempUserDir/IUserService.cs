@@ -12,7 +12,8 @@ public interface IUserService
     Task<AddressResponse> SaveUserAddress(RegisterAddressDTO dto);
     Task<AddressResponse> GetUserAddress(Guid userId);
     Task<AddressResponse> UpdateUserAddress(RegisterAddressDTO dto);
-    Task<IEnumerable<UserResponse>> GetAllUsers(Guid? adminUserId); // Admin function, gets all Users.
-    Task<IEnumerable<UserResponse>> SearchUsers(AdminUserSearchDTO dto); // Admin function, search for a specific User.
-    Task UpdateUserRole(UpdateUserRoleDTO dto); // Admin function, update the User role.
+    Task<List<UserResponse>> GetAllUsers(Guid? adminUserId); // Admin function, gets all Users.
+    Task<List<UserResponse>> SearchUsers(AdminUserSearchDTO dto, Guid? adminUserId); // Admin function, search for a specific User.
+    Task UpdateUserRole(UpdateUserRoleDTO dto, Guid? adminUserId); // Admin function, update the User role.
+    Task<User> ValidateAdminUser(Guid? userId); // Validation method that includes a database operation.
 }
