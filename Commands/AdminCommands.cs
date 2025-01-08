@@ -18,26 +18,48 @@ public class AdminCommands : MenuBaseCommand
             [1] View All Users
             [2] Search Users
             [3] Update User Role
-            [4] Exit Admin Menu            
+            [Esc] Exit Admin Menu
             """);
 
             var input = Console.ReadKey(true).Key;
 
-            switch (input)
+            try
             {
-                case ConsoleKey.D1:
-                    var users = await userService.GetAllUsers(currentUserId);
-                    break;
+                switch (input)
+                {
+                    case ConsoleKey.D1: // View All Users
+                        var users = await userService.GetAllUsers(currentUserId);
+                        Console.WriteLine("[Users]");
+                        foreach (var user in users)
+                        {
+                            Console.WriteLine($"- {user.FirstName} {user.LastName} ({user.Email})");
+                        }
+                        break;
 
-                case ConsoleKey.D2:
-                    var searchCriteria = InputHandler.GetAdminSearchInput();
-                    await userService.SearchUsers(searchCriteria, currentUserId);
-                    break;
+                    case ConsoleKey.D2: // Search Users
+                        var searchCriteria = InputHandler.GetAdminSearchInput();
+                        var searchResults = await userService.SearchUsers(searchCriteria, currentUserId);
+                        Console.WriteLine("Search Results:");
+                        foreach (var result in searchResults)
+                        {
+                            Console.WriteLine($"- {result.FirstName} {result.LastName} ({result.Email})");
+                        }
+                        break;
 
-                case ConsoleKey.D3:
-                    var newRole = InputHandler.GetRoleUpdateInput();
-                    await userService.UpdateUserRole(newRole, currentUserId);
-                    break;
+                    case ConsoleKey.D3: // Update User Role
+                        var newRole = InputHandler.GetRoleUpdateInput();
+                        await userService.UpdateUserRole(newRole, currentUserId);
+                        Console.WriteLine("User role updated successfully.");
+                        break;
+
+                    default:
+                        Console.WriteLine("Invalid option. Please try again.");
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler.Handle(ex);
             }
         }
     }
