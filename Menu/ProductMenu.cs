@@ -129,8 +129,11 @@ public class ProductMenu : Menu
 
         Console.WriteLine(
             """
+             
             │                                                                               │
-            │ ESC. Go back                                                                  │
+            │  1. Add to cart.                                                              │
+            │                                                                               │
+            │ ESC. Go back.                                                                 │
             """
         );
 

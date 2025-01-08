@@ -5,7 +5,8 @@ namespace E_commerce_Databaser_i_ett_sammanhang;
 
 public class ProductCommand : MenuBaseCommand
 {
-    private List<Product> _products;
+    private readonly IShoppingCartService _shoppingCartService;
+    private List<Product> _products = new List<Product>();
     private List<string> _menuContent = new List<string>
     {
         "Show all products",
@@ -20,11 +21,13 @@ public class ProductCommand : MenuBaseCommand
         ConsoleKey triggerKey,
         IUserService userService,
         IMenuService menuService,
-        IProductService productService
+        IProductService productService,
+        IShoppingCartService shoppingCartService
     )
         : base(triggerKey, userService, menuService)
     {
         _productService = productService;
+        _shoppingCartService = shoppingCartService;
     }
 
     public override async Task Execute(Guid? currentUserId)
@@ -35,9 +38,9 @@ public class ProductCommand : MenuBaseCommand
             baseMenu.EditContent(_menuContent);
             baseMenu.Display();
 
-            ConsoleKey input = Console.ReadKey().Key;
+            ConsoleKey input1 = Console.ReadKey().Key;
 
-            switch (input)
+            switch (input1)
             {
                 case ConsoleKey.D1:
                     List<List<Product>> allProducts = productMenu.EditContent(products);
@@ -53,10 +56,9 @@ public class ProductCommand : MenuBaseCommand
                             productMenu.SetPage(key.Key);
                             continue;
                         }
-
                         else if (key.Key == ConsoleKey.Escape)
                         {
-                            break;
+                            return;
                         }
 
                         int index = productMenu.GetPage();
@@ -64,22 +66,35 @@ public class ProductCommand : MenuBaseCommand
                         string fullLine = CustomKeyReader.GetBufferedLine();
                         if (!int.TryParse(fullLine, out int choice))
                         {
-                            Console.WriteLine("You have to enter a number.");
+                            Utilities.WriteLineWithPause("You have to enter a number.");
+                            continue;
                         }
-                        // allproducts[index][choice]
-                        // 40 produkter i varje lista, index väljer vilken lista, choice = index i valda listan
-                        // Choice index får inte vara out of range
-                        // page index kan aldrig vara out of range eftersom den kontrolleras innan.
+
+                        Product selectedProduct;
                         if (choice > 0 && choice <= currentList.Count)
                         {
-
+                            selectedProduct = currentList[choice - 1];
+                            productMenu.DisplayProduct(selectedProduct);
+                        }
+                        else
+                        {
+                            Utilities.WriteLineWithPause("Please select a product from the list.");
+                            continue;
                         }
 
-                        currentList[choice - 1]
+                        ConsoleKey input2 = Console.ReadKey().Key;
 
-
-
-
+                        if (key.Equals(ConsoleKey.D1))
+                        {
+                            _shoppingCartService.AddToShoppingCart(selectedProduct.ProductId, selectedProduct.Price);
+                            break;
+                        }
+                        else if (key.Equals(ConsoleKey.Escape))
+                        {
+                            break;
+                        }
+                        Utilities.WriteLineWithPause("Incorrect input.");
+                        continue;
                     }
                     break;
 
