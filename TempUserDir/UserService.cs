@@ -1,5 +1,6 @@
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Update;
 
 namespace E_commerce_Databaser_i_ett_sammanhang;
 
@@ -37,6 +38,7 @@ public class UserService : IUserService
             LastName = dto.LastName,
             Email = dto.Email,
             PasswordHash = hashedPassword,
+            Role = Role.User,
             CreatedAt = DateTime.UtcNow
         };
 
@@ -48,7 +50,8 @@ public class UserService : IUserService
             UserId = user.UserId,
             FirstName = user.FirstName,
             LastName = user.LastName,
-            Email = user.Email
+            Email = user.Email,
+            Role = user.Role
         };
     }
 
@@ -76,7 +79,8 @@ public class UserService : IUserService
             UserId = user.UserId,
             FirstName = user.FirstName,
             LastName = user.LastName,
-            Email = user.Email
+            Email = user.Email,
+            Role = user.Role
         };
     }
 
@@ -110,7 +114,8 @@ public class UserService : IUserService
             UserId = user.UserId,
             FirstName = user.FirstName,
             LastName = user.LastName,
-            Email = user.Email
+            Email = user.Email,
+            Role = user.Role
         };
     }
 
@@ -227,7 +232,86 @@ public class UserService : IUserService
     }
 
 
+    #region Admin Methods
 
+    /// <summary>
+    /// Retrieves a list of all users in the system. This method is restricted to admin users only 
+    /// and validates the admin user's credentials and role before execution.
+    /// </summary>
+    public async Task<List<UserResponse>> GetAllUsers(Guid? adminUserId)
+    {
+        await ValidateAdminUser(adminUserId);
+
+        return await ecommerceContext.Users
+            .Select(user => new UserResponse
+            {
+                UserId = user.UserId,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                Role = user.Role
+            }).ToListAsync();
+    }
+
+    /// <summary>
+    /// Allows admin users to search for specific users based on criteria
+    /// such as email or role. Further search-criteria can be added to this method
+    /// but make sure to adjust the input method accordingly.
+    /// </summary>
+    public async Task<List<UserResponse>> SearchUsers(AdminUserSearchDTO dto, Guid? adminUserId)
+    {
+        await ValidateAdminUser(adminUserId);
+
+        var query = ecommerceContext.Users.AsQueryable();
+
+        if (string.IsNullOrWhiteSpace(dto.Email) == false)
+        {
+            query = query.Where(u => u.Email.Contains(dto.Email));
+        }
+
+        if (dto.Role.HasValue)
+        {
+            query = query.Where(u => u.Role == dto.Role.Value);
+        }
+
+        var results = await query
+            .Select(user => new UserResponse
+            {
+                UserId = user.UserId,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                Role = user.Role
+            }).ToListAsync();
+
+        return results;
+    }
+
+    /// <summary>
+    /// Updates the role of a specified user. Accessible only by admin users.
+    /// </summary>
+    public async Task UpdateUserRole(UpdateUserRoleDTO dto, Guid? adminUserId)
+    {
+        await ValidateAdminUser(adminUserId);
+
+        var targetUser = await ecommerceContext.Users.FindAsync(dto.UserId);
+
+        if (targetUser == null)
+        {
+            throw new InvalidOperationException("Target user not found.");
+        }
+
+        if (targetUser.Role == dto.Role)
+        {
+            throw new InvalidOperationException($"The target user already has the specified role '{dto.Role}'");
+        }
+
+        targetUser.Role = dto.Role;
+
+        await ecommerceContext.SaveChangesAsync();
+    }
+
+    #endregion
 
 
 
@@ -242,6 +326,26 @@ public class UserService : IUserService
     private bool VerifyPassword(string password, string hashedPassword)
     {
         return BCrypt.Net.BCrypt.Verify(password, hashedPassword);
+    }
+
+    /// <summary>
+    /// This ensures that the adminUserId belongs to an admin user in the system.
+    /// If the user ID is invalid or doesn't belong to an admin, an exception is thrown. 
+    /// /// </summary>
+    public async Task<User> ValidateAdminUser(Guid? userId)
+    {
+        UserValidation.CheckForValidUser(userId);
+
+        var user = await ecommerceContext.Users.FindAsync(userId);
+
+        if (user == null)
+        {
+            throw new InvalidOperationException("User not found.");
+        }
+
+        UserValidation.ValidateUserRole(user.Role, Role.Admin);
+
+        return user;
     }
 
     #endregion
