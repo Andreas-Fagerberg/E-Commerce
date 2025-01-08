@@ -240,7 +240,7 @@ public class UserService : IUserService
     /// </summary>
     public async Task<List<UserResponse>> GetAllUsers(Guid adminUserId)
     {
-        var adminUser = await ValidateAdminUser(adminUserId);
+        await ValidateAdminUser(adminUserId);
 
         return await ecommerceContext.Users
             .Select(user => new UserResponse
@@ -260,7 +260,7 @@ public class UserService : IUserService
     /// </summary>
     public async Task<List<UserResponse>> SearchUsers(AdminUserSearchDTO dto, Guid adminUserId)
     {
-        var adminUser = await ValidateAdminUser(adminUserId);
+        await ValidateAdminUser(adminUserId);
 
         var query = ecommerceContext.Users.AsQueryable();
 
