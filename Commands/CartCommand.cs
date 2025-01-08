@@ -2,29 +2,39 @@ using System.ComponentModel.DataAnnotations;
 
 namespace E_commerce_Databaser_i_ett_sammanhang;
 
-public class CartCommand : BaseCommand
+public class CartCommand : MenuBaseCommand
 {
     private readonly IShoppingCartService _shoppingCartService;
+
+    private List<string> _menuContent = new List<string>
+    {
+        "Show all items in cart",
+        "Remove items from cart",
+    };
     CartMenu cartMenu = new CartMenu();
+    private BaseMenu baseMenu = new BaseMenu();
     private IMenuService _menuService;
 
     public CartCommand(
         ConsoleKey triggerKey,
         IUserService userService,
+        IMenuService menuService,
         IShoppingCartService shoppingCartService
     )
-        : base(triggerKey, userService)
+        : base(triggerKey, userService, menuService)
     {
         _shoppingCartService = shoppingCartService;
     }
 
     public override async Task Execute(Guid? currentUserId)
     {
+        var cart = await _shoppingCartService.GetShoppingCart(UserId);
+
       
         bool cartChoice = true;
         while (cartChoice)
         {
-            cartMenu.Display();
+            baseMenu.EditContent(_menuContent);
 
               if (!int.TryParse(Console.ReadLine(), out int choice))
             {

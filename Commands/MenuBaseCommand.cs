@@ -6,7 +6,11 @@ public abstract class MenuBaseCommand : ICommand
     protected readonly IUserService userService;
     protected readonly IMenuService menuService;
 
-    protected MenuBaseCommand(ConsoleKey triggerKey, IUserService userService, IMenuService menuService)
+    protected MenuBaseCommand(
+        ConsoleKey triggerKey,
+        IUserService userService,
+        IMenuService menuService
+    )
     {
         TriggerKey = triggerKey;
         this.userService = userService;
