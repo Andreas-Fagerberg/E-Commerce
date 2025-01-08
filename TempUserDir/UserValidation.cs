@@ -8,7 +8,7 @@ public static class UserValidation
 
     /// <summary>
     /// Validates that a user is currently logged in by checking their unique identifier.
-    /// This method should be called in any operation or command that requires user authorization.
+    /// This method should be called in any operations or commands that require user authorization.
     /// </summary>
     public static void CheckForValidUser(Guid? currentUserId)
     {
@@ -18,6 +18,18 @@ public static class UserValidation
         }
     }
 
+    /// <summary>
+    ///  Validates that a user possesses the required privileges by checking their
+    ///  role. Should be called in any operation or command that require
+    ///  admin status.
+    /// </summary>
+    public static void ValidateUserRole(Role userRole, Role requiredRole)
+    {
+        if (userRole != requiredRole)
+        {
+            throw new UnauthorizedAccessException($"Action requires {userRole} privileges");
+        }
+    }
 
     /// <summary>
     /// Validates user registration data, including names, email, and password.
