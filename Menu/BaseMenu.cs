@@ -3,7 +3,7 @@ public class BaseMenu
     private string _headerContent = string.Empty;
     private List<string> _menuContent = new List<string>();
 
-    public CheckoutMenu() { }
+    //public CheckoutMenu() { }
 
     public void Display()
     {
