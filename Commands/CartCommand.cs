@@ -6,6 +6,7 @@ public class CartCommand : BaseCommand
 {
     private readonly IShoppingCartService _shoppingCartService;
     CartMenu cartMenu = new CartMenu();
+    private IMenuService _menuService;
 
     public CartCommand(
         ConsoleKey triggerKey,
@@ -19,11 +20,20 @@ public class CartCommand : BaseCommand
 
     public override async Task Execute(Guid? currentUserId)
     {
-        int choice = 0;
+      
         bool cartChoice = true;
         while (cartChoice)
         {
             cartMenu.Display();
+
+              if (!int.TryParse(Console.ReadLine(), out int choice))
+            {
+                Console.WriteLine("Invalid input. Please enter a number.");
+                continue;
+            }
+
+            try{
+
             switch (choice)
             {
                 case 1:
@@ -38,6 +48,12 @@ public class CartCommand : BaseCommand
                 case 4:
                 _shoppingCartService.
                     break;
+            }
+            }
+            catch (Exception ex)
+            {
+                
+
             }
         }
     }

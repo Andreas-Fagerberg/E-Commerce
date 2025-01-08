@@ -10,17 +10,13 @@ namespace E_commerce_Databaser_i_ett_sammanhang
 {
     public class ShoppingCartService : IShoppingCartService
     {
-        private List<ShoppingCart> CartProducts;
-        private Dictionary<int, int> Cart;
+        private Dictionary<int, (int Quantity, decimal Price)> Cart;
 
         private readonly EcommerceContext _context;
 
-        //private List<Product> productList;
-
         public ShoppingCartService(EcommerceContext context)
         {
-            CartProducts = new List<ShoppingCart>();
-            Cart = new Dictionary<int, int>();
+            Cart = new Dictionary<int, (int Quantity, decimal Price)>();
             _context = context;
         }
 
@@ -28,76 +24,69 @@ namespace E_commerce_Databaser_i_ett_sammanhang
         {
             if (Cart.ContainsKey(productId))
             {
-                Cart[productId] += quantity;
+                var currentItem = Cart[productId];
+                Cart[productId] = (currentItem.Quantity + quantity, price);
             }
             else
             {
-                Cart[productId] = quantity;
+                Cart[productId] = (quantity, price);
             }
 
-            var cartItem = new ShoppingCart(userId, productId, quantity, price);
-            CartProducts.Add(cartItem);
             await Task.CompletedTask;
         }
 
-        public async Task<List<ShoppingCart>> HandleProductQuantity(
+        public async Task<Dictionary<int, (int Quantity, decimal Price)>> HandleProductQuantity(
             Guid userId,
             int productId,
             int quantity
         )
         {
-            if (!Cart.ContainsKey(productId))
+            if (quantity <= 0)
             {
-                Cart.Add(productId, quantity);
+                await RemoveItemShoppingCart(productId);
             }
-            else
+            else if (Cart.ContainsKey(productId))
             {
-                Cart[productId] += 1;
+                var currentItem = Cart[productId];
+                Cart[productId] = (quantity, currentItem.Price);
             }
-            return CartProducts;
+            return Cart;
         }
 
-        public async Task<List<ShoppingCart>> RemoveItemShoppingCart(int productid)
-        {
-            if (Cart.ContainsKey(productid))
-            {
-                Cart.Remove(productid);
-            }
-            for (int i = 0; i < CartProducts.Count; i++)
-            {
-                if (CartProducts[i].ProductId.Equals(productid))
-                {
-                    CartProducts.RemoveAt(i);
-                }
-            }
-            return CartProducts;
-        }
-
-        public async Task<List<ShoppingCart>> GetShoppingCart(
-            Guid userId,
-            int productId,
-            int quantity,
-            decimal price
+        public async Task<Dictionary<int, (int Quantity, decimal Price)>> RemoveItemShoppingCart(
+            int productId
         )
         {
-            var shoppingCartItems = await _context
-                .Carts.Where(sc => sc.UserId == userId)
-                .ToListAsync();
+            if (Cart.ContainsKey(productId))
+            {
+                Cart.Remove(productId);
+            }
 
-            return shoppingCartItems;
+            return Cart;
+        }
+
+        public async Task<Dictionary<int, (int Quantity, decimal Price)>> GetShoppingCart(
+            Guid userId
+        )
+        {
+            var dbCart = await _context.Carts.Where(sc => sc.UserId == userId).ToListAsync();
+            Cart.Clear();
+            foreach (var item in dbCart)
+            {
+                Cart[item.ProductId] = (item.Quantity, item.Price);
+            }
+
+            return Cart;
         }
 
         public async Task Checkout(Guid userId)
         {
-            using (var context = new EcommerceContext())
-            {
-                foreach (var item in CartProducts)
-                {
-                    context.Carts.Add(item);
-                }
-                context.SaveChanges();
-            }
             // cartProducts.Clear();
+        }
+
+        public decimal TotalCost()
+        {
+            return Cart.Sum(item => item.Value.Quantity * item.Value.Price);
         }
 
         // skapa metod för att summera priser i carten.
