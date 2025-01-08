@@ -287,16 +287,31 @@ public class UserService : IUserService
         return results;
     }
 
-    public async void UpdateUserRole(UpdateUserRoleDTO)
+    /// <summary>
+    /// Updates the role of a specified user. Accessible only by admin users.
+    /// </summary>
+    public async Task UpdateUserRole(UpdateUserRoleDTO dto, Guid adminUserId)
     {
+        await ValidateAdminUser(adminUserId);
 
+        var targetUser = await ecommerceContext.Users.FindAsync(dto.UserId);
 
+        if (targetUser == null)
+        {
+            throw new InvalidOperationException("Target user not found.");
+        }
+
+        if (targetUser.Role == dto.Role)
+        {
+            throw new InvalidOperationException($"The target user already has the specified role '{dto.Role}'");
+        }
+
+        targetUser.Role = dto.Role;
+
+        await ecommerceContext.SaveChangesAsync();
     }
 
     #endregion
-
-
-
 
 
 
