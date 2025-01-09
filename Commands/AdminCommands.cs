@@ -3,9 +3,12 @@ namespace E_commerce_Databaser_i_ett_sammanhang;
 
 public class AdminCommands : MenuBaseCommand
 {
-
-    public AdminCommands(ConsoleKey triggerkey, IUserService userService, IMenuService menuService)
-        : base(triggerkey, userService, menuService) { }
+    private readonly IProductService _productService;
+    public AdminCommands(ConsoleKey triggerkey, IUserService userService, IMenuService menuService, ProductService productService)
+        : base(triggerkey, userService, menuService)
+    {
+        _productService = productService;
+    }
     public override async Task Execute(Guid? currentUserId)
     {
         await userService.ValidateAdminUser(currentUserId);
@@ -18,6 +21,7 @@ public class AdminCommands : MenuBaseCommand
             [1] View All Users
             [2] Search Users
             [3] Update User Role
+            [4] Create New Product
             [Esc] Exit Admin Menu
             """);
 
@@ -50,6 +54,12 @@ public class AdminCommands : MenuBaseCommand
                         var newRole = InputHandler.GetRoleUpdateInput();
                         await userService.UpdateUserRole(newRole, currentUserId);
                         Console.WriteLine("User role updated successfully.");
+                        break;
+
+                    case ConsoleKey.D4: // Create New Product
+                        var newProduct = InputHandler.GetCreateProductInput(_productService);
+                        await _productService.CreateProduct(newProduct);
+                        Console.WriteLine("Product created successfully.");
                         break;
 
                     default:

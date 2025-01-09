@@ -57,4 +57,20 @@ public class ProductService : IProductService
             throw new Exception("An error occurred while searching products", ex);
         }
     }
+    public async Task<Product> CreateProduct(Product product)
+    {
+        try
+        {
+            // Add product to our database
+            await _ecommerceContext.Products.AddAsync(product);
+            // Save changes to our database
+            await _ecommerceContext.SaveChangesAsync();
+
+            return product;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("Failed to create product", ex);
+        }
+    }
 }

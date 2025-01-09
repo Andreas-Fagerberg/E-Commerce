@@ -1,5 +1,6 @@
 
 using System.Runtime.InteropServices;
+using System.Security.Cryptography.X509Certificates;
 
 namespace E_commerce_Databaser_i_ett_sammanhang;
 
@@ -171,6 +172,50 @@ public static class InputHandler
         }
     }
 
+    public static Product GetCreateProductInput(IProductService productService)
+    {
+        Console.WriteLine("\n[Create New Product]");
+
+        string name = ReadNonEmptyStrings("Product Name", "Product name cannot be empty");
+        string category = ReadNonEmptyStrings("Category", "Category cannot be empty");
+        string description = ReadNonEmptyStrings("Description", "Description cannot be empty");
+
+        decimal price;
+        while (true)
+        {
+            Console.Write("Enter Price: ");
+            if (decimal.TryParse(Console.ReadLine(), out price) && price > 0)
+            {
+                break;
+            }
+            Console.WriteLine("Please enter a valid price greater than 0.");
+        }
+
+        int rating;
+        while (true)
+        {
+            Console.Write("Enter Rating (1-5): ");
+            if (int.TryParse(Console.ReadLine(), out rating) && rating >= 1 && rating <= 5)
+            {
+                break;
+            }
+            Console.WriteLine("Please enter a valid rating between 1 and 5.");
+        }
+
+        Console.Write("Is product available? (y/n): ");
+        bool available = Console.ReadKey().Key == ConsoleKey.Y;
+        Console.WriteLine();
+
+        return new Product
+        {
+            Name = name,
+            Category = category,
+            Description = description,
+            Price = price,
+            Rating = rating,
+            Available = available
+        };
+    }
 
     #region Helper Methods
 
