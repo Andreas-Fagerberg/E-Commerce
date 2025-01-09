@@ -106,7 +106,21 @@ namespace E_commerce_Databaser_i_ett_sammanhang
         {
             return UserCart.Sum(item => item.Value.Quantity * item.Value.Price);
         }
+
         //Make a method to turn the cart(dictionary) to a list of list holding the products.
-        public List<>
+        public List<CartItem> ConvertCartToList(
+            Dictionary<int, (int Quantity, decimal Price, string Name)> UserCart
+        )
+        {
+            return UserCart
+                .Select(item => new CartItem
+                {
+                    ProductId = item.Key,
+                    Quantity = item.Value.Quantity,
+                    Price = item.Value.Price,
+                    Name = item.Value.Name,
+                })
+                .ToList();
+        }
     }
 }
