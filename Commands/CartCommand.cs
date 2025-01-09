@@ -46,7 +46,7 @@ public class CartCommand : MenuBaseCommand
 
             switch (choice)
             {
-                case 1:
+                case ConsoleKey.D1:
                      _shoppingCartService.RemoveItemShoppingCart();
                     break;
                 case 2:

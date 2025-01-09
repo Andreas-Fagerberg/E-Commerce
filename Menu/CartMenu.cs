@@ -32,7 +32,7 @@ public class CartMenu : Menu
         );
         Console.WriteLine("├" + new string('─', boxWidth) + "┤");
         Console.WriteLine(
-            "│ Product ID   │ Quantity       │ Price per Item     │ Total Price        │"
+            "│ Name  │ Quantity       │ Price per Item     │ Total Price        │"
         );
 
         int i = 0;

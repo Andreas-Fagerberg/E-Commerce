@@ -10,12 +10,16 @@ namespace E_commerce_Databaser_i_ett_sammanhang
     //AddToCart, removefromcart, savecart.
     public interface IShoppingCartService
     {
-        Task<Dictionary<int, (int Quantity, decimal Price)>> GetShoppingCart(Guid userId);
-        Task AddToShoppingCart(int productId, int quantity, decimal price);
+        Task<Dictionary<int, (int Quantity, decimal Price, string Name)>> GetShoppingCart(
+            Guid userId
+        );
+        Task AddToShoppingCart(Product product, int quantity);
 
-        Task<Dictionary<int, (int Quantity, decimal Price)>> RemoveItemShoppingCart(int productId);
+        Task<Dictionary<int, (int Quantity, decimal Price, string Name)>> RemoveItemShoppingCart(
+            int productId
+        );
 
-        Task<Dictionary<int, (int Quantity, decimal Price)>> HandleProductQuantity(
+        Task<Dictionary<int, (int Quantity, decimal Price, string Name)>> HandleProductQuantity(
             Guid userId,
             int productId,
             int quantity

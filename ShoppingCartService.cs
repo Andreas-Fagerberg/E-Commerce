@@ -10,39 +10,41 @@ namespace E_commerce_Databaser_i_ett_sammanhang
 {
     public class ShoppingCartService : IShoppingCartService
     {
-        private Dictionary<int, (int Quantity, decimal Price)> Cart;
+        private Dictionary<int, (int Quantity, decimal Price, string Name)> Cart;
 
         private readonly EcommerceContext _context;
 
         public ShoppingCartService(EcommerceContext context)
         {
-            Cart = new Dictionary<int, (int Quantity, decimal Price)>();
+            Cart = new Dictionary<int, (int Quantity, decimal Price, string Name)>();
             _context = context;
         }
 
         //Called when adding a product to the cart, updates quantity if item already exist.
 
-        public async Task AddToShoppingCart(int productId, int quantity, decimal price)
+        public async Task AddToShoppingCart(Product product, int quantity)
         {
-            if (Cart.ContainsKey(productId))
+            if (Cart.ContainsKey(product.ProductId))
             {
-                var currentItem = Cart[productId];
-                Cart[productId] = (currentItem.Quantity + quantity, price);
+                var currentItem = Cart[product.ProductId];
+                Cart[product.ProductId] = (
+                    currentItem.Quantity + quantity,
+                    product.Price,
+                    product.Name
+                );
             }
             else
             {
-                Cart[productId] = (quantity, price);
+                Cart[product.ProductId] = (quantity, product.Price, product.Name);
             }
 
             await Task.CompletedTask;
         }
 
         //For the user to manually change the quantity of a certain item in the shoppingcart, removing the item if the quantity changes to zero
-        public async Task<Dictionary<int, (int Quantity, decimal Price)>> HandleProductQuantity(
-            Guid userId,
-            int productId,
-            int quantity
-        )
+        public async Task<
+            Dictionary<int, (int Quantity, decimal Price, string Name)>
+        > HandleProductQuantity(Guid userId, int productId, int quantity)
         {
             if (quantity <= 0)
             {
@@ -51,14 +53,14 @@ namespace E_commerce_Databaser_i_ett_sammanhang
             else if (Cart.ContainsKey(productId))
             {
                 var currentItem = Cart[productId];
-                Cart[productId] = (quantity, currentItem.Price);
+                Cart[productId] = (quantity, currentItem.Price, currentItem.Name);
             }
             return Cart;
         }
 
-        public async Task<Dictionary<int, (int Quantity, decimal Price)>> RemoveItemShoppingCart(
-            int productId
-        )
+        public async Task<
+            Dictionary<int, (int Quantity, decimal Price, string Name)>
+        > RemoveItemShoppingCart(int productId)
         {
             if (Cart.ContainsKey(productId))
             {
@@ -68,15 +70,15 @@ namespace E_commerce_Databaser_i_ett_sammanhang
             return Cart;
         }
 
-        public async Task<Dictionary<int, (int Quantity, decimal Price)>> GetShoppingCart(
-            Guid userId
-        )
+        public async Task<
+            Dictionary<int, (int Quantity, decimal Price, string Name)>
+        > GetShoppingCart(Guid userId)
         {
             var dbCart = await _context.Carts.Where(sc => sc.UserId == userId).ToListAsync();
             Cart.Clear();
             foreach (var item in dbCart)
             {
-                Cart[item.ProductId] = (item.Quantity, item.Price);
+                Cart[item.ProductId] = (item.Quantity, item.Price, item.Name);
             }
 
             return Cart;
