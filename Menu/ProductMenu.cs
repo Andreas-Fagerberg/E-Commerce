@@ -43,7 +43,9 @@ public class ProductMenu : Menu
                     + "AAAL © │"
             );
             Console.WriteLine("├" + new string('─', boxWidth) + "┤");
+            
         }
+        // Put in else block.
         foreach (Product product in currentProducts)
         {
             displayRating = new string('★', product.Rating) + new string('☆', 5 - product.Rating);

@@ -9,7 +9,6 @@ class Program
         Guid? currentUserId = null; // Tracks the logged-in user's ID.
         IUserService userService = new UserService(new EcommerceContext());
         IMenuService menuService = new AppMenuService(userService);
-
         menuService.SetMenu(new LoginMenu(userService, menuService));
 
         while (true)
@@ -38,7 +37,7 @@ class Program
             {
                 await menuService.GetMenu().ExecuteCommand(input, currentUserId);
 
-                // After executing a command, check if we're in the LoginMenu
+                After executing a command, check if we're in the LoginMenu
                 if (menuService.GetMenu() is LoginMenu loginMenu)
                 {
                     // Get the logged-in user's ID through LoginMenu.

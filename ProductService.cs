@@ -58,7 +58,7 @@ public class ProductService : IProductService
             throw new Exception("An error occurred while searching products", ex);
         }
     }
-
+    
     public async Task<List<List<Product>>> GetProductLists(List<Product>? products = null)
     {
         if (products is null || products.Count.Equals(0))
@@ -82,4 +82,5 @@ public class ProductService : IProductService
         }
         return new List<List<Product>>(splitProducts.ToList());
     }
+
 }
