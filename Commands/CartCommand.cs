@@ -1,17 +1,18 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace E_commerce_Databaser_i_ett_sammanhang;
 
 public class CartCommand : MenuBaseCommand
 {
-    private readonly IShoppingCartService _shoppingCartService;
+    private readonly ICartService _cartService;
 
     private List<string> _menuContent = new List<string>
     {
         "Show all items in cart",
         "Remove items from cart",
     };
-    CartMenu cartMenu = new CartMenu();
+    private CartMenu _cartMenu ;
     private BaseMenu baseMenu = new BaseMenu();
     private IMenuService _menuService;
 
@@ -19,44 +20,46 @@ public class CartCommand : MenuBaseCommand
         ConsoleKey triggerKey,
         IUserService userService,
         IMenuService menuService,
-        IShoppingCartService shoppingCartService
+        ICartService cartService
     )
         : base(triggerKey, userService, menuService)
     {
-        _shoppingCartService = shoppingCartService;
+        _cartService = cartService;
     }
 
     public override async Task Execute(Guid? currentUserId)
     {
-        var cart = await _shoppingCartService.GetShoppingCart(UserId);
+        var cart = await _cartService.GetShoppingCart(currentUserId.Value);
 
       
         bool cartChoice = true;
         while (cartChoice)
         {
             baseMenu.EditContent(_menuContent);
+            
 
               if (!int.TryParse(Console.ReadLine(), out int choice))
             {
                 Console.WriteLine("Invalid input. Please enter a number.");
                 continue;
             }
+             var input = Console.ReadKey(true).Key;
 
             try{
-
-            switch (choice)
+               
+            switch (input)
             {
                 case ConsoleKey.D1:
-                     _shoppingCartService.RemoveItemShoppingCart();
+                     _cartService.RemoveItemShoppingCart(currentUserId.Value);
                     break;
-                case 2:
-                _shoppingCartService.RemoveItemShoppingCart();
+                case ConsoleKey.D2:
+                _cartService.UpdateProductQuantity(currentUserId.Value);
                     break;
-                case 3:
+                case ConsoleKey.D3:
                
                     break;
-                case 4:
-                _shoppingCartService.
+                case ConsoleKey.D4:
+                _cartService.
                     break;
             }
             }
@@ -65,6 +68,22 @@ public class CartCommand : MenuBaseCommand
 
 
             }
+             private int GetNumberFromKey(ConsoleKey key)
+        {
+            return key switch
+            {
+                ConsoleKey.D1 or ConsoleKey.NumPad1 => 1,
+                ConsoleKey.D2 or ConsoleKey.NumPad2 => 2,
+                ConsoleKey.D3 or ConsoleKey.NumPad3 => 3,
+                ConsoleKey.D4 or ConsoleKey.NumPad4 => 4,
+                ConsoleKey.D5 or ConsoleKey.NumPad5 => 5,
+                ConsoleKey.D6 or ConsoleKey.NumPad6 => 6,
+                ConsoleKey.D7 or ConsoleKey.NumPad7 => 7,
+                ConsoleKey.D8 or ConsoleKey.NumPad8 => 8,
+                ConsoleKey.D9 or ConsoleKey.NumPad9 => 9,
+                ConsoleKey.D0 or ConsoleKey.NumPad0 => 0,
+                _ => -1
+            };
         }
     }
 }

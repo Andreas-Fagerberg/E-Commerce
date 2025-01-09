@@ -6,10 +6,10 @@ public class CartMenu : Menu
 
     // List containing all pages/lists with all products.
     List<List<Product>> _allProducts = new List<List<Product>>();
-    IShoppingCartService _shoppingCartService;
+    ICartService _shoppingCartService;
     private Guid _userId;
 
-    public CartMenu(IShoppingCartService shoppingCartService, Guid userId)
+    public CartMenu(ICartService shoppingCartService, Guid userId)
     {
         _shoppingCartService = shoppingCartService;
         _userId = userId;
@@ -44,13 +44,12 @@ public class CartMenu : Menu
                     "│  "
                         + (i + 1)
                         + ". "
-                        + cart.Name
+                        + cartItem.
                         + new string(' ', 44 - cart.Name!.Length)
                         + "│ "
                         + cart.Price
                         + new string(' ', 16 - cart.Price.ToString().Length)
                         + "│ "
-                        + new string(' ', 17)
                         + "│"
                 );
                 i++;
@@ -61,7 +60,7 @@ public class CartMenu : Menu
                 "│ "
                     + (i + 1)
                     + ". "
-                    + cart.Name
+                    + cartItem.Name
                     + new string(' ', 44 - cart.Name!.Length)
                     + "│ "
                     + cart.Price
