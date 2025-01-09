@@ -68,7 +68,7 @@ public static class InputHandler
             City = city,
             Region = region,
             PostalCode = postalCode,
-            Country = country
+            Country = country,
         };
     }
 
@@ -86,7 +86,6 @@ public static class InputHandler
             Console.WriteLine("Invalid email format. Proceeding without email filter.");
             email = null;
         }
-
 
         Console.WriteLine(
             """

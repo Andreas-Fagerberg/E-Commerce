@@ -6,10 +6,10 @@ public class HomeMenu : Menu
 
     public HomeMenu(IUserService userService, IMenuService menuService, IProductService productService, ICartService cartService, IOrderService orderService, bool admin)
     {
-        _menuContent = new List<string> {"Products", "Cart", "Checkout", "Log out"};
+        _menuContent = new List<string> {"Products", "Cart", "Checkout", "Log Out"};
         if (admin)
         {
-            _menuContent.Add("Admin controls");
+            _menuContent.Add("Admin Controls");
             AddCommand(new AdminCommands(ConsoleKey.D5, userService, menuService, cartService, orderService);
         }
         AddCommand(new ProductCommand(ConsoleKey.D1, userService, menuService, productService, cartService, orderService));
@@ -17,7 +17,7 @@ public class HomeMenu : Menu
         AddCommand(new CheckoutCommands(ConsoleKey.D3, userService, menuService, cartService, orderService));
         AddCommand(new LogoutUserCommand(ConsoleKey.D4, userService, menuService));
     }
-    
+
     public override void Display()
     {
         int boxWidth = 79;
