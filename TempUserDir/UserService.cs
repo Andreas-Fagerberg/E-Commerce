@@ -231,6 +231,11 @@ public class UserService : IUserService
         };
     }
 
+    public async Task<bool> HasAddress(Guid userId)
+    {
+        return await ecommerceContext.Addresses.AnyAsync(a => a.UserId == userId);
+    }
+
 
     #region Admin Methods
 
