@@ -104,7 +104,6 @@ namespace E_commerce_Databaser_i_ett_sammanhang
         {
             return Cart.Sum(item => item.Value.Quantity * item.Value.Price);
         }
-
         //Make a method to turn the cart(dictionary) to a list of list holding the products.
     }
 }
