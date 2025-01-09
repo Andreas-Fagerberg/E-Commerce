@@ -1,11 +1,10 @@
-
 namespace E_commerce_Databaser_i_ett_sammanhang;
 
 public class AdminCommands : MenuBaseCommand
 {
+    public AdminCommands(ConsoleKey triggerkey, IUserService userService, IMenuService menuService, ICartService cartService, IOrderService orderService)
+        : base(triggerkey, userService, menuService, cartService, orderService) { }
 
-    public AdminCommands(ConsoleKey triggerkey, IUserService userService, IMenuService menuService)
-        : base(triggerkey, userService, menuService) { }
     public override async Task Execute(Guid? currentUserId)
     {
         await userService.ValidateAdminUser(currentUserId);
@@ -13,13 +12,14 @@ public class AdminCommands : MenuBaseCommand
         while (true)
         {
             Utilities.ClearAndWriteLine(
-            """
-            [Admin Commands]
-            [1] View All Users
-            [2] Search Users
-            [3] Update User Role
-            [Esc] Exit Admin Menu
-            """);
+                """
+                [Admin Commands]
+                [1] View All Users
+                [2] Search Users
+                [3] Update User Role
+                [Esc] Exit Admin Menu
+                """
+            );
 
             var input = Console.ReadKey(true).Key;
 
@@ -38,11 +38,16 @@ public class AdminCommands : MenuBaseCommand
 
                     case ConsoleKey.D2: // Search Users
                         var searchCriteria = InputHandler.GetAdminSearchInput();
-                        var searchResults = await userService.SearchUsers(searchCriteria, currentUserId);
+                        var searchResults = await userService.SearchUsers(
+                            searchCriteria,
+                            currentUserId
+                        );
                         Console.WriteLine("Search Results:");
                         foreach (var result in searchResults)
                         {
-                            Console.WriteLine($"- {result.FirstName} {result.LastName} ({result.Email})");
+                            Console.WriteLine(
+                                $"- {result.FirstName} {result.LastName} ({result.Email})"
+                            );
                         }
                         break;
 

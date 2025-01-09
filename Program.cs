@@ -17,27 +17,17 @@ class Program
             menuService.GetMenu().Display();
             ConsoleKey input = Console.ReadKey(true).Key;
 
-            switch (input)
+            if (input.Equals(ConsoleKey.Escape))
             {
-                case ConsoleKey.Escape
-                or ConsoleKey.F7:
-                    Environment.Exit(0);
-                    break;
-                case ConsoleKey.LeftArrow
-                or ConsoleKey.A:
-
-                    continue;
-
-                case ConsoleKey.RightArrow
-                or ConsoleKey.D:
-
-                    continue;
+                Environment.Exit(0);
+                break;
             }
+
             try
             {
                 await menuService.GetMenu().ExecuteCommand(input, currentUserId);
 
-                After executing a command, check if we're in the LoginMenu
+                // After executing a command, check if we're in the LoginMenu
                 if (menuService.GetMenu() is LoginMenu loginMenu)
                 {
                     // Get the logged-in user's ID through LoginMenu.

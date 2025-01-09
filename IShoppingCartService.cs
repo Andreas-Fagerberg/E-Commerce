@@ -1,4 +1,4 @@
-namespace E_commerce_Databaser_i_ett_sammanhang.Models;
+namespace E_commerce_Databaser_i_ett_sammanhang;
 
 using System;
 using System.Collections.Generic;
