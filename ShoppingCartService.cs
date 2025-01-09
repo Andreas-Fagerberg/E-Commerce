@@ -8,14 +8,14 @@ namespace E_commerce_Databaser_i_ett_sammanhang
 //Lägga till felhantering
 //Kanske ta bort listan, lägga till direkt i dictionary.
 {
-    public class ShoppingCartService : IShoppingCartService
+    public class CartService : ICartService
     {
         private List<ShoppingCart> CartProducts;
         private Dictionary<int, int> Cart;
 
         //private List<Product> productList;
 
-        public ShoppingCartService()
+        public CartService()
         {
             CartProducts = new List<ShoppingCart>();
             Cart = new Dictionary<int, int>();

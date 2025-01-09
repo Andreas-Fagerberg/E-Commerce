@@ -4,6 +4,7 @@ public class PlaceHolderHelper
 {
     public static void MenuHelperProducts(ConsoleKeyInfo key, ProductMenu productMenu, IShoppingCartService shoppingCartService)
     {
+        List<List<Product>> allProducts = productMenu.EditContent(products);
         while (true)
         {
             productMenu.Display();

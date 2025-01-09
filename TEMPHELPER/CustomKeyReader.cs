@@ -1,4 +1,5 @@
 namespace E_commerce_Databaser_i_ett_sammanhang;
+
 public static class CustomKeyReader
 {
     private static string buffer = "";
