@@ -1,16 +1,17 @@
-﻿// namespace E_commerce_Databaser_i_ett_sammanhang;
+namespace E_commerce_Databaser_i_ett_sammanhang;
 
-// public class HomeMenu : Menu
-// {
-//     List<string> options = new List<string> { "Search", "Category", "Cart", "Checkout", "Log out" };
+public class HomeMenu : Menu
+{
+    private List<string> _menuContent = new List<string> { "Products", "Cart", "Checkout", "Log out" };
 
-//     public HomeMenu(IUserService userService, IMenuService menuService)
-//     {
-//         AddCommand(new SearchCommand(ConsoleKey.D1, userService, menuService));
-//         AddCommand(new SelectCategoryCommand(ConsoleKey.D2, userService, menuService));
-//        AddCommand(new ProductCommand(ConsoleKey.D3))
-//     }
-
+    public HomeMenu(IUserService userService, IMenuService menuService)
+    {
+        AddCommand(new ProductCommand(ConsoleKey.D1, userService, menuService));
+        // AddCommand()
+        // AddCommand()
+        // AddCommand()
+        
+    }
 //     public override void Display()
 //     {
 //         int boxWidth = 79;
@@ -68,16 +69,16 @@
 //         Console.WriteLine("└" + new string('─', boxWidth) + "┘");
 //     }
 // }
-// // // Box Drawing Characters (Unicode):
+// //  Box Drawing Characters (Unicode):
 
-// //     ─ (U+2500) – Horizontal line (top, middle, bottom).
-// //     │ (U+2502) – Vertical line (left, right).
-// //     ┌ (U+250C) – Top-left corner.
-// //     ┐ (U+2510) – Top-right corner.
-// //     └ (U+2514) – Bottom-left corner.
-// //     ┘ (U+2518) – Bottom-right corner.
-// //     ├ (U+251C) – Left intersection (vertical and horizontal).
-// //     ┤ (U+2524) – Right intersection (vertical and horizontal).
-// //     ┬ (U+252C) – Top intersection (horizontal and vertical).
-// //     ┴ (U+2534) – Bottom intersection (horizontal and vertical).
-// //     ┼ (U+253C) – Center intersection (both vertical and horizontal).
+//     ─ (U+2500) – Horizontal line (top, middle, bottom).
+//     │ (U+2502) – Vertical line (left, right).
+//     ┌ (U+250C) – Top-left corner.
+//     ┐ (U+2510) – Top-right corner.
+//     └ (U+2514) – Bottom-left corner.
+//     ┘ (U+2518) – Bottom-right corner.
+//     ├ (U+251C) – Left intersection (vertical and horizontal).
+//     ┤ (U+2524) – Right intersection (vertical and horizontal).
+//     ┬ (U+252C) – Top intersection (horizontal and vertical).
+//     ┴ (U+2534) – Bottom intersection (horizontal and vertical).
+//     ┼ (U+253C) – Center intersection (both vertical and horizontal).

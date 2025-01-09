@@ -1,3 +1,4 @@
+using System.Security.Cryptography.X509Certificates;
 using Microsoft.EntityFrameworkCore;
 
 namespace E_commerce_Databaser_i_ett_sammanhang;
@@ -57,4 +58,29 @@ public class ProductService : IProductService
             throw new Exception("An error occurred while searching products", ex);
         }
     }
+    
+    public async Task<List<List<Product>>> GetProductLists(List<Product>? products = null)
+    {
+        if (products is null || products.Count.Equals(0))
+        {
+            products = await GetAllProducts();
+        }
+        List<List<Product>> splitProducts = new List<List<Product>>();
+        List<Product> tempList = new List<Product>();
+        int i = 0;
+        foreach (Product product in products)
+        {
+            if (i >= 39)
+            {
+                tempList.Add(product);
+                splitProducts.Add(tempList);
+                i = 0;
+                tempList.Clear();
+            }
+            tempList.Add(product);
+            i++;
+        }
+        return new List<List<Product>>(splitProducts.ToList());
+    }
+
 }

@@ -4,11 +4,22 @@ public enum Status
 {
     Pending,
     Completed,
-    Cancelled
+    Cancelled,
 }
 
 public enum Role
 {
     User, // Default
-    Admin
+    Admin,
+}
+
+public enum Category
+{
+    Electronics,
+    Cleaning,
+    Gaming,
+    Storage,
+    Outdoors,
+    Sports,
+    Tools,
 }
