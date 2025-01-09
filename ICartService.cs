@@ -8,7 +8,7 @@ namespace E_commerce_Databaser_i_ett_sammanhang
     //hämta produkter från en lista i products.
     //Lägg en index på items i listan.
     //AddToCart, removefromcart, savecart.
-    public interface IShoppingCartService
+    public interface ICartService
     {
         Task<Dictionary<int, (int Quantity, decimal Price, string Name)>> GetShoppingCart(
             Guid userId
@@ -19,12 +19,12 @@ namespace E_commerce_Databaser_i_ett_sammanhang
             int productId
         );
 
-        Task<Dictionary<int, (int Quantity, decimal Price, string Name)>> HandleProductQuantity(
+        Task<Dictionary<int, (int Quantity, decimal Price, string Name)>> UpdateProductQuantity(
             Guid userId,
             int productId,
             int quantity
         );
 
-        Task Checkout(Guid userId);
+        Task SaveCartToDatabase(Guid userId);
     }
 }
