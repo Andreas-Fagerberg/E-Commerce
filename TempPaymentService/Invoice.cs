@@ -10,6 +10,5 @@ public class Invoice
     public DateTime CreatedAt { get; set; }
     public DateTime? PaidAt { get; set; }
 
-    public Order Order { get; set; }
-
+    public Order? Order { get; set; }
 }
