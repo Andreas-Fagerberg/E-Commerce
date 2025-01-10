@@ -2,13 +2,20 @@ namespace E_commerce_Databaser_i_ett_sammanhang;
 
 public class CheckoutCommands : MenuBaseCommand
 {
-    public CheckoutCommands(ConsoleKey triggerKey, IUserService userService, IMenuService menuService, ICartService cartService, IOrderService orderService)
-        : base(triggerKey, userService, menuService, cartService, orderService) { }
+    public CheckoutCommands
+    (ConsoleKey triggerKey,
+    IUserService userService,
+    IMenuService menuService,
+    ICartService cartService,
+    IOrderService orderService,
+    IPaymentService paymentService)
+    : base(triggerKey, userService, menuService, cartService, orderService, paymentService) { }
 
     public override async Task Execute(Guid? currentUserId)
     {
         UserValidation.CheckForValidUser(currentUserId);
         Console.WriteLine("[Checkout Commands]");
+
 
         // 1. Retrieve Address
         var address = await HandleAddressOptions(currentUserId);
@@ -21,13 +28,18 @@ public class CheckoutCommands : MenuBaseCommand
         Utilities.WriteLineWithPause("Proceeding to the next step...");
 
 
-        // HANDLING OF PAYMENT SHOULD GO HERE
-        // HANDLING OF PAYMENT SHOULD GO HERE
-        // HANDLING OF PAYMENT SHOULD GO HERE
-        // HANDLING OF PAYMENT SHOULD GO HERE
+        // 2. Payment Handling
+        Console.WriteLine(
+            """
+            Select a payment option:
+            [1] Pay Now
+            [2] Pay Later
+            """);
+
+        PaymentMethod paymentMethod = SelectPaymentMethod();
 
 
-        // 2. Retrieve Cart Data
+        // 3. Retrieve Cart Data
         var cartData = await cartService.GetShoppingCart(currentUserId);
         if (!cartData.Any())
         {
@@ -35,40 +47,65 @@ public class CheckoutCommands : MenuBaseCommand
             return;
         }
 
-        // 3. Prepare Order Data
+
+        // 4. Prepare Order Data
         var orderProducts = PrepareCartData(cartData);
 
-        // 4. Create Order
-        var createOrderDto = new CreateOrderDTO
-        {
-            UserId = currentUserId!.Value,
-            Products = orderProducts
-        };
 
+        // 5. Create Order
         try
         {
-            var orderResponse = await orderService.CreateOrder(createOrderDto);
-            if (orderResponse == null)
-            {
-                Console.WriteLine("Order creation failed. Please try again");
-                return;
-            }
-
-            var orderSummary = await orderService.GetOrderDetails(orderResponse.OrderId);
-            Console.WriteLine("Your order has been successfully created.");
-
-            // AndreasUI.DisplayOrderConfirmation(orderSummary)
+            var orderSummary = orderService.ProcessOrder(currentUserId, orderProducts, paymentMethod);
+            Console.WriteLine("Your order has been successfully created");
+            // DISPLAY ORDER SUMMARY 
         }
         catch (Exception ex)
         {
             ExceptionHandler.Handle(ex);
         }
+
+
+        // 6. Process Payment and Invoice
+        try
+        {
+            var paymentStatus = await paymentService.ProcessPayment(orderResponse!.OrderId, paymentMethod, orderResponse.TotalCost);
+            Console.WriteLine(paymentStatus);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Invoice creation failed. Checkout process aborted.");
+            ExceptionHandler.Handle(ex);
+        }
+
+        Console.WriteLine("Checkout completed successfully.");
     }
 
 
 
 
     #region Helper Methods
+    private static PaymentMethod SelectPaymentMethod()
+    {
+        PaymentMethod paymentMethod;
+        while (true)
+        {
+            var input = Console.ReadKey(true).Key;
+
+            switch (input)
+            {
+                case ConsoleKey.D1:
+                    paymentMethod = PaymentMethod.PayNow;
+                    return paymentMethod;
+
+                case ConsoleKey.D2:
+                    paymentMethod = PaymentMethod.PayLater;
+                    return paymentMethod;
+
+                default:
+                    Console.WriteLine("Invalid selection. Please press [1] for Pay Now or [2] for Pay Later."); continue;
+            }
+        }
+    }
 
     /// <summary>
     /// Transforms cart data from a dictionary structure into a list of OrderProductDTO objects.

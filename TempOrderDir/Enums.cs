@@ -22,10 +22,16 @@ public enum PaymentStatus
 
 public enum PaymentMethod
 {
-    CreditCard,
-    PayPal,
-    Klarna,
-    BankTransfer,
+    /// <summary>
+    /// The user pays immediately during checkout.
+    /// Marks the invoice as Paid upon creation.
+    /// </summary>
+    PayNow,
+    /// <summary>
+    /// The user defers payment (e.g. 30-day-invoice)
+    /// Marks the invoice as Pending upon creation.
+    /// </summary>
+    PayLater
 }
 
 

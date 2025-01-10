@@ -1,4 +1,7 @@
 
+using System.Runtime.CompilerServices;
+using Microsoft.EntityFrameworkCore;
+
 namespace E_commerce_Databaser_i_ett_sammanhang;
 
 public class PaymentService : IPaymentService
@@ -17,6 +20,7 @@ public class PaymentService : IPaymentService
     public async Task<InvoiceResponse> CreateInvoice(InvoiceCreationDTO dto)
     {
         ValidateInvoiceCreationDto(dto);
+        await ValidateOrderId(dto.OrderId);
 
         var invoice = new Invoice
         {
@@ -43,10 +47,32 @@ public class PaymentService : IPaymentService
         };
     }
 
+    public async Task<string> ProcessPayment(Guid orderId, PaymentMethod paymentMethod, decimal totalAmount)
+    {
+        var invoiceCreationDto = new InvoiceCreationDTO
+        {
+            OrderId = orderId,
+            TotalAmount = totalAmount,
+            PaymentMethod = paymentMethod
+        };
+
+        try
+        {
+            await CreateInvoice(invoiceCreationDto);
+
+            return paymentMethod == PaymentMethod.PayNow
+                ? "Payment sucessful. Your invoice is marked as Paid"
+                : "Payment deferred. Your invoice is marked as Pending.";
+        }
+        catch (Exception ex)
+        {
+            throw new InvalidOperationException("Invoice creation failed.", ex);
+        }
+    }
 
 
 
-    #region Helper Method
+    #region Helper Methods
 
     private static void ValidateInvoiceCreationDto(InvoiceCreationDTO dto)
     {
@@ -58,6 +84,15 @@ public class PaymentService : IPaymentService
         if (dto.TotalAmount <= 0)
         {
             throw new ArgumentException("TotalAmount must be greater than zero.");
+        }
+    }
+
+    private async Task ValidateOrderId(Guid orderId)
+    {
+        var orderExists = await ecommerceContext.Orders.AnyAsync(o => o.OrderId == orderId);
+        if (orderExists == false)
+        {
+            throw new ArgumentException("Invalid OrderId. No matching order found.");
         }
     }
 
