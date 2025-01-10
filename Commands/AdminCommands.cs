@@ -10,10 +10,11 @@ public class AdminCommands : MenuBaseCommand
         ConsoleKey triggerkey,
         IUserService userService,
         IMenuService menuService,
+        IProductService productService,
         ICartService cartService,
         IOrderService orderService
     )
-        : base(triggerkey, userService, menuService, cartService, orderService)
+        : base(triggerkey, userService, menuService, productService, cartService, orderService)
     {
         _baseMenu = new BaseMenu();
         _adminMenu = new AdminMenu();

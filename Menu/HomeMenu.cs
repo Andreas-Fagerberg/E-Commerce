@@ -10,12 +10,12 @@ public class HomeMenu : Menu
         if (admin)
         {
             _menuContent.Add("Admin Controls");
-            AddCommand(new AdminCommands(ConsoleKey.D5, userService, menuService, cartService, orderService);
+            AddCommand(new AdminCommands(ConsoleKey.D5, userService, menuService, productService, cartService, orderService);
         }
         AddCommand(new ProductCommand(ConsoleKey.D1, userService, menuService, productService, cartService, orderService));
-        AddCommand(new CartCommand(ConsoleKey.D2, userService, cartService));
-        AddCommand(new CheckoutCommands(ConsoleKey.D3, userService, menuService, cartService, orderService));
-        AddCommand(new LogoutUserCommand(ConsoleKey.D4, userService, menuService));
+        AddCommand(new CartCommand(ConsoleKey.D2, userService, menuService, productService, cartService, orderService));
+        AddCommand(new CheckoutCommands(ConsoleKey.D3, userService, menuService, productService, cartService, orderService));
+        AddCommand(new LogoutUserCommand(ConsoleKey.D4, userService, menuService, productService, cartService, orderService));
     }
 
     public override void Display()

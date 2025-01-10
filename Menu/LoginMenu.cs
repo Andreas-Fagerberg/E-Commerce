@@ -2,65 +2,84 @@ namespace E_commerce_Databaser_i_ett_sammanhang;
 
 public class LoginMenu : Menu
 {
-    List<string> options = new List<string> { "Search", "Category", "Cart", "Checkout", "Log out" };
+    private List<string> _menuContent;
+    private string _headerContent;
 
-    public LoginMenu(IUserService userService, IMenuService menuService)
+    public LoginMenu(
+        IUserService userService,
+        IMenuService menuService,
+        IProductService productService,
+        ICartService cartService,
+        IOrderService orderService
+    )
     {
-        AddCommand(new SearchCommand(ConsoleKey.F1, userService, menuService));
-        AddCommand(new SelectCategoryCommand(ConsoleKey.F2, userService, menuService));
+        _menuContent = new List<string> { "Login", "Register User" };
+        _headerContent = "Select an option below:";
+        AddCommand(
+            new LoginCommand(
+                ConsoleKey.D1,
+                userService,
+                menuService,
+                productService,
+                cartService,
+                orderService
+            )
+        );
+
+        AddCommand(
+            new RegisterUserCommand(
+                ConsoleKey.D2,
+                userService,
+                menuService,
+                productService,
+                cartService,
+                orderService
+            )
+        );
     }
 
     public override void Display()
-    { 
+    {
+        int lineCount = 1;
         int boxWidth = 79;
-        string optionText1 = "Select an option below:";
-
-        // Viktigt
 
         Console.WriteLine("┌" + new string('─', boxWidth) + "┐");
         Console.WriteLine(
-            "│ " + optionText1 + new string(' ', boxWidth - (optionText1.Length + 8)) + "AAAL © │"
+            "│ "
+                + _headerContent
+                + new string(' ', boxWidth - (_headerContent.Length + 8))
+                + "AAAL © │"
         );
         Console.WriteLine("├" + new string('─', boxWidth) + "┤");
 
-        for (int i = 0; i < 40; i++)
+        foreach (string item in _menuContent)
         {
-            if (i > options.Count)
+            if (_menuContent is null || _menuContent.Count.Equals(0))
             {
+                Console.WriteLine(
+                    "│ No options found.                                                               │"
+                );
                 break;
             }
-            if (options.Count > i && i < 9)
-            {
-                Console.WriteLine(
-                    "│  "
-                        + (i + 1)
-                        + ". "
-                        + options[i]
-                        + new string(' ', boxWidth - (options[i].Length + 6))
-                        + " │"
-                );
-                continue;
-            }
-            if (options.Count > i)
-            {
-                Console.WriteLine(
-                    "│ "
-                        + (i + 1)
-                        + ". "
-                        + options[i]
-                        + new string(' ', boxWidth - (options[i].Length + 6))
-                        + " │"
-                );
-                continue;
-            }
             Console.WriteLine(
-                """
-                │                                                                               │
-                │ ESC. Exit application                                                         │
-                """
+                "│"
+                    + new string(' ', 3 - lineCount.ToString().Length)
+                    + lineCount
+                    + ". "
+                    + item
+                    + new string(' ', boxWidth - (item.Length + lineCount.ToString().Length + 5))
+                    + " │"
             );
-            // Console.WriteLine("│" + new string(' ', boxWidth) + "│");
+            lineCount++;
+            continue;
         }
+
+        Console.WriteLine(
+            """
+            │                                                                               │
+            │ ESC. Go Back.                                                                 │
+            """
+        );
 
         Console.WriteLine("├" + new string('─', boxWidth) + "┤");
         Console.WriteLine("│" + new string(' ', boxWidth) + "│");

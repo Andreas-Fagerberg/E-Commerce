@@ -17,4 +17,5 @@ public interface IUserService
     Task<List<UserResponse>> SearchUsers(AdminUserSearchDTO dto, Guid? adminUserId); // Admin function, search for a specific User.
     Task UpdateUserRole(UpdateUserRoleDTO dto, Guid? adminUserId); // Admin function, update the User role.
     Task<User> ValidateAdminUser(Guid? userId); // Validation method that includes a database operation.
+    Task<bool> CheckAdminPriviliges(Guid? userId);
 }
