@@ -5,6 +5,7 @@ public abstract class MenuBaseCommand : ICommand
     public ConsoleKey TriggerKey { get; init; }
     protected readonly IUserService userService;
     protected readonly IMenuService menuService;
+    protected readonly IProductService productService;
     protected readonly ICartService cartService;
     protected readonly IOrderService orderService;
 
@@ -12,6 +13,7 @@ public abstract class MenuBaseCommand : ICommand
         ConsoleKey triggerKey,
         IUserService userService,
         IMenuService menuService,
+        IProductService productService,
         ICartService cartService,
         IOrderService orderService
     )
@@ -19,6 +21,7 @@ public abstract class MenuBaseCommand : ICommand
         TriggerKey = triggerKey;
         this.userService = userService;
         this.menuService = menuService;
+        this.productService = productService;
         this.cartService = cartService;
         this.orderService = orderService;
     }

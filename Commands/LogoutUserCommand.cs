@@ -3,10 +3,17 @@ namespace E_commerce_Databaser_i_ett_sammanhang;
 /// <summary>
 /// Handles the execution of the user logout process as part of the command pattern.
 /// </summary>
-public class LogoutUserCommand : BaseCommand
+public class LogoutUserCommand : MenuBaseCommand
 {
-    public LogoutUserCommand(ConsoleKey triggerkey, IUserService userService, IMenuService menuService)
-        : base(triggerkey, userService, menuService) { }
+    public LogoutUserCommand(
+        ConsoleKey triggerkey,
+        IUserService userService,
+        IMenuService menuService,
+        IProductService productService,
+        ICartService cartService,
+        IOrderService orderService
+    )
+        : base(triggerkey, userService, menuService, productService, cartService, orderService) { }
 
     /// <summary>
     /// Executes the user logout process. The caller is responsible for nullifying the currentUserId after the method call.
@@ -35,8 +42,9 @@ public class LogoutUserCommand : BaseCommand
         }
 
         Console.Clear();
-        menuService?.SetMenu(new LoginMenu(userService));
+        menuService.SetMenu(
+            new LoginMenu(userService, menuService, productService, cartService, orderService)
+        );
         return Task.CompletedTask;
     }
 }
-

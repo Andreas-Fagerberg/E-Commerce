@@ -20,4 +20,3 @@ public class User
     public ICollection<Order> Orders = [];
     public ShoppingCart? ShoppingCart { get; set; }
 }
-
