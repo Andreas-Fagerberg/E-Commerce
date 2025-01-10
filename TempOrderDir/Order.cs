@@ -13,5 +13,6 @@ public class Order
 
     // Navigation properties (WIP)
     public User? User { get; set; }
+    public Invoice? Invoice { get; set; }
     public ICollection<OrderProduct> OrderProducts = [];
 }
