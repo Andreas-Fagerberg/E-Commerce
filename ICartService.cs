@@ -25,6 +25,10 @@ namespace E_commerce_Databaser_i_ett_sammanhang
             int quantity
         );
 
+        List<CartItem> ConvertCartToList(
+            Dictionary<int, (int Quantity, decimal Price, string Name)> UserCart
+        );
+
         Task SaveCartToDatabase(Guid userId);
     }
 }

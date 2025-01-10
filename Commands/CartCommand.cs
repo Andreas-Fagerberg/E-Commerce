@@ -6,6 +6,7 @@ namespace E_commerce_Databaser_i_ett_sammanhang;
 public class CartCommand : MenuBaseCommand
 {
     private readonly ICartService _cartService;
+    private CartHandler _cartHandler;
 
     private List<string> _menuContent = new List<string>
     {
@@ -36,6 +37,7 @@ public class CartCommand : MenuBaseCommand
         while (cartChoice)
         {
             baseMenu.EditContent(_menuContent);
+            baseMenu.Display();
             
 
               if (!int.TryParse(Console.ReadLine(), out int choice))
@@ -50,13 +52,13 @@ public class CartCommand : MenuBaseCommand
             switch (input)
             {
                 case ConsoleKey.D1:
-                     _cartService.RemoveItemShoppingCart(currentUserId.Value);
+                     
                     break;
                 case ConsoleKey.D2:
-                _cartService.UpdateProductQuantity(currentUserId.Value);
+                await _cartHandler.HandleShowCart();
                     break;
                 case ConsoleKey.D3:
-               
+                    await RemoveItemShoppingCart(currentUserId.Value, productId);
                     break;
                 case ConsoleKey.D4:
                 _cartService.
@@ -87,3 +89,4 @@ public class CartCommand : MenuBaseCommand
         }
     }
 }
+

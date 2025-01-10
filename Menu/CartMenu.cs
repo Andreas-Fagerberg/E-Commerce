@@ -5,14 +5,16 @@ public class CartMenu : Menu
     // Keeps track of current page number
 
     // List containing all pages/lists with all products.
-    List<List<Product>> _allProducts = new List<List<Product>>();
-    ICartService _shoppingCartService;
+    
+    ICartService _CartService;
     private Guid _userId;
+    private List<CartItem> _cartItems; 
 
-    public CartMenu(ICartService shoppingCartService, Guid userId)
+    public CartMenu(ICartService CartService, Guid userId)
     {
-        _shoppingCartService = shoppingCartService;
+        _CartService = CartService;
         _userId = userId;
+        _cartItems = new List<CartItem>();
     }
 
     public override async void Display()
@@ -20,7 +22,8 @@ public class CartMenu : Menu
         string displayRating = String.Empty;
         // List containing the current page/current products.
         // List<Product> currentProducts = _allProducts[0];
-        var cart = await _shoppingCartService.GetShoppingCart(_userId);
+        var cart = await _CartService.GetShoppingCart(_userId);
+         var cartItems = _CartService.ConvertCartToList(cart);
 
         // Used to decide the size of the menu.
         int boxWidth = 79;
@@ -142,15 +145,15 @@ public class CartMenu : Menu
     //     Console.WriteLine("└" + new string('─', boxWidth) + "┘");
     // }
 
-    public List<List<Product>> EditContent(List<Product> allProducts)
+    public List<List<CartItem>> EditContent(List<CartItem> allCartItems)
     {
-        List<Product> tempList = new List<Product>();
+        List<CartItem> tempList = new List<CartItem>();
         int i = 0;
-        foreach (Product product in allProducts)
+        foreach (CartItem cartitem in allCartItems)
         {
             if (i >= 39)
             {
-                _allProducts.Add(tempList);
+                _cartItems.Add(tempList);
                 i = 0;
                 tempList.Clear();
                 tempList.Add(product);
@@ -158,6 +161,6 @@ public class CartMenu : Menu
             tempList.Add(product);
             i++;
         }
-        return new List<List<Product>>(_allProducts.ToList());
+        return new List<CartItem>(_cartItems.ToList());
     }
 }
