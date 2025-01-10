@@ -1,23 +1,31 @@
-
 namespace E_commerce_Databaser_i_ett_sammanhang;
 
 public class LoginMenuCommands : MenuBaseCommand
 {
     public UserResponse? LoggedInUser { get; private set; }
 
-    public LoginMenuCommands(ConsoleKey triggerkey, IUserService userService, IMenuService menuService)
-        : base(triggerkey, userService, menuService) { }
+    public LoginMenuCommands(
+        ConsoleKey triggerkey,
+        IUserService userService,
+        IMenuService menuService,
+        IProductService productService,
+        ICartService cartService,
+        IOrderService orderService
+    )
+        : base(triggerkey, userService, menuService, productService, cartService, orderService) { }
+
     public override async Task Execute(Guid? currentUserId)
     {
         while (true)
         {
             Utilities.ClearAndWriteLine(
-            """
-            [Login Commands]
-            [1] Login
-            [2] Register User
-            [Esc] Exit            
-            """);
+                """
+                [Login Commands]
+                [1] Login
+                [2] Register User
+                [Esc] Exit            
+                """
+            );
 
             var input = Console.ReadKey(true).Key;
 
@@ -30,7 +38,33 @@ public class LoginMenuCommands : MenuBaseCommand
                         LoggedInUser = await userService.LoginUser(loginDetails);
 
                         Console.WriteLine($"User logged in successfully!");
-                        Console.WriteLine($"Good to see you, {LoggedInUser.FirstName} {LoggedInUser.LastName}!");
+                        Console.WriteLine(
+                            $"Good to see you, {LoggedInUser.FirstName} {LoggedInUser.LastName}!"
+                        );
+                        if (await userService.CheckAdminPriviliges(LoggedInUser.UserId))
+                        {
+                            menuService.SetMenu(
+                                new HomeMenu(
+                                    userService,
+                                    menuService,
+                                    productService,
+                                    cartService,
+                                    orderService,
+                                    true
+                                )
+                            );
+                            break;
+                        }
+                        menuService.SetMenu(
+                            new HomeMenu(
+                                userService,
+                                menuService,
+                                productService,
+                                cartService,
+                                orderService,
+                                false
+                            )
+                        );
                         break;
 
                     case ConsoleKey.D2: // Register

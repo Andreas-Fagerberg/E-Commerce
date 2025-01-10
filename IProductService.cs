@@ -5,5 +5,6 @@ public interface IProductService
     Task<List<Product>> SearchProducts(string? productName = null, string? category = null);
     Task<Product> CreateProduct(Product product);
     Task<bool> RemoveProduct(int productId);
+    Task<List<List<Product>>> GetProductLists(List<Product>? products = null);
 }
 

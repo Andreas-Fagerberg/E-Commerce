@@ -16,7 +16,6 @@ public class UserService : IUserService
         this.ecommerceContext = ecommerceContext;
     }
 
-
     /// <summary>
     /// Registers a new user to the database with the provided details.
     /// </summary>
@@ -39,7 +38,7 @@ public class UserService : IUserService
             Email = dto.Email,
             PasswordHash = hashedPassword,
             Role = Role.User,
-            CreatedAt = DateTime.UtcNow
+            CreatedAt = DateTime.UtcNow,
         };
 
         await ecommerceContext.Users.AddAsync(user);
@@ -51,10 +50,9 @@ public class UserService : IUserService
             FirstName = user.FirstName,
             LastName = user.LastName,
             Email = user.Email,
-            Role = user.Role
+            Role = user.Role,
         };
     }
-
 
     /// <summary>
     /// Authenticates a user with the provided login credentials.
@@ -80,10 +78,9 @@ public class UserService : IUserService
             FirstName = user.FirstName,
             LastName = user.LastName,
             Email = user.Email,
-            Role = user.Role
+            Role = user.Role,
         };
     }
-
 
     /// <summary>
     /// Logs out the current user. The caller is responsible for setting currentUserId = null.
@@ -95,14 +92,13 @@ public class UserService : IUserService
     }
 
     /// <summary>
-    /// Retrieves user details by their unique identifier, typically for profile management, 
+    /// Retrieves user details by their unique identifier, typically for profile management,
     /// authorization, or UI personalization.
     /// </summary>
     public async Task<UserResponse> GetUser(Guid userId)
     {
         UserValidation.CheckForValidUser(userId);
-        var user = await ecommerceContext.Users
-            .FirstOrDefaultAsync(u => u.UserId == userId);
+        var user = await ecommerceContext.Users.FirstOrDefaultAsync(u => u.UserId == userId);
 
         if (user == null)
         {
@@ -115,13 +111,12 @@ public class UserService : IUserService
             FirstName = user.FirstName,
             LastName = user.LastName,
             Email = user.Email,
-            Role = user.Role
+            Role = user.Role,
         };
     }
 
-
     /// <summary>
-    /// Saves a user's address to the database. Enforces a one-to-one relationship, ensuring 
+    /// Saves a user's address to the database. Enforces a one-to-one relationship, ensuring
     /// the user can only have one address. Throws an exception if an address already exists.
     /// </summary>
     public async Task<AddressResponse> SaveUserAddress(RegisterAddressDTO dto)
@@ -129,12 +124,15 @@ public class UserService : IUserService
         UserValidation.CheckForValidUser(dto.UserId);
 
         // Check if the user already has an address
-        var existingAddress = await ecommerceContext.Addresses
-            .FirstOrDefaultAsync(a => a.UserId == dto.UserId);
+        var existingAddress = await ecommerceContext.Addresses.FirstOrDefaultAsync(a =>
+            a.UserId == dto.UserId
+        );
 
         if (existingAddress != null)
         {
-            throw new InvalidOperationException("User already has an address. Please update the existing address.");
+            throw new InvalidOperationException(
+                "User already has an address. Please update the existing address."
+            );
         }
 
         // Create the new address
@@ -146,7 +144,7 @@ public class UserService : IUserService
             City = dto.City,
             Region = dto.Region,
             PostalCode = dto.PostalCode,
-            Country = dto.Country
+            Country = dto.Country,
         };
 
         // Save to the database
@@ -157,26 +155,26 @@ public class UserService : IUserService
         return new AddressResponse
         {
             AddressId = address.AddressId,
-            UserId = address.UserId ?? throw new InvalidOperationException("Address UserId cannot be null."),
+            UserId =
+                address.UserId
+                ?? throw new InvalidOperationException("Address UserId cannot be null."),
             Street = address.Street,
             City = address.City,
             Region = address.Region,
             PostalCode = address.PostalCode,
-            Country = address.Country
+            Country = address.Country,
         };
     }
 
-
     /// <summary>
-    /// Retrieves a user's address by their unique identifier. 
+    /// Retrieves a user's address by their unique identifier.
     /// Throws an exception if no address is found.
     /// </summary>
     public async Task<AddressResponse> GetUserAddress(Guid userId)
     {
         UserValidation.CheckForValidUser(userId);
 
-        var address = await ecommerceContext.Addresses
-            .FirstOrDefaultAsync(a => a.UserId == userId);
+        var address = await ecommerceContext.Addresses.FirstOrDefaultAsync(a => a.UserId == userId);
 
         if (address == null)
         {
@@ -185,12 +183,14 @@ public class UserService : IUserService
 
         return new AddressResponse
         {
-            UserId = address.UserId ?? throw new InvalidOperationException("Address UserId cannot be null."),
+            UserId =
+                address.UserId
+                ?? throw new InvalidOperationException("Address UserId cannot be null."),
             Street = address.Street,
             City = address.City,
             Region = address.Region,
             PostalCode = address.PostalCode,
-            Country = address.Country
+            Country = address.Country,
         };
     }
 
@@ -202,12 +202,15 @@ public class UserService : IUserService
         UserValidation.CheckForValidUser(dto.UserId);
         AddressValidation.ValidateAddress(dto);
 
-        var existingAddress = await ecommerceContext.Addresses
-            .FirstOrDefaultAsync(a => a.UserId == dto.UserId);
+        var existingAddress = await ecommerceContext.Addresses.FirstOrDefaultAsync(a =>
+            a.UserId == dto.UserId
+        );
 
         if (existingAddress == null)
         {
-            throw new InvalidOperationException($"No existing address found for User: {dto.UserId}");
+            throw new InvalidOperationException(
+                $"No existing address found for User: {dto.UserId}"
+            );
         }
 
         existingAddress.Street = dto.Street;
@@ -222,35 +225,42 @@ public class UserService : IUserService
         return new AddressResponse
         {
             AddressId = existingAddress.AddressId,
-            UserId = existingAddress.UserId ?? throw new InvalidOperationException("Address UserId cannot be null."),
+            UserId =
+                existingAddress.UserId
+                ?? throw new InvalidOperationException("Address UserId cannot be null."),
             Street = existingAddress.Street,
             City = existingAddress.City,
             Region = existingAddress.Region,
             PostalCode = existingAddress.PostalCode,
-            Country = existingAddress.Country
+            Country = existingAddress.Country,
         };
     }
 
+    public async Task<bool> HasAddress(Guid userId)
+    {
+        return await ecommerceContext.Addresses.AnyAsync(a => a.UserId == userId);
+    }
 
     #region Admin Methods
 
     /// <summary>
-    /// Retrieves a list of all users in the system. This method is restricted to admin users only 
+    /// Retrieves a list of all users in the system. This method is restricted to admin users only
     /// and validates the admin user's credentials and role before execution.
     /// </summary>
     public async Task<List<UserResponse>> GetAllUsers(Guid? adminUserId)
     {
         await ValidateAdminUser(adminUserId);
 
-        return await ecommerceContext.Users
-            .Select(user => new UserResponse
+        return await ecommerceContext
+            .Users.Select(user => new UserResponse
             {
                 UserId = user.UserId,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Email = user.Email,
-                Role = user.Role
-            }).ToListAsync();
+                Role = user.Role,
+            })
+            .ToListAsync();
     }
 
     /// <summary>
@@ -281,8 +291,9 @@ public class UserService : IUserService
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Email = user.Email,
-                Role = user.Role
-            }).ToListAsync();
+                Role = user.Role,
+            })
+            .ToListAsync();
 
         return results;
     }
@@ -303,7 +314,9 @@ public class UserService : IUserService
 
         if (targetUser.Role == dto.Role)
         {
-            throw new InvalidOperationException($"The target user already has the specified role '{dto.Role}'");
+            throw new InvalidOperationException(
+                $"The target user already has the specified role '{dto.Role}'"
+            );
         }
 
         targetUser.Role = dto.Role;
@@ -315,13 +328,12 @@ public class UserService : IUserService
 
 
 
-    #region Helper Methods 
+    #region Helper Methods
 
     private string HashPassword(string password)
     {
         return BCrypt.Net.BCrypt.HashPassword(password);
     }
-
 
     private bool VerifyPassword(string password, string hashedPassword)
     {
@@ -330,7 +342,7 @@ public class UserService : IUserService
 
     /// <summary>
     /// This ensures that the adminUserId belongs to an admin user in the system.
-    /// If the user ID is invalid or doesn't belong to an admin, an exception is thrown. 
+    /// If the user ID is invalid or doesn't belong to an admin, an exception is thrown.
     /// /// </summary>
     public async Task<User> ValidateAdminUser(Guid? userId)
     {
@@ -346,6 +358,22 @@ public class UserService : IUserService
         UserValidation.ValidateUserRole(user.Role, Role.Admin);
 
         return user;
+    }
+
+    public async Task<bool> CheckAdminPriviliges(Guid? userId)
+    {
+        UserValidation.CheckForValidUser(userId);
+
+        var user = await ecommerceContext.Users.FindAsync(userId);
+
+        if (user == null)
+        {
+            throw new InvalidOperationException("User not found.");
+        }
+
+        UserValidation.ValidateUserRole(user.Role, Role.Admin);
+
+        return true;
     }
 
     #endregion
