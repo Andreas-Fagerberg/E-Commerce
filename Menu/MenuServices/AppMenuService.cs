@@ -1,12 +1,4 @@
-﻿namespace E_commerce_Databaser_i_ett_sammanhang;
-
-public interface IMenuService
-{
-    void SetMenu(Menu menu);
-    Menu GetMenu();
-
-}
-
+namespace E_commerce_Databaser_i_ett_sammanhang;
 public class AppMenuService : IMenuService
 {
     private Menu menu;
@@ -27,5 +19,4 @@ public class AppMenuService : IMenuService
     {
         this.menu = menu;
     }
-
 }

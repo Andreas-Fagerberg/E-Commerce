@@ -1,11 +1,10 @@
-using E_commerce_Databaser_i_ett_sammanhang;
-
+namespace E_commerce_Databaser_i_ett_sammanhang;
 public class BaseMenu : Menu
 {
     private string _headerContent = string.Empty;
     private List<string> _menuContent = new List<string>();
 
-    //public CheckoutMenu() { }
+    public BaseMenu() { }
 
     public override void Display()
     {
@@ -55,7 +54,7 @@ public class BaseMenu : Menu
             Console.WriteLine(
                 """
                 │                                                                               │
-                │ ESC. Exit application                                                         │
+                │ ESC. Go back.                                                                 │
                 """
             );
         }

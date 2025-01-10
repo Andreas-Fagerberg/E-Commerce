@@ -1,82 +1,195 @@
-// namespace E_commerce_Databaser_i_ett_sammanhang;
+namespace E_commerce_Databaser_i_ett_sammanhang;
 
-// public class ProductMenu : Menu
-// {
-//     public ProductMenu() { }
+public class ProductMenu : Menu
+{
+    // Keeps track of current page number
+    int index = 0;
+    bool noProducts = false;
+    string headerText = string.Empty;
+    string errorMessage = string.Empty;
+    string bottomText = string.Empty;
 
-//     public override void Display()
-//     {
-//         int index = 0;
-//         List<ProductForMenu> products = ProductList.GetProducts(index);
+    public ProductMenu() { }
 
-//         int boxWidth = 79;
-//         string headerText = "Select a product below:";
-//         string optionText2 =
-//             "← A/Left (Previous page)                                (Next page) D/Right →";
+    // List containing all pages/lists with all products.
+    List<List<Product>> _productLists = new List<List<Product>>();
 
-//         // Viktigt
+    public override void Display()
+    {
+        string displayRating;
+        // List containing the current page/current products.
+        List<Product> currentProducts = _productLists[index];
 
-//         Console.WriteLine("┌" + new string('─', boxWidth) + "┐");
-//         Console.WriteLine(
-//             "│ " + optionText1 + new string(' ', boxWidth - (optionText1.Length + 8)) + "AAAL © │"
-//         );
-//         Console.WriteLine("├" + new string('─', boxWidth) + "┤");
-//         Console.WriteLine(
-//             "│ Name:                                           │ Price:          │ Rating:   │"
-//         );
+        // Used to decide the size of the menu.
+        int boxWidth = 79;
 
-//         for (int i = 0; i < 40; i++)
-//         {
-//             if (i > products.Count)
-//             {
-//                 break;
-//             }
-//             if (products.Count > i && i < 9)
-//             {
-//                 Console.WriteLine(
-//                     "│  "
-//                         + (i + 1)
-//                         + ". "
-//                         + products[i].Name
-//                         + new string(' ', 44 - products[i].Name.Length)
-//                         + "│ "
-//                         + products[i].Price
-//                         + new string(' ', 16 - products[i].Price.ToString().Length)
-//                         + "│ "
-//                         + products[i].DisplayRating
-//                         + new string(' ', 10 - products[i].DisplayRating.Length)
-//                         + "│"
-//                 );
-//                 continue;
+        Console.WriteLine("┌" + new string('─', boxWidth) + "┐");
+        Console.WriteLine(
+            "│ " + headerText + new string(' ', boxWidth - (headerText.Length + 8)) + "AAAL © │"
+        );
+        Console.WriteLine("├" + new string('─', boxWidth) + "┤");
+        Console.WriteLine(
+            "│ Name:                                           │ Price:          │ Rating:   │"
+        );
 
-//                 { }
-//             }
-//             if (products.Count > i)
-//             {
-//                 Console.WriteLine(
-//                     "│ "
-//                         + (i + 1)
-//                         + ". "
-//                         + products[i].Name
-//                         + new string(' ', 44 - products[i].Name.Length)
-//                         + "│ "
-//                         + products[i].Price
-//                         + new string(' ', 16 - products[i].Price.ToString().Length)
-//                         + "│ "
-//                         + products[i].DisplayRating
-//                         + new string(' ', 10 - products[i].DisplayRating.Length)
-//                         + "│"
-//                 );
-//                 continue;
-//             }
+        int i = 0;
+        if (noProducts)
+        {
+            Console.WriteLine("├" + new string('─', boxWidth) + "┤");
+            Console.WriteLine(
+                "│ "
+                    + errorMessage
+                    + new string(' ', boxWidth - (errorMessage.Length + 8))
+                    + "AAAL © │"
+            );
+            Console.WriteLine("├" + new string('─', boxWidth) + "┤");
+            
+        }
+        // Put in else block.
+        foreach (Product product in currentProducts)
+        {
+            displayRating = new string('★', product.Rating) + new string('☆', 5 - product.Rating);
 
-//             // Console.WriteLine("│" + new string(' ', boxWidth) + "│");
-//         }
+            if (i < 9)
+            {
+                Console.WriteLine(
+                    "│  "
+                        + (i + 1)
+                        + ". "
+                        + product.Name
+                        + new string(' ', 44 - product.Name!.Length)
+                        + "│ "
+                        + product.Price
+                        + new string(' ', 16 - product.Price.ToString().Length)
+                        + "│ "
+                        + displayRating
+                        + new string(' ', 10 - displayRating.Length)
+                        + "│"
+                );
+                i++;
+                continue;
+            }
 
-//         Console.WriteLine("├" + new string('─', boxWidth) + "┤");
-//         Console.WriteLine(
-//             "│ " + optionText2 + new string(' ', boxWidth - (optionText2.Length + 1)) + "│"
-//         );
-//         Console.WriteLine("└" + new string('─', boxWidth) + "┘");
-//     }
-// }
+            Console.WriteLine(
+                "│ "
+                    + (i + 1)
+                    + ". "
+                    + product.Name
+                    + new string(' ', 44 - product.Name!.Length)
+                    + "│ "
+                    + product.Price
+                    + new string(' ', 16 - product.Price.ToString().Length)
+                    + "│ "
+                    + displayRating
+                    + new string(' ', 10 - displayRating.Length)
+                    + "│"
+            );
+            i++;
+            continue;
+        }
+        Console.WriteLine(
+            """
+            │                                                                               │
+            │ ESC. Go back.                                                                 │
+            """
+        );
+
+        Console.WriteLine("├" + new string('─', boxWidth) + "┤");
+        Console.WriteLine(
+            "│ " + bottomText + new string(' ', boxWidth - (bottomText.Length + 1)) + "│"
+        );
+        Console.WriteLine("└" + new string('─', boxWidth) + "┘");
+    }
+
+    public void DisplayProduct(Product product)
+    {
+        string displayRating =
+            new string('★', product.Rating) + new string('☆', 5 - product.Rating);
+
+        int boxWidth = 79;
+        string headerText = "Select an option below:";
+
+        Console.WriteLine("┌" + new string('─', boxWidth) + "┐");
+        Console.WriteLine(
+            "│ " + headerText + new string(' ', boxWidth - (headerText.Length + 8)) + "AAAL © │"
+        );
+        Console.WriteLine("├" + new string('─', boxWidth) + "┤");
+
+        Console.WriteLine(
+            "│ NAME: " + product.Name + new string(' ', boxWidth - product.Name!.Length + 8) + "│"
+        );
+
+        Console.WriteLine(
+            "│ DESCRIPTION: "
+                + product.Description
+                + new string(' ', boxWidth - product.Description!.Length + 15)
+                + "│"
+        );
+
+        Console.WriteLine(
+            "│ PRICE: "
+                + product.Price
+                + new string(' ', boxWidth - product.Price.ToString().Length + 9)
+                + "│"
+        );
+
+        Console.WriteLine(
+            "│ RATING: " + displayRating + new string(' ', 16 - displayRating.Length + 10) + "│"
+        );
+
+        // TODO: Should we set a custom message for available?
+        Console.WriteLine(
+            "│ IN STOCK: "
+                + product.Available
+                + new string(' ', boxWidth - product.Available!.ToString().Length + 12)
+                + "│"
+        );
+
+        Console.WriteLine(
+            """
+            │                                                                               │
+            │  1. Add to cart.                                                              │
+            │                                                                               │
+            │ ESC. Go back.                                                                 │
+            """
+        );
+
+        Console.WriteLine("├" + new string('─', boxWidth) + "┤");
+        Console.WriteLine("│" + new string(' ', boxWidth) + "│");
+        Console.WriteLine("└" + new string('─', boxWidth) + "┘");
+    }
+
+    public void EditContent(List<List<Product>>? productLists = null)
+    {
+        if (productLists is null || productLists.Count.Equals(0))
+        {
+            noProducts = true;
+            headerText = string.Empty;
+            errorMessage = "No products found.";
+            return;
+        }
+        noProducts = false;
+        headerText = "Select a product below:";
+        bottomText =
+            "←   Left (Previous page)                                (Next page) Right   →";
+        _productLists = productLists;
+    }
+
+    public void SetPage(ConsoleKey key)
+    {
+        if (key.Equals(ConsoleKey.LeftArrow) && index > 0)
+        {
+            index--;
+        }
+
+        if (key.Equals(ConsoleKey.RightArrow) && index < _productLists.Count - 1)
+        {
+            index++;
+        }
+    }
+
+    public int GetPage()
+    {
+        return index;
+    }
+}

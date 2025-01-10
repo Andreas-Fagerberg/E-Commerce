@@ -2,11 +2,54 @@ namespace E_commerce_Databaser_i_ett_sammanhang;
 
 public class ProductCommand : MenuBaseCommand
 {
-    public ProductCommand(ConsoleKey triggerKey, IUserService userService, IMenuService menuService)
-        : base(triggerKey, userService, menuService) { }
-
-    public override Task Execute(Guid? currentUserId)
+    private readonly ProductHandler _productHandler;
+    private BaseMenu baseMenu = new BaseMenu();
+    private List<string> _menuContent = new List<string>
     {
-        throw new NotImplementedException();
+        "Show all products",
+        "Search for products",
+        "Select category",
+    };
+
+    public ProductCommand(
+        ConsoleKey triggerKey,
+        IUserService userService,
+        IMenuService menuService,
+        IProductService productService,
+        ICartService cartService,
+        IOrderService orderService
+    )
+        : base(triggerKey, userService, menuService, cartService, orderService)
+    {
+        _productHandler = new ProductHandler(productService, cartService);
+    }
+
+    public override async Task Execute(Guid? currentUserId)
+    {
+        while (true)
+        {
+            baseMenu.EditContent(_menuContent);
+            baseMenu.Display();
+
+            ConsoleKey input = Console.ReadKey().Key;
+
+            switch (input)
+            {
+                case ConsoleKey.D1:
+                    await _productHandler.HandleShowProducts();
+                    break;
+                case ConsoleKey.D2:
+                    await _productHandler.HandleSearchProducts();
+                    break;
+                case ConsoleKey.D3:
+                    await _productHandler.HandleCategorySelection();
+                    break;
+                case ConsoleKey.Escape:
+                    return;
+                default:
+                    Console.WriteLine("Invalid input");
+                    continue;
+            }
+        }
     }
 }
