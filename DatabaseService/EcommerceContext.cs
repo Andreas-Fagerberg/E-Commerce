@@ -9,6 +9,7 @@ using System.Net.Sockets;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
+// DO NOT FORMAT THIS FILE WITH CSHARPIER PLEASE!!!!!!
 public class EcommerceContext : DbContext
 {
     public DbSet<User> Users { get; set; }
@@ -17,6 +18,7 @@ public class EcommerceContext : DbContext
     public DbSet<ShoppingCart> Carts { get; set; }
     public DbSet<OrderProduct> OrderProducts { get; set; }
     public DbSet<Address> Addresses { get; set; }
+    public DbSet<Invoice> Invoices { get; set; }
 
     // public DbSet<ShoppingCart> ShoppingCarts { get; set; }
 
@@ -40,6 +42,7 @@ public class EcommerceContext : DbContext
             );
         }
     }
+
 
     // Om man vill konfigurera modellerna med constraints.:
     protected override void OnModelCreating(ModelBuilder builder)
@@ -98,27 +101,70 @@ public class EcommerceContext : DbContext
 
             order.HasIndex(o => o.UserId);
 
-            order
-                .Property(o => o.CreatedAt)
-                .IsRequired()
-                .HasDefaultValueSql("CURRENT_TIMESTAMP")
-                .HasColumnType("timestamp(0) with time zone");
+            order.Property(o => o.CreatedAt)
+                 .IsRequired()
+                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                 .HasColumnType("timestamp(0) with time zone");
 
-            order
-                .Property(o => o.Status)
-                .IsRequired()
-                .HasConversion<string>()
-                .HasDefaultValueSql("Pending");
+            order.Property(o => o.Status)
+                 .IsRequired()
+                 .HasConversion<string>()
+                 .HasDefaultValueSql("Pending");
 
-            order.Property(o => o.TotalCost).IsRequired().HasColumnType("decimal(10, 2)");
+            order.Property(o => o.TotalCost)
+                 .IsRequired()
+                .HasColumnType("decimal(10, 2)");
 
-            // Relationship configuration
-            order
-                .HasOne(o => o.User)
-                .WithMany(u => u.Orders)
-                .HasForeignKey(o => o.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
+            // Relationship with User
+            order.HasOne(o => o.User)
+                 .WithMany(u => u.Orders)
+                 .HasForeignKey(o => o.UserId)
+                 .OnDelete(DeleteBehavior.Cascade);
+
+            // Relationship with Invoice
+            order.HasOne(o => o.Invoice)
+                 .WithOne(i => i.Order)
+                 .HasForeignKey<Invoice>(i => i.OrderId)
+                 .OnDelete(DeleteBehavior.Restrict);
+
         });
+
+        builder.Entity<Invoice>(invoice =>
+        {
+
+            invoice.HasKey(i => i.InvoiceId);
+
+            invoice.Property(i => i.OrderId)
+                   .IsRequired();
+
+            invoice.Property(i => i.TotalAmount)
+                    .IsRequired()
+                    .HasColumnType("decimal(10, 2)");
+
+            invoice.Property(i => i.PaymentStatus)
+                    .IsRequired()
+                    .HasConversion<string>();
+
+            invoice.Property(i => i.PaymentMethod)
+                    .IsRequired()
+                    .HasConversion<string>();
+
+            invoice.Property(i => i.CreatedAt)
+                    .IsRequired()
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                    .HasColumnType("timestamp(0) with time zone");
+
+            invoice.Property(i => i.PaidAt)
+                    .IsRequired(false)
+                    .HasColumnType("timestamp(0) with time zone");
+
+            // Relationship with Order
+            invoice.HasOne(i => i.Order)
+                    .WithOne(o => o.Invoice)
+                    .HasForeignKey<Invoice>(i => i.OrderId)
+                    .OnDelete(DeleteBehavior.Restrict);
+        });
+
 
         builder.Entity<OrderProduct>(orderProduct =>
         {

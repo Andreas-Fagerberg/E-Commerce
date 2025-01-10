@@ -137,6 +137,32 @@ public class OrderService : IOrderService
         return orderResponses;
     }
 
+    public async Task<OrderResponse> ProcessOrder(Guid currentUserId, List<OrderProductDTO> orderProducts, PaymentMethod paymentMethod)
+    {
+        var createOrderDTO = new CreateOrderDTO
+        {
+            UserId = currentUserId,
+            Products = orderProducts,
+            PaymentMethod = paymentMethod
+        };
+
+        try
+        {
+            var orderResponse = await CreateOrder(createOrderDTO);
+            if (orderResponse == null)
+            {
+                throw new InvalidOperationException("Order creation failed.");
+            }
+
+            var detailedOrderResponse = await GetOrderDetails(orderResponse.OrderId);
+            return detailedOrderResponse;
+        }
+        catch (Exception ex)
+        {
+            throw new InvalidOperationException($"An error occurred during order processing: {ex.Message}");
+        }
+    }
+
     #region Helper Methods
 
     private async Task<Dictionary<int, decimal>> GetProductPrices(IEnumerable<int> productIds)
