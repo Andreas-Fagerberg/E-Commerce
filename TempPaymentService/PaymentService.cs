@@ -26,8 +26,10 @@ public class PaymentService : IPaymentService
         {
             OrderId = dto.OrderId,
             TotalAmount = dto.TotalAmount,
-            PaymentStatus = PaymentStatus.Pending,
             PaymentMethod = dto.PaymentMethod,
+            PaymentStatus = dto.PaymentMethod == PaymentMethod.PayNow
+                ? PaymentStatus.Paid
+                : PaymentStatus.Pending,
             CreatedAt = DateTime.UtcNow
         };
 
