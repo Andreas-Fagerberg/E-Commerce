@@ -1,5 +1,6 @@
 
 using System.Runtime.InteropServices;
+using System.Security.Cryptography.X509Certificates;
 
 namespace E_commerce_Databaser_i_ett_sammanhang;
 
@@ -170,6 +171,83 @@ public static class InputHandler
         }
     }
 
+    public static Product GetCreateProductInput()
+    {
+        Console.WriteLine("\nCreate New Product");
+
+        string name = ReadNonEmptyStrings("Product Name", "Product name cannot be empty");
+        string category = ReadNonEmptyStrings("Category", "Category cannot be empty");
+        string description = ReadNonEmptyStrings("Description", "Description cannot be empty");
+
+        decimal price;
+        while (true)
+        {
+            Console.Write("Enter Price: ");
+            if (decimal.TryParse(Console.ReadLine(), out price) && price > 0)
+            {
+                break;
+            }
+            Console.WriteLine("Please enter a valid price greater than 0.");
+        }
+
+        int rating;
+        while (true)
+        {
+            Console.Write("Enter Rating (1-5): ");
+            if (int.TryParse(Console.ReadLine(), out rating) && rating >= 1 && rating <= 5)
+            {
+                break;
+            }
+            Console.WriteLine("Please enter a valid rating between 1 and 5.");
+        }
+
+        Console.Write("Is product available? (y/n): ");
+        bool available = Console.ReadKey().Key == ConsoleKey.Y;
+        Console.WriteLine();
+
+        return new Product
+        {
+            Name = name,
+            Category = category,
+            Description = description,
+            Price = price,
+            Rating = rating,
+            Available = available
+        };
+    }
+    public static int GetProductIdToRemove(IProductService productService)
+    {
+        while (true)
+        {
+            Console.Write("Enter the product name: ");
+            var productName = Console.ReadLine();
+
+            var products = productService.SearchProducts(productName).Result;
+
+            if (products == null || products.Count == 0)
+            {
+                Console.WriteLine("No products found with that name. Please try again.");
+                continue;
+            }
+
+            Console.WriteLine("Matching Products:");
+            foreach (var product in products)
+            {
+                Console.WriteLine($"ID: {product.ProductId}, Name: {product.Name}");
+            }
+
+            int productId;
+            while (true)
+            {
+                Console.Write("Enter the Product ID to remove: ");
+                if (int.TryParse(Console.ReadLine(), out productId) && products.Any(p => p.ProductId == productId))
+                {
+                    return productId;
+                }
+                Console.WriteLine("Invalid Product ID. Please enter a valid ID from the list.");
+            }
+        }
+    }
 
     #region Helper Methods
 

@@ -25,8 +25,10 @@ public class AdminCommands : MenuBaseCommand
             "Search Users",
             "Update User Role",
             "Create Product",
+            "Remove Product",
         };
     }
+
 
     public override async Task Execute(Guid? currentUserId)
     {
@@ -35,6 +37,7 @@ public class AdminCommands : MenuBaseCommand
         _baseMenu.EditContent(_menuContent);
         while (true)
         {
+
             _baseMenu.Display();
 
             var input = Console.ReadKey(true).Key;
@@ -78,6 +81,25 @@ public class AdminCommands : MenuBaseCommand
                         var newRole = InputHandler.GetRoleUpdateInput();
                         await userService.UpdateUserRole(newRole, currentUserId);
                         Console.WriteLine("User role updated successfully.");
+                        break;
+
+                    case ConsoleKey.D4: // Create New Product
+                        var newProduct = InputHandler.GetCreateProductInput();
+                        await _productService.CreateProduct(newProduct);
+                        Console.WriteLine("Product created successfully.");
+                        break;
+
+                    case ConsoleKey.D5: // Remove Product
+                        int productId = InputHandler.GetProductIdToRemove(_productService);
+                        var isRemoved = await _productService.RemoveProduct(productId);
+                        if (isRemoved)
+                        {
+                            Console.WriteLine("Product removed successfully.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Failed to remove product.");
+                        }
                         break;
 
                     default:

@@ -58,6 +58,44 @@ public class ProductService : IProductService
             throw new Exception("An error occurred while searching products", ex);
         }
     }
+
+    public async Task<Product> CreateProduct(Product product)
+    {
+        try
+        {
+            await _ecommerceContext.Products.AddAsync(product);
+
+            await _ecommerceContext.SaveChangesAsync();
+
+            return product;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("Failed to create product", ex);
+        }
+    }
+    public async Task<bool> RemoveProduct(int productId)
+    {
+        try
+        {
+            var product = await _ecommerceContext.Products.FindAsync(productId);
+
+            if (product == null)
+            {
+                Console.WriteLine($"No product found with ID: {productId}");
+                return false;
+            }
+
+            _ecommerceContext.Products.Remove(product);
+            await _ecommerceContext.SaveChangesAsync();
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("Failed to remove product", ex);
+        }
+    }
     
     public async Task<List<List<Product>>> GetProductLists(List<Product>? products = null)
     {
@@ -82,5 +120,4 @@ public class ProductService : IProductService
         }
         return new List<List<Product>>(splitProducts.ToList());
     }
-
 }
