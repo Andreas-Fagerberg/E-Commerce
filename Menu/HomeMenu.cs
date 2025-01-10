@@ -1,4 +1,4 @@
-namespace E_commerce_Databaser_i_ett_sammanhang;
+﻿namespace E_commerce_Databaser_i_ett_sammanhang;
 
 public class HomeMenu : Menu
 {
@@ -10,7 +10,6 @@ public class HomeMenu : Menu
         // AddCommand()
         // AddCommand()
         // AddCommand()
-        
     }
 //     public override void Display()
 //     {

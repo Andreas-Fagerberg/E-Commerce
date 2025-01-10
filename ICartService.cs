@@ -30,5 +30,8 @@ namespace E_commerce_Databaser_i_ett_sammanhang
         );
 
         Task SaveCartToDatabase(Guid userId);
+
+        public decimal TotalCost();
+        
     }
 }

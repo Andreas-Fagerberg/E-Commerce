@@ -23,7 +23,7 @@ public class CartCommand : MenuBaseCommand
         IMenuService menuService,
         ICartService cartService
     )
-        : base(triggerKey, userService, menuService)
+        : base(triggerKey, userService, menuService, cartService)
     {
         _cartService = cartService;
     }
@@ -52,17 +52,13 @@ public class CartCommand : MenuBaseCommand
             switch (input)
             {
                 case ConsoleKey.D1:
-                     
+                     await _cartHandler.HandleShowCart();
                     break;
                 case ConsoleKey.D2:
-                await _cartHandler.HandleShowCart();
+             
                     break;
-                case ConsoleKey.D3:
-                    await RemoveItemShoppingCart(currentUserId.Value, productId);
-                    break;
-                case ConsoleKey.D4:
-                _cartService.
-                    break;
+                default: 
+                break;    
             }
             }
             catch (Exception ex)
