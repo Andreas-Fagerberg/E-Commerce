@@ -108,7 +108,7 @@ public class ProductHandler
 
             if (key == ConsoleKey.D1)
             {
-                await _shoppingCartService.AddToShoppingCart(product);
+                await _cartService.AddToShoppingCart(product);
                 return;
             }
             else if (key == ConsoleKey.Escape)

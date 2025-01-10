@@ -19,7 +19,7 @@ public class ProductCommand : MenuBaseCommand
         ICartService cartService,
         IOrderService orderService
     )
-        : base(triggerKey, userService, menuService, cartService, orderService)
+        : base(triggerKey, userService, menuService, productService, cartService, orderService)
     {
         _productHandler = new ProductHandler(productService, cartService);
     }
