@@ -1,4 +1,4 @@
-namespace E_commerce_Databaser_i_ett_sammanhang;
+﻿namespace E_commerce_Databaser_i_ett_sammanhang;
 
 public class HomeMenu : Menu
 {
@@ -6,6 +6,7 @@ public class HomeMenu : Menu
 
     public HomeMenu(IUserService userService, IMenuService menuService, IProductService productService, ICartService cartService, IOrderService orderService, bool admin)
     {
+
         _menuContent = new List<string> {"Products", "Cart", "Checkout", "Log Out"};
         if (admin)
         {
