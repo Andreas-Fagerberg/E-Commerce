@@ -72,4 +72,26 @@ public class ProductService : IProductService
             throw new Exception("Failed to create product", ex);
         }
     }
+    public async Task<bool> RemoveProduct(int productId)
+    {
+        try
+        {
+            var product = await _ecommerceContext.Products.FindAsync(productId);
+
+            if (product == null)
+            {
+                Console.WriteLine($"No product found with ID: {productId}");
+                return false;
+            }
+
+            _ecommerceContext.Products.Remove(product);
+            await _ecommerceContext.SaveChangesAsync();
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("Failed to remove product", ex);
+        }
+    }
 }

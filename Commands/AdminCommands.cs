@@ -22,6 +22,7 @@ public class AdminCommands : MenuBaseCommand
             [2] Search Users
             [3] Update User Role
             [4] Create New Product
+            [5] Remove Product
             [Esc] Exit Admin Menu
             """);
 
@@ -60,6 +61,19 @@ public class AdminCommands : MenuBaseCommand
                         var newProduct = InputHandler.GetCreateProductInput();
                         await _productService.CreateProduct(newProduct);
                         Console.WriteLine("Product created successfully.");
+                        break;
+
+                    case ConsoleKey.D5: // Remove Product
+                        int productId = InputHandler.GetProductIdToRemove(_productService);
+                        var isRemoved = await _productService.RemoveProduct(productId);
+                        if (isRemoved)
+                        {
+                            Console.WriteLine("Product removed successfully.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Failed to remove product.");
+                        }
                         break;
 
                     default:

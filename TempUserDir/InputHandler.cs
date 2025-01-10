@@ -216,6 +216,39 @@ public static class InputHandler
             Available = available
         };
     }
+    public static int GetProductIdToRemove(IProductService productService)
+    {
+        while (true)
+        {
+            Console.Write("Enter the product name: ");
+            var productName = Console.ReadLine();
+
+            var products = productService.SearchProducts(productName).Result;
+
+            if (products == null || products.Count == 0)
+            {
+                Console.WriteLine("No products found with that name. Please try again.");
+                continue;
+            }
+
+            Console.WriteLine("Matching Products:");
+            foreach (var product in products)
+            {
+                Console.WriteLine($"ID: {product.ProductId}, Name: {product.Name}");
+            }
+
+            int productId;
+            while (true)
+            {
+                Console.Write("Enter the Product ID to remove: ");
+                if (int.TryParse(Console.ReadLine(), out productId) && products.Any(p => p.ProductId == productId))
+                {
+                    return productId;
+                }
+                Console.WriteLine("Invalid Product ID. Please enter a valid ID from the list.");
+            }
+        }
+    }
 
     #region Helper Methods
 
