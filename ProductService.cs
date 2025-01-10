@@ -61,9 +61,8 @@ public class ProductService : IProductService
     {
         try
         {
-            // Add product to our database
             await _ecommerceContext.Products.AddAsync(product);
-            // Save changes to our database
+
             await _ecommerceContext.SaveChangesAsync();
 
             return product;

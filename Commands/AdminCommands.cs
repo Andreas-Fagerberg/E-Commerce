@@ -57,7 +57,7 @@ public class AdminCommands : MenuBaseCommand
                         break;
 
                     case ConsoleKey.D4: // Create New Product
-                        var newProduct = InputHandler.GetCreateProductInput(_productService);
+                        var newProduct = InputHandler.GetCreateProductInput();
                         await _productService.CreateProduct(newProduct);
                         Console.WriteLine("Product created successfully.");
                         break;

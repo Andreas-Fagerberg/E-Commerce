@@ -172,9 +172,9 @@ public static class InputHandler
         }
     }
 
-    public static Product GetCreateProductInput(IProductService productService)
+    public static Product GetCreateProductInput()
     {
-        Console.WriteLine("\n[Create New Product]");
+        Console.WriteLine("\nCreate New Product");
 
         string name = ReadNonEmptyStrings("Product Name", "Product name cannot be empty");
         string category = ReadNonEmptyStrings("Category", "Category cannot be empty");
