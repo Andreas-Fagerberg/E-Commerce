@@ -2,32 +2,41 @@ namespace E_commerce_Databaser_i_ett_sammanhang;
 
 public class LoginCommand : MenuBaseCommand
 {
-    public UserResponse? LoggedInUser { get; private set; }
-
     public LoginCommand(
         ConsoleKey triggerKey,
         IUserService userService,
         IMenuService menuService,
         IProductService productService,
         ICartService cartService,
-        IOrderService orderService
+        IOrderService orderService,
+        IPaymentService paymentService
     )
-        : base(triggerKey, userService, menuService, productService, cartService, orderService) { }
+        : base(
+            triggerKey,
+            userService,
+            menuService,
+            productService,
+            cartService,
+            orderService,
+            paymentService
+        ) { }
 
-    public override async Task Execute(Guid? currentUserId)
+    public override async Task<Guid> Execute(Guid? currentUserId)
     {
         while (true)
         {
             try
             {
                 var loginDetails = InputHandler.GetLoginInput();
-                LoggedInUser = await userService.LoginUser(loginDetails);
+                UserResponse? loggedInUser = await userService.LoginUser(loginDetails);
 
                 Console.WriteLine($"User logged in successfully!");
                 Console.WriteLine(
-                    $"Good to see you, {LoggedInUser.FirstName} {LoggedInUser.LastName}!"
+                    $"Good to see you, {loggedInUser.FirstName} {loggedInUser.LastName}!"
                 );
-                if (await userService.CheckAdminPriviliges(LoggedInUser.UserId))
+
+                // Sets Admin version of HomeMenu.
+                if (await userService.CheckAdminPriviliges(loggedInUser.UserId))
                 {
                     menuService.SetMenu(
                         new HomeMenu(
@@ -36,11 +45,13 @@ public class LoginCommand : MenuBaseCommand
                             productService,
                             cartService,
                             orderService,
+                            paymentService,
                             true
                         )
                     );
-                    break;
                 }
+
+                // Sets regular version of HomeMenu.
                 menuService.SetMenu(
                     new HomeMenu(
                         userService,
@@ -48,9 +59,11 @@ public class LoginCommand : MenuBaseCommand
                         productService,
                         cartService,
                         orderService,
+                        paymentService,
                         false
                     )
                 );
+                return loggedInUser.UserId;
             }
             catch (Exception ex)
             {

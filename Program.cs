@@ -9,13 +9,21 @@ class Program
         Guid? currentUserId = null; // Tracks the logged-in user's ID.
         EcommerceContext ecommerceContext = new EcommerceContext();
         IUserService userService = new UserService(ecommerceContext);
-        IMenuService menuService = new AppMenuService(userService);
+        IMenuService menuService = new MenuService(userService);
         IProductService productService = new ProductService(ecommerceContext);
         ICartService cartService = new CartService(ecommerceContext);
         IOrderService orderService = new OrderService(ecommerceContext);
+        IPaymentService paymentService = new PaymentService(ecommerceContext);
 
         menuService.SetMenu(
-            new LoginMenu(userService, menuService, productService, cartService, orderService)
+            new LoginMenu(
+                userService,
+                menuService,
+                productService,
+                cartService,
+                orderService,
+                paymentService
+            )
         );
 
         while (true)
