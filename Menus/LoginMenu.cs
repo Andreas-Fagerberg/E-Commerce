@@ -10,7 +10,8 @@ public class LoginMenu : Menu
         IMenuService menuService,
         IProductService productService,
         ICartService cartService,
-        IOrderService orderService
+        IOrderService orderService,
+        IPaymentService paymentService
     )
     {
         _menuContent = new List<string> { "Login", "Register User" };
@@ -22,18 +23,20 @@ public class LoginMenu : Menu
                 menuService,
                 productService,
                 cartService,
-                orderService
+                orderService,
+                paymentService
             )
         );
 
         AddCommand(
-            new RegisterUserCommand(
+            new RegisterCommand(
                 ConsoleKey.D2,
                 userService,
                 menuService,
                 productService,
                 cartService,
-                orderService
+                orderService,
+                paymentService
             )
         );
     }

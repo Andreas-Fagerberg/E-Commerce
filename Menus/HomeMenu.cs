@@ -4,19 +4,76 @@ public class HomeMenu : Menu
 {
     private List<string> _menuContent;
 
-    public HomeMenu(IUserService userService, IMenuService menuService, IProductService productService, ICartService cartService, IOrderService orderService, bool admin)
+    public HomeMenu(
+        IUserService userService,
+        IMenuService menuService,
+        IProductService productService,
+        ICartService cartService,
+        IOrderService orderService,
+        IPaymentService paymentService,
+        bool admin
+    )
     {
-
-        _menuContent = new List<string> {"Products", "Cart", "Checkout", "Log Out"};
+        _menuContent = new List<string> { "Products", "Cart", "Checkout", "Log Out" };
         if (admin)
         {
             _menuContent.Add("Admin Controls");
-            AddCommand(new AdminCommands(ConsoleKey.D5, userService, menuService, productService, cartService, orderService);
+            AddCommand(
+                new AdminCommands(
+                    ConsoleKey.D5,
+                    userService,
+                    menuService,
+                    productService,
+                    cartService,
+                    orderService,
+                    paymentService
+                )
+            );
         }
-        AddCommand(new ProductCommand(ConsoleKey.D1, userService, menuService, productService, cartService, orderService));
-        AddCommand(new CartCommand(ConsoleKey.D2, userService, menuService, productService, cartService, orderService));
-        AddCommand(new CheckoutCommands(ConsoleKey.D3, userService, menuService, productService, cartService, orderService));
-        AddCommand(new LogoutUserCommand(ConsoleKey.D4, userService, menuService, productService, cartService, orderService));
+        AddCommand(
+            new ProductCommands(
+                ConsoleKey.D1,
+                userService,
+                menuService,
+                productService,
+                cartService,
+                orderService,
+                paymentService
+            )
+        );
+        AddCommand(
+            new CartCommands(
+                ConsoleKey.D2,
+                userService,
+                menuService,
+                productService,
+                cartService,
+                orderService,
+                paymentService
+            )
+        );
+        AddCommand(
+            new CheckoutCommands(
+                ConsoleKey.D3,
+                userService,
+                menuService,
+                productService,
+                cartService,
+                orderService,
+                paymentService
+            )
+        );
+        AddCommand(
+            new LogoutCommand(
+                ConsoleKey.D4,
+                userService,
+                menuService,
+                productService,
+                cartService,
+                orderService,
+                paymentService
+            )
+        );
     }
 
     public override void Display()

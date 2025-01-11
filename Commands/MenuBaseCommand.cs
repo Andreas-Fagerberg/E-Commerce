@@ -8,6 +8,7 @@ public abstract class MenuBaseCommand : ICommand
     protected readonly IProductService productService;
     protected readonly ICartService cartService;
     protected readonly IOrderService orderService;
+    protected readonly IPaymentService paymentService;
 
     protected MenuBaseCommand(
         ConsoleKey triggerKey,
@@ -15,7 +16,8 @@ public abstract class MenuBaseCommand : ICommand
         IMenuService menuService,
         IProductService productService,
         ICartService cartService,
-        IOrderService orderService
+        IOrderService orderService,
+        IPaymentService paymentService
     )
     {
         TriggerKey = triggerKey;
@@ -24,6 +26,7 @@ public abstract class MenuBaseCommand : ICommand
         this.productService = productService;
         this.cartService = cartService;
         this.orderService = orderService;
+        this.paymentService = paymentService;
     }
 
     /* Using abstract method with a Task return type.

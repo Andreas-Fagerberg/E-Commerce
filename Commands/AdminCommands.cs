@@ -12,9 +12,18 @@ public class AdminCommands : MenuBaseCommand
         IMenuService menuService,
         IProductService productService,
         ICartService cartService,
-        IOrderService orderService
+        IOrderService orderService,
+        IPaymentService paymentService
     )
-        : base(triggerkey, userService, menuService, productService, cartService, orderService)
+        : base(
+            triggerkey,
+            userService,
+            menuService,
+            productService,
+            cartService,
+            orderService,
+            paymentService
+        )
     {
         _baseMenu = new BaseMenu();
         _adminMenu = new AdminMenu();
@@ -29,7 +38,6 @@ public class AdminCommands : MenuBaseCommand
         };
     }
 
-
     public override async Task Execute(Guid? currentUserId)
     {
         await userService.ValidateAdminUser(currentUserId);
@@ -37,7 +45,6 @@ public class AdminCommands : MenuBaseCommand
         _baseMenu.EditContent(_menuContent);
         while (true)
         {
-
             _baseMenu.Display();
 
             var input = Console.ReadKey(true).Key;
@@ -85,13 +92,13 @@ public class AdminCommands : MenuBaseCommand
 
                     case ConsoleKey.D4: // Create New Product
                         var newProduct = InputHandler.GetCreateProductInput();
-                        await _productService.CreateProduct(newProduct);
+                        await productService.CreateProduct(newProduct);
                         Console.WriteLine("Product created successfully.");
                         break;
 
                     case ConsoleKey.D5: // Remove Product
-                        int productId = InputHandler.GetProductIdToRemove(_productService);
-                        var isRemoved = await _productService.RemoveProduct(productId);
+                        int productId = InputHandler.GetProductIdToRemove(productService);
+                        var isRemoved = await productService.RemoveProduct(productId);
                         if (isRemoved)
                         {
                             Console.WriteLine("Product removed successfully.");

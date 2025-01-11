@@ -80,8 +80,6 @@ public class CartMenu : Menu
         Console.WriteLine(
             """                                               
             │                                                                               │
-            │ Enter. Checkout.                                                              │
-            │                                                                               │
             │ ESC. Go back.                                                                 │
             """
         );

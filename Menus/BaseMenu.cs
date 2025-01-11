@@ -1,4 +1,5 @@
 namespace E_commerce_Databaser_i_ett_sammanhang;
+
 public class BaseMenu : Menu
 {
     private string _headerContent = string.Empty;
@@ -9,8 +10,6 @@ public class BaseMenu : Menu
     public override void Display()
     {
         int boxWidth = 79;
-
-        // Viktigt
 
         Console.WriteLine("┌" + new string('─', boxWidth) + "┐");
         Console.WriteLine(
@@ -63,6 +62,7 @@ public class BaseMenu : Menu
         Console.WriteLine("│" + new string(' ', boxWidth) + "│");
         Console.WriteLine("└" + new string('─', boxWidth) + "┘");
     }
+
     /// <summary>
     ///  Adds content to the BaseMenu display. Default headerContent is: "Select an option below:"
     ///  menuContent must have atleast one string to function.

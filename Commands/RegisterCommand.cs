@@ -1,16 +1,25 @@
 namespace E_commerce_Databaser_i_ett_sammanhang;
 
-public class RegisterUserCommand : MenuBaseCommand
+public class RegisterCommand : MenuBaseCommand
 {
-    public RegisterUserCommand(
+    public RegisterCommand(
         ConsoleKey triggerKey,
         IUserService userService,
         IMenuService menuService,
         IProductService productService,
         ICartService cartService,
-        IOrderService orderService
+        IOrderService orderService,
+        IPaymentService paymentService
     )
-        : base(triggerKey, userService, menuService, productService, cartService, orderService) { }
+        : base(
+            triggerKey,
+            userService,
+            menuService,
+            productService,
+            cartService,
+            orderService,
+            paymentService
+        ) { }
 
     public override async Task Execute(Guid? currentUserId)
     {
@@ -20,7 +29,6 @@ public class RegisterUserCommand : MenuBaseCommand
 
             try
             {
-                
                 var registrationDetails = InputHandler.GetRegistrationInput();
                 var response = await userService.RegisterUser(registrationDetails);
 
@@ -28,11 +36,11 @@ public class RegisterUserCommand : MenuBaseCommand
                 Console.WriteLine($"Welcome, {response.FirstName} {response.LastName}");
                 Console.ReadLine();
                 break;
-                
             }
             catch (Exception ex)
             {
                 ExceptionHandler.Handle(ex);
             }
+        }
     }
 }

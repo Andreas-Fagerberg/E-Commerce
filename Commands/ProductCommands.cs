@@ -1,9 +1,6 @@
-using System.Runtime.CompilerServices;
-using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
-
 namespace E_commerce_Databaser_i_ett_sammanhang;
 
-public class ProductCommand : MenuBaseCommand
+public class ProductCommands : MenuBaseCommand
 {
     private readonly ProductHandler _productHandler;
     private BaseMenu baseMenu = new BaseMenu();
@@ -14,23 +11,30 @@ public class ProductCommand : MenuBaseCommand
         "Select category",
     };
 
-    public ProductCommand(
+    public ProductCommands(
         ConsoleKey triggerKey,
         IUserService userService,
         IMenuService menuService,
         IProductService productService,
         ICartService cartService,
-        IOrderService orderService
+        IOrderService orderService,
+        IPaymentService paymentService
     )
-        : base(triggerKey, userService, menuService, productService, cartService, orderService)
+        : base(
+            triggerKey,
+            userService,
+            menuService,
+            productService,
+            cartService,
+            orderService,
+            paymentService
+        )
     {
         _productHandler = new ProductHandler(productService, cartService);
-
     }
-    
+
     public override async Task Execute(Guid? currentUserId)
     {
-
         while (true)
         {
             baseMenu.EditContent(_menuContent);
