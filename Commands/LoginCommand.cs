@@ -19,9 +19,10 @@ public class LoginCommand : MenuBaseCommand
             cartService,
             orderService,
             paymentService
-        ) { }
+        )
+    { }
 
-    public override async Task<Guid> Execute(Guid? currentUserId)
+    public override async Task<Guid> Execute()
     {
         while (true)
         {

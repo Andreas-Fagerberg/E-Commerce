@@ -22,12 +22,13 @@ public class LogoutCommand : MenuBaseCommand
             cartService,
             orderService,
             paymentService
-        ) { }
+        )
+    { }
 
     /// <summary>
     /// Executes the user logout process. The caller is responsible for nullifying the currentUserId after the method call.
     /// </summary>
-    public override Task Execute(Guid? currentUserId)
+    public override Task Execute()
     {
         try
         {

@@ -38,7 +38,7 @@ public class AdminCommands : MenuBaseCommand
         };
     }
 
-    public override async Task Execute(Guid? currentUserId)
+    public override async Task Execute()
     {
         await userService.ValidateAdminUser(currentUserId);
 
