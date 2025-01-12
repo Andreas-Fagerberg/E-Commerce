@@ -40,6 +40,9 @@ public class AdminCommands : MenuBaseCommand
 
     public override async Task Execute()
     {
+        Guid currentUserId = SessionHandler.CurrentUserId
+            ?? throw new InvalidOperationException("No user is currently logged in");
+
         await userService.ValidateAdminUser(currentUserId);
 
         _baseMenu.EditContent(_menuContent);
@@ -66,17 +69,12 @@ public class AdminCommands : MenuBaseCommand
 
                     case ConsoleKey.D2: // Search Users
                         var searchCriteria = InputHandler.GetAdminSearchInput();
-                        var searchResults = await userService.SearchUsers(
-                            searchCriteria,
-                            currentUserId
-                        );
+                        var searchResults = await userService.SearchUsers(searchCriteria, currentUserId);
 
                         List<string> allResults = new List<string>();
                         foreach (var result in searchResults)
                         {
-                            allResults.Add(
-                                $" - {result.FirstName} {result.LastName} ({result.Email})"
-                            );
+                            allResults.Add($" - {result.FirstName} {result.LastName} ({result.Email})");
                         }
 
                         _adminMenu.EditContent(allResults, "All matching users:");

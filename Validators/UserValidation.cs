@@ -19,6 +19,14 @@ public static class UserValidation
     }
 
     /// <summary>
+    /// Returns true or false depending on if the user is Admin or not.
+    /// </summary>
+    public static bool CheckIfAdmin(UserResponse loggedInUser)
+    {
+        return loggedInUser.Role == Role.Admin;
+    }
+
+    /// <summary>
     ///  Validates that a user possesses the required privileges by checking their
     ///  role. Should be called in any operation or command that require
     ///  admin status.
@@ -128,10 +136,7 @@ public static class UserValidation
     /// <summary>
     /// Checks if the user is an Admin or a regular user.
     /// </summary>
-    public static bool CheckIfAdmin(UserResponse loggedInUser)
-    {
-        return loggedInUser.Role == Role.Admin;
-    }
+
 
 
 }
