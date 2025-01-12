@@ -22,7 +22,7 @@ public class LoginCommand : MenuBaseCommand
         )
     { }
 
-    public override async Task<Guid> Execute()
+    public override async Task Execute()
     {
         while (true)
         {
@@ -31,28 +31,18 @@ public class LoginCommand : MenuBaseCommand
                 var loginDetails = InputHandler.GetLoginInput();
                 UserResponse? loggedInUser = await userService.LoginUser(loginDetails);
 
-                Console.WriteLine($"User logged in successfully!");
-                Console.WriteLine(
-                    $"Good to see you, {loggedInUser.FirstName} {loggedInUser.LastName}!"
-                );
-
-                // Sets Admin version of HomeMenu.
-                if (await userService.CheckAdminPriviliges(loggedInUser.UserId))
+                if (loggedInUser == null)
                 {
-                    menuService.SetMenu(
-                        new HomeMenu(
-                            userService,
-                            menuService,
-                            productService,
-                            cartService,
-                            orderService,
-                            paymentService,
-                            true
-                        )
-                    );
+                    Console.WriteLine("Login failed. Please try again.");
+                    continue;
                 }
 
-                // Sets regular version of HomeMenu.
+                SessionHandler.CurrentUserId = loggedInUser.UserId;
+                Console.WriteLine($"Good to see you, {loggedInUser.FirstName} {loggedInUser.LastName}!");
+
+                // Determine if the user has admin privileges and set the appropriate HomeMenu
+                bool isAdmin = UserValidation.CheckIfAdmin(loggedInUser);
+
                 menuService.SetMenu(
                     new HomeMenu(
                         userService,
@@ -61,10 +51,10 @@ public class LoginCommand : MenuBaseCommand
                         cartService,
                         orderService,
                         paymentService,
-                        false
-                    )
-                );
-                return loggedInUser.UserId;
+                        isAdmin));
+
+                // Exit the loop after a successful login and menu setup.
+                break;
             }
             catch (Exception ex)
             {

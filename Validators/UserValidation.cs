@@ -124,4 +124,14 @@ public static class UserValidation
         var validPattern = @"[a-zA-Z\s\-]+$";
         return System.Text.RegularExpressions.Regex.IsMatch(inputName, validPattern);
     }
+
+    /// <summary>
+    /// Checks if the user is an Admin or a regular user.
+    /// </summary>
+    public static bool CheckIfAdmin(UserResponse loggedInUser)
+    {
+        return loggedInUser.Role == Role.Admin;
+    }
+
+
 }

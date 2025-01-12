@@ -360,21 +360,5 @@ public class UserService : IUserService
         return user;
     }
 
-    public async Task<bool> CheckAdminPriviliges(Guid? userId)
-    {
-        UserValidation.CheckForValidUser(userId);
-
-        var user = await ecommerceContext.Users.FindAsync(userId);
-
-        if (user == null)
-        {
-            throw new InvalidOperationException("User not found.");
-        }
-
-        UserValidation.ValidateUserRole(user.Role, Role.Admin);
-
-        return true;
-    }
-
     #endregion
 }
