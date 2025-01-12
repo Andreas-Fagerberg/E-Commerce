@@ -19,6 +19,16 @@ public static class SessionHandler
     }
 
     /// <summary>
+    /// Retrieves the currently logged in User's ID while
+    /// handling cases when the ID is null.
+    /// </summary>
+    public static Guid GetCurrentUserId()
+    {
+        return CurrentUserId
+            ?? throw new InvalidOperationException("No user is currently logged in.");
+    }
+
+    /// <summary>
     /// Clears the current session, effectively logging the user out.
     /// </summary>
     public static void ClearSession()

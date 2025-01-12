@@ -49,7 +49,8 @@ public class PaymentService : IPaymentService
         };
     }
 
-    public async Task<string> ProcessPayment(Guid orderId, PaymentMethod paymentMethod, decimal totalAmount)
+
+    public async Task<string> ProcessPayment(Guid orderId, decimal totalAmount, PaymentMethod paymentMethod)
     {
         var invoiceCreationDto = new InvoiceCreationDTO
         {

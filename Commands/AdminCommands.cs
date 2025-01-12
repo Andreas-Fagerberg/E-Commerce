@@ -40,8 +40,7 @@ public class AdminCommands : MenuBaseCommand
 
     public override async Task Execute()
     {
-        Guid currentUserId = SessionHandler.CurrentUserId
-            ?? throw new InvalidOperationException("No user is currently logged in");
+        Guid currentUserId = SessionHandler.GetCurrentUserId();
 
         await userService.ValidateAdminUser(currentUserId);
 
