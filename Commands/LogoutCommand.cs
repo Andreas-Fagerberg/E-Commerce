@@ -25,36 +25,35 @@ public class LogoutCommand : MenuBaseCommand
         )
     { }
 
-    /// <summary>
-    /// Executes the user logout process. The caller is responsible for nullifying the currentUserId after the method call.
-    /// </summary>
     public override Task Execute()
     {
         try
         {
-            UserValidation.CheckForValidUser(currentUserId);
-
-            userService.LogoutUser(currentUserId);
+            userService.LogoutUser();
             Utilities.WriteLineWithPause($"Logout successful.");
-            currentUserId = null;
-        }
-        catch (ArgumentException ex)
-        {
-            Console.WriteLine($"Validation Error: {ex.Message}");
-        }
-        catch (InvalidOperationException ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An Unexpected error occurred: {ex.Message}");
+            ExceptionHandler.Handle(ex);
         }
 
-        Console.Clear();
-        menuService.SetMenu(
-            new LoginMenu(userService, menuService, productService, cartService, orderService, paymentService)
-        );
+        ResetToLoginMenu();
         return Task.CompletedTask;
+    }
+
+
+
+
+    // Suggestion: Move elsewhere.
+    private void ResetToLoginMenu()
+    {
+        menuService.SetMenu(
+            new LoginMenu(
+            userService,
+            menuService,
+            productService,
+            cartService,
+            orderService,
+            paymentService));
     }
 }

@@ -7,7 +7,7 @@ public interface IUserService
 {
     Task<UserResponse> RegisterUser(UserRegistrationDTO dto);
     Task<UserResponse> LoginUser(UserLoginDTO dto);
-    void LogoutUser(Guid? currentUserId);
+    void LogoutUser();
     Task<UserResponse> GetUser(Guid userId);
     Task<AddressResponse> SaveUserAddress(RegisterAddressDTO dto);
     Task<AddressResponse> GetUserAddress(Guid? userId);

@@ -85,10 +85,14 @@ public class UserService : IUserService
     /// <summary>
     /// Logs out the current user. The caller is responsible for setting currentUserId = null.
     /// </summary>
-    public void LogoutUser(Guid? currentUserId)
+    public void LogoutUser()
     {
-        UserValidation.CheckForValidUser(currentUserId);
-        Console.WriteLine($"Logging out user with ID: {currentUserId}.");
+        if (SessionHandler.CurrentUserId == null)
+        {
+            throw new InvalidOperationException("No user is currently logged in");
+        }
+
+        SessionHandler.ClearSession();
     }
 
     /// <summary>
