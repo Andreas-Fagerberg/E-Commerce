@@ -1,5 +1,3 @@
-
-using System.Runtime.CompilerServices;
 using Microsoft.EntityFrameworkCore;
 
 namespace E_commerce_Databaser_i_ett_sammanhang;

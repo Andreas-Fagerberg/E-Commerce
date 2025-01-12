@@ -1,6 +1,4 @@
-using System.Security.Cryptography.X509Certificates;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Update;
 
 namespace E_commerce_Databaser_i_ett_sammanhang;
 
