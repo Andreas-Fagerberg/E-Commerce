@@ -2,18 +2,18 @@
 
 public abstract class Menu
 {
-    private List<ICommand> commands = new List<ICommand>();
+    private List<MenuBaseCommand> commands = new List<MenuBaseCommand>();
 
-    public void AddCommand(ICommand command)
+    public void AddCommand(MenuBaseCommand command)
     {
         commands.Add(command);
     }
 
     public async Task ExecuteCommand(ConsoleKey input)
     {
-        foreach (ICommand command in commands)
+        foreach (MenuBaseCommand command in commands)
         {
-            if (command.TriggerKey.Equals(input))
+            if (command.triggerKey.Equals(input))
             {
                 await command.Execute();
                 return;

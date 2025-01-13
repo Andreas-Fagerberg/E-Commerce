@@ -4,7 +4,7 @@ namespace E_commerce_Databaser_i_ett_sammanhang;
 
 public class Cart
 {
-    public int Cart_Id { get; set; }
+    public int CartId { get; set; }
     public Guid UserId { get; set; }
     public string Name { get; set; }
     public int ProductId { get; set; }

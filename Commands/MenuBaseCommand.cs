@@ -2,7 +2,7 @@ namespace E_commerce_Databaser_i_ett_sammanhang;
 
 public abstract class MenuBaseCommand : ICommand
 {
-    public ConsoleKey TriggerKey { get; init; }
+    public readonly ConsoleKey triggerKey;
     protected readonly IUserService userService;
     protected readonly IMenuService menuService;
     protected readonly IProductService productService;
@@ -20,7 +20,7 @@ public abstract class MenuBaseCommand : ICommand
         IPaymentService paymentService
     )
     {
-        TriggerKey = triggerKey;
+        this.triggerKey = triggerKey;
         this.userService = userService;
         this.menuService = menuService;
         this.productService = productService;

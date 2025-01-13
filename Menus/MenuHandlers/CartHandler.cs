@@ -6,24 +6,23 @@ public class CartHandler
     private readonly CartMenu _cartMenu;
     private readonly BaseMenu _baseMenu;
     private List<CartItem> _cartItems;
-    private readonly Guid _userId;
     private int index = 0;
 
-    public CartHandler(ICartService cartService, Guid userId)
+    public CartHandler(ICartService cartService)
     {
         _cartService = cartService;
         _cartMenu = new CartMenu();
         _baseMenu = new BaseMenu();
         _cartItems = new List<CartItem>();
-        _userId = userId;
     }
 
     public async Task HandleShowCart(List<CartItem>? cartItems = null)
     {
+        Guid currentUserId = SessionHandler.GetCurrentUserId();
         index = 0;
         if (cartItems is null)
         {
-            var userCart = await _cartService.GetShoppingCart(_userId);
+            var userCart = await _cartService.GetShoppingCart(currentUserId);
             _cartItems = _cartService.ConvertCartToList(userCart);
         }
         else { }
@@ -78,7 +77,7 @@ public class CartHandler
                 Console.Write("Enter new quantity: ");
                 if (int.TryParse(Console.ReadLine(), out int newQuantity))
                 {
-                    await _cartService.UpdateProductQuantity(_userId, item.ProductId, newQuantity);
+                    await _cartService.UpdateProductQuantity(item);
                 }
                 return;
             }

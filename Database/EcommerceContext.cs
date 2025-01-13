@@ -64,7 +64,11 @@ public class EcommerceContext : DbContext
 
             user.Property(u => u.Role)
                 .IsRequired()
-                .HasDefaultValueSql("User");
+                .HasConversion<string>()
+                .HasDefaultValueSql("'User'");
+
+
+
 
             user.Property(u => u.CreatedAt)
                 .IsRequired()
@@ -76,6 +80,12 @@ public class EcommerceContext : DbContext
                 .WithOne(a => a.User)
                 .HasForeignKey<Address>(a => a.UserId)
                 .IsRequired(false)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            user.HasOne(u => u.Cart)
+                .WithOne(c => c.User)
+                .HasForeignKey<Cart>(c => c.UserId)
+                .IsRequired()
                 .OnDelete(DeleteBehavior.Cascade);
         });
 
@@ -121,7 +131,7 @@ public class EcommerceContext : DbContext
             order.Property(o => o.Status)
                 .IsRequired()
                 .HasConversion<string>()
-                .HasDefaultValueSql("Pending");
+                .HasDefaultValueSql("'Pending'");
 
             order.Property(o => o.TotalCost)
                 .IsRequired()
@@ -205,15 +215,9 @@ public class EcommerceContext : DbContext
         {
             // carts.HasKey(o => o.UserId);
             // carts.HasKey(o => o.ProductId);
-            carts.HasKey(u => u.Cart_Id);
+            carts.HasKey(u => u.CartId);
 
-            carts.Property(c => c.Cart_Id)
-                .UseIdentityColumn();
-
-            carts.Property(c => c.UserId)
-                .UseIdentityColumn();
-
-            carts.Property(c => c.ProductId)
+            carts.Property(c => c.CartId)
                 .UseIdentityColumn();
 
             carts.Property(c => c.Quantity)
