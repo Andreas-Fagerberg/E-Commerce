@@ -20,16 +20,12 @@ namespace E_commerce_Databaser_i_ett_sammanhang
         );
 
         Task<Dictionary<int, (int Quantity, decimal Price, string Name)>> UpdateProductQuantity(
-            CartItem cartItem
+            CartItem cartItem, 
+            int quantity
         );
 
-        List<CartItem> ConvertCartToList(
-            Dictionary<int, (int Quantity, decimal Price, string Name)> UserCart
-        );
+        List<CartItem> ConvertCartToList();
 
         Task SaveCartToDatabase(Guid userId);
-
-        public decimal TotalCost();
-        
     }
 }

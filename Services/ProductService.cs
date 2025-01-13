@@ -39,15 +39,17 @@ public class ProductService : IProductService
 
             if (!string.IsNullOrWhiteSpace(productName))
             {
+                var searchTerms = productName.Trim().ToLower().Split(' ');
                 searchProduct = searchProduct.Where(p =>
-                    p.Name.ToLower().Contains(productName.ToLower())
+                    searchTerms.All(term => p.Name.ToLower().Contains(term))
                 );
             }
 
             if (!string.IsNullOrWhiteSpace(category))
             {
+                var searchTerms = category.Trim().ToLower().Split(' ');
                 searchProduct = searchProduct.Where(p =>
-                    p.Category.ToLower().Contains(category.ToLower())
+                    searchTerms.All(term => p.Category.ToLower().Contains(term))
                 );
             }
 
@@ -107,21 +109,37 @@ public class ProductService : IProductService
         {
             tempProducts = await GetAllProducts();
         }
+        else
+        {
+            tempProducts = products;
+        }
         List<List<Product>> splitProducts = new List<List<Product>>();
         List<Product> tempList = new List<Product>();
         int i = 0;
-        foreach (Product product in tempProducts)
+        if (tempProducts.Count < 40)
         {
-            if (i >= 39)
+            foreach (Product product in tempProducts)
             {
                 tempList.Add(product);
-                splitProducts.Add(tempList);
-                i = 0;
-                tempList.Clear();
             }
-            tempList.Add(product);
-            i++;
+            splitProducts.Add(tempList);
         }
+        else
+        {
+            foreach (Product product in tempProducts)
+            {
+                if (i >= 39)
+                {
+                    tempList.Add(product);
+                    splitProducts.Add(tempList);
+                    i = 0;
+                    tempList.Clear();
+                }
+                tempList.Add(product);
+                i++;
+            }
+        }
+
         return new List<List<Product>>(splitProducts.ToList());
     }
 }

@@ -25,6 +25,7 @@ namespace E_commerce_Databaser_i_ett_sammanhang
 
         public async Task AddToShoppingCart(Product product, int quantity)
         {
+
             if (UserCart.ContainsKey(product.ProductId))
             {
                 var currentItem = UserCart[product.ProductId];
@@ -38,12 +39,15 @@ namespace E_commerce_Databaser_i_ett_sammanhang
             {
                 UserCart[product.ProductId] = (quantity, product.Price, product.Name);
             }
+            System.Console.WriteLine(UserCart[product.ProductId].Name);
+            Console.ReadLine();
+
 
             await Task.CompletedTask;
         }
 
         //For the user to manually change the quantity of a certain item in the shoppingcart, removing the item if the quantity changes to zero
-        public async Task<Dictionary<int, (int Quantity, decimal Price, string Name)>> UpdateProductQuantity(CartItem item)
+        public async Task<Dictionary<int, (int Quantity, decimal Price, string Name)>> UpdateProductQuantity(CartItem item, int quantity)
         {
             if (item.Quantity <= 0)
             {
@@ -52,7 +56,7 @@ namespace E_commerce_Databaser_i_ett_sammanhang
             else if (UserCart.ContainsKey(item.ProductId))
             {
                 var currentItem = UserCart[item.ProductId];
-                UserCart[item.ProductId] = (item.Quantity, currentItem.Price, currentItem.Name);
+                UserCart[item.ProductId] = (item.Quantity = quantity, currentItem.Price, currentItem.Name);
             }
             return UserCart;
         }
@@ -70,7 +74,7 @@ namespace E_commerce_Databaser_i_ett_sammanhang
         public async Task<Dictionary<int, (int Quantity, decimal Price, string Name)>> GetShoppingCart(Guid userId)
         {
             var dbCart = await _context.Carts.Where(sc => sc.UserId == userId).ToListAsync();
-            UserCart.Clear();
+
             foreach (var item in dbCart)
             {
                 UserCart[item.ProductId] = (item.Quantity, item.Price, item.Name);
@@ -97,17 +101,12 @@ namespace E_commerce_Databaser_i_ett_sammanhang
         }
 
         //Method that can be used to sum total cost in cart.
-        public decimal TotalCost()
-        {
-            return UserCart.Sum(item => item.Value.Quantity * item.Value.Price);
-        }
+
 
         //Make a method to turn the cart(dictionary) to a list of list holding the products.
-        public List<CartItem> ConvertCartToList(
-            Dictionary<int, (int Quantity, decimal Price, string Name)> UserCart
-        )
+        public List<CartItem> ConvertCartToList()
         {
-            return UserCart
+             return UserCart
                 .Select(item => new CartItem
                 {
                     ProductId = item.Key,

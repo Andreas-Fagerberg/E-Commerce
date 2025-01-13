@@ -56,6 +56,7 @@ public class CheckoutCommands : MenuBaseCommand
         if (!cartData.Any())
         {
             Console.WriteLine("Your cart is empty. Add items before checking out.");
+            Console.ReadLine();
             return;
         }
 
@@ -89,6 +90,7 @@ public class CheckoutCommands : MenuBaseCommand
                 paymentMethod
             );
             Console.WriteLine(paymentStatus);
+            Console.ReadLine();
         }
         catch (Exception ex)
         {
@@ -96,6 +98,7 @@ public class CheckoutCommands : MenuBaseCommand
                 $"Payment processing failed using method '{paymentMethod}'. Checkout aborted."
             );
             ExceptionHandler.Handle(ex);
+            Console.ReadLine();
         }
 
         Console.WriteLine("Checkout completed successfully.");
@@ -123,6 +126,7 @@ public class CheckoutCommands : MenuBaseCommand
                     Console.WriteLine(
                         "Invalid selection. Please press [1] for Pay Now or [2] for Pay Later."
                     );
+                    Console.ReadLine();
                     continue;
             }
         }

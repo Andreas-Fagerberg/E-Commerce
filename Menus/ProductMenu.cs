@@ -8,23 +8,19 @@ public class ProductMenu : Menu
     string headerText = string.Empty;
     string errorMessage = string.Empty;
     string bottomText = string.Empty;
+    List<List<Product>> _productLists = new List<List<Product>>();
 
     public ProductMenu() { }
 
     // List containing all pages/lists with all products.
-    List<List<Product>> _productLists = new List<List<Product>>();
 
-    public override Task Display()
+    public override void Display()
     {
-        System.Console.WriteLine("You got to the display method bitch");
-        Console.ReadLine();
+        Console.Clear();
 
         string displayRating;
         // List containing the current page/current products.
         List<Product> currentProducts = _productLists[index];
-
-        System.Console.WriteLine("You got to the display method bitch list");
-        Console.ReadLine();
 
         // Used to decide the size of the menu.
         int boxWidth = 79;
@@ -50,13 +46,9 @@ public class ProductMenu : Menu
         //     );
         //     Console.WriteLine("├" + new string('─', boxWidth) + "┤");
         // }
-        System.Console.WriteLine("You got to the display method bitch no products if");
-        Console.ReadLine();
 
         foreach (Product product in currentProducts)
         {
-            System.Console.WriteLine("You got to the display and have entered the foreach");
-            Console.ReadLine();
             displayRating = new string('★', product.Rating) + new string('☆', 5 - product.Rating);
 
             if (i < 9)
@@ -108,13 +100,11 @@ public class ProductMenu : Menu
             "│ " + bottomText + new string(' ', boxWidth - (bottomText.Length + 1)) + "│"
         );
         Console.WriteLine("└" + new string('─', boxWidth) + "┘");
-        System.Console.WriteLine("You got to the display method bitch real 2");
-        Console.ReadLine();
-        return Task.CompletedTask;
     }
 
     public void DisplayProduct(Product product)
     {
+        Console.Clear();
         string displayRating =
             new string('★', product.Rating) + new string('☆', 5 - product.Rating);
 
@@ -169,9 +159,6 @@ public class ProductMenu : Menu
         Console.WriteLine("├" + new string('─', boxWidth) + "┤");
         Console.WriteLine("│" + new string(' ', boxWidth) + "│");
         Console.WriteLine("└" + new string('─', boxWidth) + "┘");
-
-        System.Console.WriteLine("You got to the display method bitch2");
-        Console.ReadLine();
     }
 
     public void EditContent(List<List<Product>>? productLists = null)
@@ -202,7 +189,7 @@ public class ProductMenu : Menu
             index++;
         }
     }
-  
+
     public int GetPage()
     {
         return index;

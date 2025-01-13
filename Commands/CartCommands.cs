@@ -38,11 +38,6 @@ public class CartCommands : MenuBaseCommand
             baseMenu.EditContent(_menuContent);
             baseMenu.Display();
 
-            if (!int.TryParse(Console.ReadLine(), out int choice))
-            {
-                Console.WriteLine("Invalid input. Please enter a number.");
-                continue;
-            }
             var input = Console.ReadKey(true).Key;
 
             try

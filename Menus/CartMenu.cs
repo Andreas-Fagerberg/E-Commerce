@@ -7,7 +7,7 @@ public class CartMenu : Menu
     // List containing all pages/lists with all products.
     ICartService _cartService;
     private Guid _userId;
-    private List<CartItem> _cartItems;
+    private List<CartItem> _cartItems = new List<CartItem>();
     private string _headerText;
 
     public CartMenu()
@@ -19,6 +19,7 @@ public class CartMenu : Menu
 
     public override void Display()
     {
+        Console.Clear();
         // Used to decide the size of the menu.
         int boxWidth = 79;
 
@@ -27,16 +28,38 @@ public class CartMenu : Menu
             "│ " + _headerText + new string(' ', boxWidth - (_headerText.Length + 8)) + "AAAL © │"
         );
         Console.WriteLine("├" + new string('─', boxWidth) + "┤");
-        // csharpier-ignore-start
-        Console.WriteLine("│ Name                                          │ Qty.   │ Price              │");
-        // csharpier-ignore-end
+
+        Console.WriteLine(
+            "│ Name                                          │ Qty.   │ Price                │"
+        );
+
         int i = 0;
+        if (_cartItems.Count().Equals(0)) {}
         foreach (var item in _cartItems)
         {
             if (i < 9)
             {
                 Console.WriteLine(
                     "│  "
+                        + (i + 1)
+                        + ". "
+                        + item.Name
+                        + new string(' ', 44 - item.Name.Length)
+                        + "│ "
+                        + item.Quantity.ToString()
+                        + new string(' ', 16 - item.Quantity.ToString().Length)
+                        + "│ "
+                        + item.Price
+                        + new string(' ', 16 - item.Price.ToString().Length)
+                        + "│"
+                );
+                i++;
+                continue;
+            }
+            else
+            {
+                Console.WriteLine(
+                    "│ "
                         + (i + 1)
                         + ". "
                         + item.Name
@@ -50,39 +73,19 @@ public class CartMenu : Menu
                         + "│"
                 );
                 i++;
-                continue;
             }
 
-            Console.WriteLine(
-                "│ "
-                    + (i + 1)
-                    + ". "
-                    + item.Name
-                    + new string(' ', 44 - item.Name!.Length)
-                    + "│ "
-                    + item.Quantity.ToString()
-                    + new string(' ', 16 - item.Price.ToString().Length)
-                    + "│ "
-                    + item.Price
-                    + new string(' ', 16 - item.Price.ToString().Length)
-                    + "│"
-            );
-            i++;
             continue;
         }
-        Console.WriteLine(
-            "│"
-                + new string(' ', boxWidth - _cartService.TotalCost().ToString().Length + 14)
-                + "Total Price: "
-                + _cartService.TotalCost().ToString()
-                + " │"
-        );
         Console.WriteLine(
             """                                               
             │                                                                               │
             │ ESC. Go back.                                                                 │
             """
         );
+        Console.WriteLine("├" + new string('─', boxWidth) + "┤");
+        Console.WriteLine("│" + new string(' ', boxWidth) + "│");
+        Console.WriteLine("└" + new string('─', boxWidth) + "┘");
     }
 
     public void DisplayCartItems(CartItem cartItems)
@@ -117,7 +120,6 @@ public class CartMenu : Menu
                 + "│"
         );
 
-
         Console.WriteLine(
             """
 
@@ -135,10 +137,10 @@ public class CartMenu : Menu
     }
 
     // csharpier-ignore-start
-    public List<CartItem> EditContent(List<CartItem> allCartItems, string headerText = "Your Shopping Cart:")
+    public void EditContent(List<CartItem> allCartItems, string headerText = "Your Shopping Cart:")
     {
+        _headerText = headerText;
         _cartItems = allCartItems;
-        return allCartItems;
     }
     // csharpier-ignore-end
 }

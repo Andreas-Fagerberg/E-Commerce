@@ -22,5 +22,5 @@ public abstract class Menu
         throw new Exception("Command not found.");
     }
 
-    public abstract Task Display();
+    public abstract void Display();
 }

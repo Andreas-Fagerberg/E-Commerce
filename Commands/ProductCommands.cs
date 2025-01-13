@@ -59,8 +59,6 @@ public class ProductCommands : MenuBaseCommand
                     Console.WriteLine("Invalid input");
                     continue;
             }
-            System.Console.WriteLine("Finished switch");
-            Console.ReadLine();
         }
     }
 }
