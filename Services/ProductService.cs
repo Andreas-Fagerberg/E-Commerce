@@ -21,6 +21,9 @@ public class ProductService : IProductService
         }
         catch (Exception ex)
         {
+            System.Console.WriteLine();
+            Console.ReadLine();
+
             throw new Exception("Failed to retrieve products from database", ex);
         }
     }
@@ -73,6 +76,7 @@ public class ProductService : IProductService
             throw new Exception("Failed to create product", ex);
         }
     }
+
     public async Task<bool> RemoveProduct(int productId)
     {
         try
@@ -98,14 +102,15 @@ public class ProductService : IProductService
 
     public async Task<List<List<Product>>> GetProductLists(List<Product>? products = null)
     {
+        List<Product> tempProducts = new List<Product>();
         if (products is null || products.Count.Equals(0))
         {
-            products = await GetAllProducts();
+            tempProducts = await GetAllProducts();
         }
         List<List<Product>> splitProducts = new List<List<Product>>();
         List<Product> tempList = new List<Product>();
         int i = 0;
-        foreach (Product product in products)
+        foreach (Product product in tempProducts)
         {
             if (i >= 39)
             {

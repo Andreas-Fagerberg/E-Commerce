@@ -24,17 +24,26 @@ public class ProductHandler
         if (products is null)
         {
             _productLists = await _productService.GetProductLists();
+            System.Console.WriteLine("You got to the product null");
+            Console.ReadLine();
         }
         else
         {
             _productLists = await _productService.GetProductLists(products);
+            System.Console.WriteLine("You got to completly awesome product list");
+            Console.ReadLine();
         }
         _productMenu.EditContent(_productLists);
 
         while (true)
         {
+            System.Console.WriteLine("You got to the display1");
+            Console.ReadLine();
             // Display current page of products using your existing menu
-            _productMenu.Display();
+            await _productMenu.Display();
+
+            System.Console.WriteLine("You got to the display 2");
+            Console.ReadLine();
 
             var key = CustomKeyReader.GetKeyOrBuffered();
 
