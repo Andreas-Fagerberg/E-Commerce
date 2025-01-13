@@ -19,9 +19,10 @@ public class RegisterCommand : MenuBaseCommand
             cartService,
             orderService,
             paymentService
-        ) { }
+        )
+    { }
 
-    public override async Task Execute(Guid? currentUserId)
+    public override async Task Execute()
     {
         while (true)
         {

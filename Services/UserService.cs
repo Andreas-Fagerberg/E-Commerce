@@ -1,6 +1,4 @@
-using System.Security.Cryptography.X509Certificates;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Update;
 
 namespace E_commerce_Databaser_i_ett_sammanhang;
 
@@ -85,10 +83,14 @@ public class UserService : IUserService
     /// <summary>
     /// Logs out the current user. The caller is responsible for setting currentUserId = null.
     /// </summary>
-    public void LogoutUser(Guid? currentUserId)
+    public void LogoutUser()
     {
-        UserValidation.CheckForValidUser(currentUserId);
-        Console.WriteLine($"Logging out user with ID: {currentUserId}.");
+        if (SessionHandler.CurrentUserId == null)
+        {
+            throw new InvalidOperationException("No user is currently logged in");
+        }
+
+        SessionHandler.ClearSession();
     }
 
     /// <summary>
@@ -225,8 +227,7 @@ public class UserService : IUserService
         return new AddressResponse
         {
             AddressId = existingAddress.AddressId,
-            UserId =
-                existingAddress.UserId
+            UserId = existingAddress.UserId
                 ?? throw new InvalidOperationException("Address UserId cannot be null."),
             Street = existingAddress.Street,
             City = existingAddress.City,
@@ -247,7 +248,7 @@ public class UserService : IUserService
     /// Retrieves a list of all users in the system. This method is restricted to admin users only
     /// and validates the admin user's credentials and role before execution.
     /// </summary>
-    public async Task<List<UserResponse>> GetAllUsers(Guid? adminUserId)
+    public async Task<List<UserResponse>> GetAllUsers(Guid adminUserId)
     {
         await ValidateAdminUser(adminUserId);
 
@@ -268,7 +269,7 @@ public class UserService : IUserService
     /// such as email or role. Further search-criteria can be added to this method
     /// but make sure to adjust the input method accordingly.
     /// </summary>
-    public async Task<List<UserResponse>> SearchUsers(AdminUserSearchDTO dto, Guid? adminUserId)
+    public async Task<List<UserResponse>> SearchUsers(AdminUserSearchDTO dto, Guid adminUserId)
     {
         await ValidateAdminUser(adminUserId);
 
@@ -301,7 +302,7 @@ public class UserService : IUserService
     /// <summary>
     /// Updates the role of a specified user. Accessible only by admin users.
     /// </summary>
-    public async Task UpdateUserRole(UpdateUserRoleDTO dto, Guid? adminUserId)
+    public async Task UpdateUserRole(UpdateUserRoleDTO dto, Guid adminUserId)
     {
         await ValidateAdminUser(adminUserId);
 
@@ -344,7 +345,7 @@ public class UserService : IUserService
     /// This ensures that the adminUserId belongs to an admin user in the system.
     /// If the user ID is invalid or doesn't belong to an admin, an exception is thrown.
     /// /// </summary>
-    public async Task<User> ValidateAdminUser(Guid? userId)
+    public async Task<User> ValidateAdminUser(Guid userId)
     {
         UserValidation.CheckForValidUser(userId);
 
@@ -358,22 +359,6 @@ public class UserService : IUserService
         UserValidation.ValidateUserRole(user.Role, Role.Admin);
 
         return user;
-    }
-
-    public async Task<bool> CheckAdminPriviliges(Guid? userId)
-    {
-        UserValidation.CheckForValidUser(userId);
-
-        var user = await ecommerceContext.Users.FindAsync(userId);
-
-        if (user == null)
-        {
-            throw new InvalidOperationException("User not found.");
-        }
-
-        UserValidation.ValidateUserRole(user.Role, Role.Admin);
-
-        return true;
     }
 
     #endregion

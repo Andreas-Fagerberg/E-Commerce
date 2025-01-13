@@ -1,5 +1,3 @@
-
-using System.Runtime.CompilerServices;
 using Microsoft.EntityFrameworkCore;
 
 namespace E_commerce_Databaser_i_ett_sammanhang;
@@ -49,7 +47,8 @@ public class PaymentService : IPaymentService
         };
     }
 
-    public async Task<string> ProcessPayment(Guid orderId, PaymentMethod paymentMethod, decimal totalAmount)
+
+    public async Task<string> ProcessPayment(Guid orderId, decimal totalAmount, PaymentMethod paymentMethod)
     {
         var invoiceCreationDto = new InvoiceCreationDTO
         {

@@ -28,11 +28,14 @@ public class CartCommands : MenuBaseCommand
             cartService,
             orderService,
             paymentService
-        ) { }
+        )
+    { }
 
-    public override async Task Execute(Guid? currentUserId)
+    public override async Task Execute()
     {
-        _cartHandler = new CartHandler(cartService, currentUserId.Value);
+        Guid currentUserId = SessionHandler.GetCurrentUserId();
+
+        _cartHandler = new CartHandler(cartService, currentUserId);
         while (true)
         {
             baseMenu.EditContent(_menuContent);

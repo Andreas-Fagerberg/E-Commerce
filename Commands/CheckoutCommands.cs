@@ -19,12 +19,15 @@ public class CheckoutCommands : MenuBaseCommand
             cartService,
             orderService,
             paymentService
-        ) { }
+        )
+    { }
 
-    public override async Task Execute(Guid? currentUserId)
+    public override async Task Execute()
     {
-        UserValidation.CheckForValidUser(currentUserId);
+        Guid currentUserId = SessionHandler.GetCurrentUserId();
+
         Console.WriteLine("[Checkout Commands]");
+
 
         // 1. Retrieve Address
         var address = await HandleAddressOptions(currentUserId);
@@ -35,6 +38,7 @@ public class CheckoutCommands : MenuBaseCommand
         }
 
         Utilities.WriteLineWithPause("Proceeding to the next step...");
+
 
         // 2. Payment Handling
         Console.WriteLine(
@@ -47,6 +51,7 @@ public class CheckoutCommands : MenuBaseCommand
 
         PaymentMethod paymentMethod = SelectPaymentMethod();
 
+
         // 3. Retrieve Cart Data
         var cartData = await cartService.GetShoppingCart(currentUserId);
         if (!cartData.Any())
@@ -55,38 +60,43 @@ public class CheckoutCommands : MenuBaseCommand
             return;
         }
 
+
         // 4. Prepare Order Data
         var orderProducts = PrepareCartData(cartData);
 
+
         // 5. Create Order
+        OrderResponse? orderSummary = null;
         try
         {
-            var orderSummary = orderService.ProcessOrder(
+            orderSummary = await orderService.ProcessOrder(
                 currentUserId,
                 orderProducts,
                 paymentMethod
             );
             Console.WriteLine("Your order has been successfully created");
-            // DISPLAY ORDER SUMMARY
         }
         catch (Exception ex)
         {
+            Console.WriteLine("Order creation failed. Cannot proceed");
             ExceptionHandler.Handle(ex);
+            return;
         }
+
 
         // 6. Process Payment and Invoice
         try
         {
             var paymentStatus = await paymentService.ProcessPayment(
-                orderResponse!.OrderId,
-                paymentMethod,
-                orderResponse.TotalCost
+                orderSummary.OrderId,
+                orderSummary.TotalCost,
+                paymentMethod
             );
             Console.WriteLine(paymentStatus);
         }
         catch (Exception ex)
         {
-            Console.WriteLine("Invoice creation failed. Checkout process aborted.");
+            Console.WriteLine($"Payment processing failed using method '{paymentMethod}'. Checkout aborted.");
             ExceptionHandler.Handle(ex);
         }
 
@@ -120,13 +130,15 @@ public class CheckoutCommands : MenuBaseCommand
         }
     }
 
+
+
     /// <summary>
     /// Transforms cart data from a dictionary structure into a list of OrderProductDTO objects.
     /// This method is necessary to convert raw cart data into a standardized format
     /// suitable for order creation, ensuring compatibility with the CreateOrder process.
     /// </summary>
     private static List<OrderProductDTO> PrepareCartData(
-        Dictionary<int, (int Quantity, decimal Price)> cartData
+        Dictionary<int, (int Quantity, decimal Price, string Name)> cartData
     )
     {
         var orderProducts = new List<OrderProductDTO>();
@@ -144,6 +156,7 @@ public class CheckoutCommands : MenuBaseCommand
 
         return orderProducts;
     }
+
 
     /// <summary>
     /// Handles the selection or creation of a user's address during the checkout process.

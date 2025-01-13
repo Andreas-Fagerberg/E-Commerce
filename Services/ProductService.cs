@@ -1,4 +1,3 @@
-using System.Security.Cryptography.X509Certificates;
 using Microsoft.EntityFrameworkCore;
 
 namespace E_commerce_Databaser_i_ett_sammanhang;
@@ -96,7 +95,7 @@ public class ProductService : IProductService
             throw new Exception("Failed to remove product", ex);
         }
     }
-    
+
     public async Task<List<List<Product>>> GetProductLists(List<Product>? products = null)
     {
         if (products is null || products.Count.Equals(0))

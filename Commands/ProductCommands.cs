@@ -33,7 +33,7 @@ public class ProductCommands : MenuBaseCommand
         _productHandler = new ProductHandler(productService, cartService);
     }
 
-    public override async Task Execute(Guid? currentUserId)
+    public override async Task Execute()
     {
         while (true)
         {

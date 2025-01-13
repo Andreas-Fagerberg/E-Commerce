@@ -9,13 +9,13 @@ public abstract class Menu
         commands.Add(command);
     }
 
-    public async Task ExecuteCommand(ConsoleKey input, Guid? currentUserId)
+    public async Task ExecuteCommand(ConsoleKey input)
     {
         foreach (ICommand command in commands)
         {
             if (command.TriggerKey.Equals(input))
             {
-                await command.Execute(currentUserId);
+                await command.Execute();
                 return;
             }
         }
