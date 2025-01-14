@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace E_commerce_Databaser_i_ett_sammanhang;
 
 public class AdminCommands : MenuBaseCommand
@@ -55,17 +57,24 @@ public class AdminCommands : MenuBaseCommand
             {
                 switch (input)
                 {
+                    case ConsoleKey.Escape:
+                        return;
                     case ConsoleKey.D1: // View All Users
                         var users = await userService.GetAllUsers(currentUserId);
                         List<string> allUsers = new List<string>();
                         Console.WriteLine();
                         foreach (var user in users)
                         {
-                            allUsers.Add($" - {user.FirstName} {user.LastName} ({user.Email}) ({user.UserId})");
+
+                            allUsers.Add($" NAME: {user.FirstName} {user.LastName}");
+                            allUsers.Add($" EMAIL: {user.Email}");
+                            allUsers.Add($" ROLE: {user.Role}");
+                            allUsers.Add($" ID: {user.UserId}");
                         }
                         _adminMenu.EditContent(allUsers, "All users: ");
                         _adminMenu.Display();
-                        Console.ReadLine();
+                        Console.ReadKey(true);
+
                         break;
 
                     case ConsoleKey.D2: // Search Users
@@ -85,12 +94,18 @@ public class AdminCommands : MenuBaseCommand
 
                         _adminMenu.EditContent(allResults, "All matching users:");
                         _adminMenu.Display();
-                        Console.ReadLine();
+                        Console.ReadKey();
+
 
                         break;
 
                     case ConsoleKey.D3: // Update User Role
+                        var emptyGuid = new Guid();
                         var newRole = InputHandler.GetRoleUpdateInput();
+                        if (newRole.UserId.Equals(emptyGuid))
+                        {
+                            return;
+                        }
                         await userService.UpdateUserRole(newRole, currentUserId);
                         Utilities.WriteLineWithPause($"User role for updated successfully.");
                         break;
@@ -102,7 +117,11 @@ public class AdminCommands : MenuBaseCommand
                         break;
 
                     case ConsoleKey.D5: // Remove Product
-                        int productId = InputHandler.GetProductIdToRemove(productService);
+                        int productId = await InputHandler.GetProductIdToRemove(productService);
+                        if (productId == 0)
+                        {
+                            break;
+                        }
                         var isRemoved = await productService.RemoveProduct(productId);
                         if (isRemoved)
                         {
@@ -110,12 +129,12 @@ public class AdminCommands : MenuBaseCommand
                         }
                         else
                         {
-                            Console.WriteLine("Failed to remove product.");
+                            Utilities.WriteLineWithPause("Failed to remove product.", 3000);
                         }
                         break;
 
                     default:
-                        Console.WriteLine("Invalid option. Please try again.");
+                        Utilities.WriteLineWithPause("Invalid option. Please try again.", 3000);
                         break;
                 }
             }

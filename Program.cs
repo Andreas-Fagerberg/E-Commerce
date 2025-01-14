@@ -31,12 +31,6 @@ class Program
             menuService.GetMenu().Display();
             ConsoleKey input = Console.ReadKey(true).Key;
 
-            if (input.Equals(ConsoleKey.Escape))
-            {
-                Environment.Exit(0);
-                break;
-            }
-
             try
             {
                 await menuService.GetMenu().ExecuteCommand(input);

@@ -2,6 +2,9 @@ namespace E_commerce_Databaser_i_ett_sammanhang;
 
 public class CheckoutCommands : MenuBaseCommand
 {
+    private readonly BaseMenu _baseMenu = new BaseMenu();
+    private List<string> _menuContent;
+
     public CheckoutCommands(
         ConsoleKey triggerKey,
         IUserService userService,
@@ -19,14 +22,27 @@ public class CheckoutCommands : MenuBaseCommand
             cartService,
             orderService,
             paymentService
-        ) { }
+        )
+    {
+        _menuContent = new List<string> { "Checkout" };
+    }
 
     public override async Task Execute()
     {
         Guid currentUserId = SessionHandler.GetCurrentUserId();
 
-        Console.WriteLine("[Checkout Commands]");
-        Console.ReadKey();
+        _baseMenu.EditContent(_menuContent);
+        _baseMenu.Display();
+
+        ConsoleKey input = Console.ReadKey(true).Key;
+
+        switch (input)
+        {
+            case ConsoleKey.Escape:
+                return;
+            default:
+                break;
+        }
 
         // 1. Retrieve Address
         var address = await HandleAddressOptions(currentUserId);
@@ -35,8 +51,6 @@ public class CheckoutCommands : MenuBaseCommand
         //     Console.WriteLine("Checkout cancelled. No address selected.");
         //     return;
         // }
-        System.Console.WriteLine("Debug 1.");
-        Console.ReadKey();
 
         Utilities.WriteLineWithPause("Proceeding to the next step...");
 
@@ -169,9 +183,6 @@ public class CheckoutCommands : MenuBaseCommand
 
         if (existingAddress != null)
         {
-            System.Console.WriteLine("Debug 2 Adress");
-            Console.ReadLine();
-
             Console.WriteLine(
                 $"""
                 Select an Address Option:
@@ -184,13 +195,12 @@ public class CheckoutCommands : MenuBaseCommand
                 {existingAddress.Region}, 
                 {existingAddress.PostalCode}, 
                 {existingAddress.Country}
+                
                 """
             );
 
             while (true)
             {
-                System.Console.WriteLine("Debug 3 Adress");
-                Console.ReadLine();
                 var input = Console.ReadKey(true).Key;
 
                 switch (input)

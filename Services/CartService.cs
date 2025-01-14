@@ -39,10 +39,6 @@ namespace E_commerce_Databaser_i_ett_sammanhang
             {
                 UserCart[product.ProductId] = (quantity, product.Price, product.Name);
             }
-            System.Console.WriteLine(UserCart[product.ProductId].Name);
-            Console.ReadLine();
-
-
             await Task.CompletedTask;
         }
 
@@ -73,8 +69,8 @@ namespace E_commerce_Databaser_i_ett_sammanhang
 
         public async Task<Dictionary<int, (int Quantity, decimal Price, string Name)>> GetShoppingCart(Guid userId)
         {
-            var dbCart = await _context.Carts.Where(sc => sc.UserId == userId).ToListAsync();
-
+            var dbCart = await _context.Carts.Include (c => c.Product).Where(sc => sc.UserId == userId).ToListAsync();
+            UserCart.Clear();
             foreach (var item in dbCart)
             {
                 UserCart[item.ProductId] = (item.Quantity, item.Price, item.Name);
@@ -83,8 +79,11 @@ namespace E_commerce_Databaser_i_ett_sammanhang
             return UserCart;
         }
 
-        public async void SaveCartToDatabase(Guid userId)
+        public async Task SaveCartToDatabase(Guid userId)
         {
+            try {
+           
+
             var cartItems = UserCart.Select(item => new Cart
             {
                 UserId = userId,
@@ -98,6 +97,11 @@ namespace E_commerce_Databaser_i_ett_sammanhang
             await _context.SaveChangesAsync();
 
             UserCart.Clear();
+            }
+            catch
+            {
+                Console.WriteLine("Failed to save cart");
+            }
         }
 
         //Method that can be used to sum total cost in cart.

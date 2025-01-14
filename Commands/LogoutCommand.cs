@@ -22,13 +22,13 @@ public class LogoutCommand : MenuBaseCommand
             cartService,
             orderService,
             paymentService
-        )
-    { }
+        ) { }
 
     public override Task Execute()
     {
         try
         {
+            cartService.SaveCartToDatabase(SessionHandler.GetCurrentUserId());
             userService.LogoutUser();
             Utilities.WriteLineWithPause($"Logout successful.");
         }
@@ -41,19 +41,18 @@ public class LogoutCommand : MenuBaseCommand
         return Task.CompletedTask;
     }
 
-
-
-
     // Suggestion: Move elsewhere.
     private void ResetToLoginMenu()
     {
         menuService.SetMenu(
             new LoginMenu(
-            userService,
-            menuService,
-            productService,
-            cartService,
-            orderService,
-            paymentService));
+                userService,
+                menuService,
+                productService,
+                cartService,
+                orderService,
+                paymentService
+            )
+        );
     }
 }

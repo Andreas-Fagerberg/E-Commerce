@@ -20,7 +20,7 @@ public class AdminMenu : Menu
                 + "AAAL © │"
         );
         Console.WriteLine("├" + new string('─', boxWidth) + "┤");
-
+        int i = 1;
         foreach (string item in _menuContent)
         {
             if (_menuContent is null || _menuContent.Count.Equals(0))
@@ -30,14 +30,22 @@ public class AdminMenu : Menu
                 );
                 break;
             }
-            Console.WriteLine("│" + item + new string(' ', boxWidth - (item.Length + 3)) + " │");
+            if (i == 5)
+            {
+                i = 1;
+                Console.WriteLine(
+                    "│ ───────────────────────────────────────────────────────────────────────────── │"
+                );
+            }
+            Console.WriteLine("│" + item + new string(' ', boxWidth - item.Length) + "│");
+            i++;
             continue;
         }
 
         Console.WriteLine(
             """
             │                                                                               │
-            │ ESC. Go back.                                                                 │
+            │ Press any key to return.                                                      │
             """
         );
 

@@ -105,7 +105,7 @@ public class ProductService : IProductService
     public async Task<List<List<Product>>> GetProductLists(List<Product>? products = null)
     {
         List<Product> tempProducts = new List<Product>();
-        if (products is null || products.Count.Equals(0))
+        if (products is null)
         {
             tempProducts = await GetAllProducts();
         }

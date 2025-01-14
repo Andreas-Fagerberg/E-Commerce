@@ -39,6 +39,18 @@ public class LoginMenu : Menu
                 paymentService
             )
         );
+
+        AddCommand(
+            new ExitCommand(
+                ConsoleKey.Escape,
+                userService,
+                menuService,
+                productService,
+                cartService,
+                orderService,
+                paymentService
+            )
+        );
     }
 
     public override void Display()

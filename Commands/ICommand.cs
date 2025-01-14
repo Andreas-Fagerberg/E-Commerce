@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
-
-namespace E_commerce_Databaser_i_ett_sammanhang;
+﻿namespace E_commerce_Databaser_i_ett_sammanhang;
 
 public interface ICommand
 {

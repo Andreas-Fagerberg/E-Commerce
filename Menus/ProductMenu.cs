@@ -57,7 +57,7 @@ public class ProductMenu : Menu
         _buffer.AppendLine(
             """
             │                                                                               │
-            │ ESC. Go Back.                                           ENTER. Select product │
+            │ ESC. Go Back.                                          ENTER. Select product. │
             """
         );
 
