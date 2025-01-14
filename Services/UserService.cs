@@ -125,7 +125,6 @@ public class UserService : IUserService
     {
         UserValidation.CheckForValidUser(dto.UserId);
 
-        // Check if the user already has an address
         var existingAddress = await ecommerceContext.Addresses.FirstOrDefaultAsync(a =>
             a.UserId == dto.UserId
         );
@@ -137,7 +136,6 @@ public class UserService : IUserService
             );
         }
 
-        // Create the new address
         var address = new Address
         {
             AddressId = Guid.NewGuid(),
@@ -149,11 +147,9 @@ public class UserService : IUserService
             Country = dto.Country,
         };
 
-        // Save to the database
         await ecommerceContext.Addresses.AddAsync(address);
         await ecommerceContext.SaveChangesAsync();
 
-        // Return the response
         return new AddressResponse
         {
             AddressId = address.AddressId,
@@ -168,6 +164,7 @@ public class UserService : IUserService
         };
     }
 
+
     /// <summary>
     /// Retrieves a user's address by their unique identifier.
     /// Throws an exception if no address is found.
@@ -180,9 +177,7 @@ public class UserService : IUserService
 
         if (address == null)
         {
-            System.Console.WriteLine("Debug Adress 4");
-            Console.ReadLine();
-            //throw new InvalidOperationException("Address for the specified user not found.");
+
             return null;
         }
 
@@ -198,6 +193,7 @@ public class UserService : IUserService
             Country = address.Country,
         };
     }
+
 
     /// <summary>
     ///  Updating an existing user's address in the database.
@@ -247,6 +243,7 @@ public class UserService : IUserService
 
     #region Admin Methods
 
+
     /// <summary>
     /// Retrieves a list of all users in the system. This method is restricted to admin users only
     /// and validates the admin user's credentials and role before execution.
@@ -266,6 +263,7 @@ public class UserService : IUserService
             })
             .ToListAsync();
     }
+
 
     /// <summary>
     /// Allows admin users to search for specific users based on criteria
@@ -301,6 +299,7 @@ public class UserService : IUserService
 
         return results;
     }
+
 
     /// <summary>
     /// Updates the role of a specified user. Accessible only by admin users.
@@ -343,6 +342,7 @@ public class UserService : IUserService
     {
         return BCrypt.Net.BCrypt.Verify(password, hashedPassword);
     }
+
 
     /// <summary>
     /// This ensures that the adminUserId belongs to an admin user in the system.
