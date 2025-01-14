@@ -37,7 +37,6 @@ public static class InputHandler
     /// </summary>
     public static UserLoginDTO GetLoginInput()
     {
-
         string email = ReadAndValidateEmail();
         // string email = "a@b.se";
         string password = ReadAndValidatePassword();
