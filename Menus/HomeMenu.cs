@@ -14,13 +14,13 @@ public class HomeMenu : Menu
         bool admin
     )
     {
-        _menuContent = new List<string> { "Products", "Cart", "Checkout", "Log Out" };
+        _menuContent = new List<string> { "Products", "Cart", "Checkout" };
         if (admin)
         {
             _menuContent.Add("Admin Controls");
             AddCommand(
                 new AdminCommands(
-                    ConsoleKey.D5,
+                    ConsoleKey.D4,
                     userService,
                     menuService,
                     productService,
@@ -65,7 +65,7 @@ public class HomeMenu : Menu
         );
         AddCommand(
             new LogoutCommand(
-                ConsoleKey.D4,
+                ConsoleKey.Escape,
                 userService,
                 menuService,
                 productService,
@@ -121,7 +121,7 @@ public class HomeMenu : Menu
             Console.WriteLine(
                 """
                 │                                                                               │
-                │ ESC. Exit application                                                         │
+                │ ESC. Log Out                                                                  │
                 """
             );
             // Console.WriteLine("│" + new string(' ', boxWidth) + "│");

@@ -82,7 +82,7 @@ public class EcommerceContext : DbContext
                 .IsRequired(false)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            user.HasOne(u => u.Cart)
+            user.HasOne(u => u.Carts)
                 .WithOne(c => c.User)
                 .HasForeignKey<Cart>(c => c.UserId)
                 .IsRequired()
@@ -213,8 +213,7 @@ public class EcommerceContext : DbContext
         });
         builder.Entity<Cart>(carts =>
         {
-            // carts.HasKey(o => o.UserId);
-            // carts.HasKey(o => o.ProductId);
+           
             carts.HasKey(u => u.CartId);
 
             carts.Property(c => c.CartId)
@@ -225,13 +224,10 @@ public class EcommerceContext : DbContext
                 .HasPrecision(10)
                 .HasDefaultValue(0);
 
-            carts.Property(c => c.TotalPrice)
-                .IsRequired()
-                .HasPrecision(10, 2)
-                .HasDefaultValue(0);
+        
 
             carts.HasOne(c => c.User)
-                .WithOne(u => u.Cart)
+                .WithOne(u => u.Carts)
                 .HasForeignKey<Cart>(c => c.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
@@ -239,6 +235,8 @@ public class EcommerceContext : DbContext
                 .WithOne(p => p.Cart)
                 .HasForeignKey<Cart>(c => c.ProductId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+    
         });
 
         builder.Entity<Product>(product =>

@@ -1,9 +1,8 @@
-
 using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
 
 namespace E_commerce_Databaser_i_ett_sammanhang;
-
 
 /// <summary>
 /// Handles user input by ensuring it meets basic criteria and providing immediate feedback.
@@ -11,7 +10,6 @@ namespace E_commerce_Databaser_i_ett_sammanhang;
 /// </summary>
 public static class InputHandler
 {
-
     /// <summary>
     /// Collects and performs basic validation on user input for registration details, including name, email, and password.
     /// </summary>
@@ -30,26 +28,20 @@ public static class InputHandler
             FirstName = firstname,
             LastName = lastname,
             Email = email,
-            Password = password
+            Password = password,
         };
     }
-
 
     /// <summary>
     /// Collects and performs basic validation on user input for login details, including email and password.
     /// </summary>
     public static UserLoginDTO GetLoginInput()
     {
-        
         // string email = ReadAndValidateEmail();
         string email = "a@b.se";
         // string password = ReadAndValidatePassword();
         string password = "password";
-        return new UserLoginDTO
-        {
-            Email = email,
-            Password = password
-        };
+        return new UserLoginDTO { Email = email, Password = password };
     }
 
     /// <summary>
@@ -95,7 +87,8 @@ public static class InputHandler
             [1] Admin
             [2] User
             [3] No Role Filter
-            """);
+            """
+        );
 
         Role? role = null;
 
@@ -124,7 +117,6 @@ public static class InputHandler
         return new AdminUserSearchDTO { Email = email, Role = role };
     }
 
-
     /// <summary>
     /// Collects and validates input for updating a user's role.
     /// Ensures the provided User ID is in the correct format and allows
@@ -133,12 +125,25 @@ public static class InputHandler
     public static UpdateUserRoleDTO GetRoleUpdateInput()
     {
         Guid userId;
-
         while (true)
         {
+            Console.WriteLine(
+                """
+
+                1. To stop updating role.
+
+                """
+            );
+
             Console.WriteLine("Enter the User ID to update: ");
             var userIdInput = Console.ReadLine();
-            if (Guid.TryParse(userIdInput, out userId)) break;
+            if (userIdInput.Equals("1"))
+            {
+                return new UpdateUserRoleDTO { UserId = new Guid(), Role = Role.User };
+            }
+
+            if (Guid.TryParse(userIdInput, out userId))
+                break;
             Console.WriteLine("Invalid User ID format. Please try again.");
         }
 
@@ -149,7 +154,8 @@ public static class InputHandler
                 Select the new role:
                 [1] Admin
                 [2] User
-                """);
+                """
+            );
 
             Role role;
             var key = Console.ReadKey(true).Key;
@@ -159,7 +165,6 @@ public static class InputHandler
                 case ConsoleKey.D1:
                     role = Role.Admin;
                     return new UpdateUserRoleDTO { UserId = userId, Role = role };
-
 
                 case ConsoleKey.D2:
                     role = Role.User;
@@ -213,17 +218,24 @@ public static class InputHandler
             Description = description,
             Price = price,
             Rating = rating,
-            Available = available
+            Available = available,
         };
     }
-    public static int GetProductIdToRemove(IProductService productService)
+
+    public static async Task<int> GetProductIdToRemove(IProductService productService)
     {
         while (true)
         {
             Console.Write("Enter the product name: ");
             var productName = Console.ReadLine();
 
-            var products = productService.SearchProducts(productName).Result;
+            if (string.IsNullOrWhiteSpace(productName))
+            {
+                Console.WriteLine("Product name cannot be empty. Please try again.");
+                continue;
+            }
+
+            var products = await productService.SearchProducts(productName);
 
             if (products == null || products.Count == 0)
             {
@@ -241,7 +253,10 @@ public static class InputHandler
             while (true)
             {
                 Console.Write("Enter the Product ID to remove: ");
-                if (int.TryParse(Console.ReadLine(), out productId) && products.Any(p => p.ProductId == productId))
+                if (
+                    int.TryParse(Console.ReadLine(), out productId)
+                    && products.Any(p => p.ProductId == productId)
+                )
                 {
                     return productId;
                 }
@@ -266,10 +281,10 @@ public static class InputHandler
                 return input;
             }
 
-            Console.WriteLine(errorMessage); ;
+            Console.WriteLine(errorMessage);
+            ;
         }
     }
-
 
     /// <summary>
     /// Reads and validates a name, ensuring it contains only valid characters.
@@ -278,7 +293,6 @@ public static class InputHandler
     {
         while (true)
         {
-
             string input = ReadNonEmptyStrings(fieldName, $"{fieldName} is required");
 
             if (UserValidation.IsValidName(input))
@@ -289,7 +303,6 @@ public static class InputHandler
             Console.WriteLine($"{fieldName} can only contain letters, spaces or hyphens.");
         }
     }
-
 
     /// <summary>
     /// Reads and validates an email address, providing feedback for invalid formats.
@@ -305,10 +318,11 @@ public static class InputHandler
                 return email;
             }
 
-            Console.WriteLine("Invalid email format. Please ensure it includes '@' and a domain, e.g., user@example.com.");
+            Console.WriteLine(
+                "Invalid email format. Please ensure it includes '@' and a domain, e.g., user@example.com."
+            );
         }
     }
-
 
     /// <summary>
     /// Reads and validates a password, ensuring it meets security requirements.
@@ -359,13 +373,11 @@ public static class InputHandler
                 Console.Write("*");
                 password.Append(keyInfo.KeyChar);
             }
-        }
-        while (key != ConsoleKey.Enter);
+        } while (key != ConsoleKey.Enter);
 
         Console.WriteLine();
         return password.ToString();
     }
 
     #endregion
-
 }

@@ -22,8 +22,9 @@ public class ProductHandler
     // This method handles showing and navigating through all products
     public async Task HandleShowProducts(List<Product>? products = null)
     {
+        
         index = 0;
-        if (products is null)
+        if (products is null && !searchMode)
         {
             _productLists = await _productService.GetProductLists();
         }
@@ -42,7 +43,6 @@ public class ProductHandler
         while (true)
         {
             searchMode = true;
-            Console.Clear();
             Console.Write("Enter search term: ");
             var searchTerm = Console.ReadLine();
 
