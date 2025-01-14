@@ -1,7 +1,4 @@
 
-using System.Runtime.InteropServices;
-using System.Security.Cryptography.X509Certificates;
-
 namespace E_commerce_Databaser_i_ett_sammanhang;
 
 
@@ -40,7 +37,7 @@ public static class InputHandler
     /// </summary>
     public static UserLoginDTO GetLoginInput()
     {
-        
+
         // string email = ReadAndValidateEmail();
         string email = "a@b.se";
         // string password = ReadAndValidatePassword();

@@ -1,5 +1,9 @@
 namespace E_commerce_Databaser_i_ett_sammanhang;
 
+/// <summary>
+/// Represents an invoice associated with an order, 
+/// containing details about payment and creation timestamps.
+/// </summary>
 public class Invoice
 {
     public int InvoiceId { get; set; }

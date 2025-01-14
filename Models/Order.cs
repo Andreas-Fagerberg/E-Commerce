@@ -11,7 +11,6 @@ public class Order
     public Status Status { get; set; } = Status.Pending;
     public decimal TotalCost { get; set; }
 
-    // Navigation properties
     public User? User { get; set; }
     public Invoice? Invoice { get; set; }
     public ICollection<OrderProduct> OrderProducts = [];
