@@ -6,27 +6,23 @@ public class CartHandler
     private readonly CartMenu _cartMenu;
     private readonly BaseMenu _baseMenu;
     private List<CartItem> _cartItems;
-    private readonly Guid _userId;
     private int index = 0;
 
-    public CartHandler(ICartService cartService, Guid userId)
+    public CartHandler(ICartService cartService)
     {
         _cartService = cartService;
         _cartMenu = new CartMenu();
         _baseMenu = new BaseMenu();
         _cartItems = new List<CartItem>();
-        _userId = userId;
     }
 
-    public async Task HandleShowCart(List<CartItem>? cartItems = null)
+    public async Task HandleShowCart()
     {
+        Guid currentUserId = SessionHandler.GetCurrentUserId();
         index = 0;
-        if (cartItems is null)
-        {
-            var userCart = await _cartService.GetShoppingCart(_userId);
-            _cartItems = _cartService.ConvertCartToList(userCart);
-        }
-        else { }
+
+        _cartItems = _cartService.ConvertCartToList();
+
         while (true)
         {
             _cartMenu.EditContent(_cartItems);
@@ -38,12 +34,6 @@ public class CartHandler
             {
                 break;
             }
-
-            if (key.Key.Equals(ConsoleKey.Enter))
-            {
-                //Implement call to checkout functionality
-            }
-
             // Handle cart item selection
             string fullLine = CustomKeyReader.GetBufferedLine();
 
@@ -52,7 +42,6 @@ public class CartHandler
                 Utilities.WriteLineWithPause("You have to enter a number.");
                 continue;
             }
-
             if (choice > 0 && choice <= _cartItems.Count)
             {
                 CartItem selectedItem = _cartItems[choice - 1];
@@ -71,25 +60,29 @@ public class CartHandler
         while (true)
         {
             _cartMenu.DisplayCartItems(item);
-            var key = Console.ReadKey(true).Key;
+            var key = Console.ReadKey(true);
 
-            if (key == ConsoleKey.D1)
+            if (key.Key == ConsoleKey.Escape)
+            {
+                return;
+            }
+
+            if (key.Key == ConsoleKey.D1)
             {
                 Console.Write("Enter new quantity: ");
-                if (int.TryParse(Console.ReadLine(), out int newQuantity))
+                string? choice = Console.ReadLine();
+                if (int.TryParse(choice, out int newQuantity))
                 {
-                    await _cartService.UpdateProductQuantity(_userId, item.ProductId, newQuantity);
+                    await _cartService.UpdateProductQuantity(item, newQuantity);
+                    _cartItems = _cartService.ConvertCartToList();
+                    return;
                 }
-                return;
+                Utilities.WriteLineWithPause("Please enter a number.");
             }
-            else if (key == ConsoleKey.D2)
+            else if (key.Key == ConsoleKey.D2)
             {
                 await _cartService.RemoveItemShoppingCart(item.ProductId);
-
-                return;
-            }
-            else if (key == ConsoleKey.Escape)
-            {
+                _cartItems = _cartService.ConvertCartToList();
                 return;
             }
 

@@ -2,6 +2,6 @@
 
 public enum Role
 {
-    User, // Default
-    Admin,
+    User = 0, // Default
+    Admin = 1,
 }

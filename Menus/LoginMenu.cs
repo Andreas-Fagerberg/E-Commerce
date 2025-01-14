@@ -43,6 +43,7 @@ public class LoginMenu : Menu
 
     public override void Display()
     {
+        Console.Clear();
         int lineCount = 1;
         int boxWidth = 79;
 

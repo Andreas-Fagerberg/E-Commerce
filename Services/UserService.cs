@@ -172,7 +172,7 @@ public class UserService : IUserService
     /// Retrieves a user's address by their unique identifier.
     /// Throws an exception if no address is found.
     /// </summary>
-    public async Task<AddressResponse> GetUserAddress(Guid userId)
+    public async Task<AddressResponse?> GetUserAddress(Guid userId)
     {
         UserValidation.CheckForValidUser(userId);
 
@@ -180,7 +180,10 @@ public class UserService : IUserService
 
         if (address == null)
         {
-            throw new InvalidOperationException("Address for the specified user not found.");
+            System.Console.WriteLine("Debug Adress 4");
+            Console.ReadLine();
+            //throw new InvalidOperationException("Address for the specified user not found.");
+            return null;
         }
 
         return new AddressResponse

@@ -8,14 +8,16 @@ public class ProductMenu : Menu
     string headerText = string.Empty;
     string errorMessage = string.Empty;
     string bottomText = string.Empty;
+    List<List<Product>> _productLists = new List<List<Product>>();
 
     public ProductMenu() { }
 
     // List containing all pages/lists with all products.
-    List<List<Product>> _productLists = new List<List<Product>>();
 
     public override void Display()
     {
+        Console.Clear();
+
         string displayRating;
         // List containing the current page/current products.
         List<Product> currentProducts = _productLists[index];
@@ -33,19 +35,18 @@ public class ProductMenu : Menu
         );
 
         int i = 0;
-        if (noProducts)
-        {
-            Console.WriteLine("├" + new string('─', boxWidth) + "┤");
-            Console.WriteLine(
-                "│ "
-                    + errorMessage
-                    + new string(' ', boxWidth - (errorMessage.Length + 8))
-                    + "AAAL © │"
-            );
-            Console.WriteLine("├" + new string('─', boxWidth) + "┤");
-            
-        }
-        // Put in else block.
+        // if (noProducts)
+        // {
+        //     Console.WriteLine("├" + new string('─', boxWidth) + "┤");
+        //     Console.WriteLine(
+        //         "│ "
+        //             + errorMessage
+        //             + new string(' ', boxWidth - (errorMessage.Length + 8))
+        //             + "AAAL © │"
+        //     );
+        //     Console.WriteLine("├" + new string('─', boxWidth) + "┤");
+        // }
+
         foreach (Product product in currentProducts)
         {
             displayRating = new string('★', product.Rating) + new string('☆', 5 - product.Rating);
@@ -103,6 +104,7 @@ public class ProductMenu : Menu
 
     public void DisplayProduct(Product product)
     {
+        Console.Clear();
         string displayRating =
             new string('★', product.Rating) + new string('☆', 5 - product.Rating);
 

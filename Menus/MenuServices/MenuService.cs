@@ -7,7 +7,6 @@ public class MenuService : IMenuService
     public MenuService(IUserService userService)
     {
         this.userService = userService;
-
     }
 
     public Menu GetMenu()

@@ -19,26 +19,26 @@ public class CheckoutCommands : MenuBaseCommand
             cartService,
             orderService,
             paymentService
-        )
-    { }
+        ) { }
 
     public override async Task Execute()
     {
         Guid currentUserId = SessionHandler.GetCurrentUserId();
 
         Console.WriteLine("[Checkout Commands]");
-
+        Console.ReadKey();
 
         // 1. Retrieve Address
         var address = await HandleAddressOptions(currentUserId);
-        if (address == null)
-        {
-            Console.WriteLine("Checkout cancelled. No address selected.");
-            return;
-        }
+        // if (address == null)
+        // {
+        //     Console.WriteLine("Checkout cancelled. No address selected.");
+        //     return;
+        // }
+        System.Console.WriteLine("Debug 1.");
+        Console.ReadKey();
 
         Utilities.WriteLineWithPause("Proceeding to the next step...");
-
 
         // 2. Payment Handling
         Console.WriteLine(
@@ -51,19 +51,17 @@ public class CheckoutCommands : MenuBaseCommand
 
         PaymentMethod paymentMethod = SelectPaymentMethod();
 
-
         // 3. Retrieve Cart Data
         var cartData = await cartService.GetShoppingCart(currentUserId);
         if (!cartData.Any())
         {
             Console.WriteLine("Your cart is empty. Add items before checking out.");
+            Console.ReadLine();
             return;
         }
 
-
         // 4. Prepare Order Data
         var orderProducts = PrepareCartData(cartData);
-
 
         // 5. Create Order
         OrderResponse? orderSummary = null;
@@ -83,7 +81,6 @@ public class CheckoutCommands : MenuBaseCommand
             return;
         }
 
-
         // 6. Process Payment and Invoice
         try
         {
@@ -93,11 +90,15 @@ public class CheckoutCommands : MenuBaseCommand
                 paymentMethod
             );
             Console.WriteLine(paymentStatus);
+            Console.ReadLine();
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Payment processing failed using method '{paymentMethod}'. Checkout aborted.");
+            Console.WriteLine(
+                $"Payment processing failed using method '{paymentMethod}'. Checkout aborted."
+            );
             ExceptionHandler.Handle(ex);
+            Console.ReadLine();
         }
 
         Console.WriteLine("Checkout completed successfully.");
@@ -125,12 +126,11 @@ public class CheckoutCommands : MenuBaseCommand
                     Console.WriteLine(
                         "Invalid selection. Please press [1] for Pay Now or [2] for Pay Later."
                     );
+                    Console.ReadLine();
                     continue;
             }
         }
     }
-
-
 
     /// <summary>
     /// Transforms cart data from a dictionary structure into a list of OrderProductDTO objects.
@@ -157,7 +157,6 @@ public class CheckoutCommands : MenuBaseCommand
         return orderProducts;
     }
 
-
     /// <summary>
     /// Handles the selection or creation of a user's address during the checkout process.
     /// If an address exists, the user can choose to use it or update it.
@@ -170,6 +169,9 @@ public class CheckoutCommands : MenuBaseCommand
 
         if (existingAddress != null)
         {
+            System.Console.WriteLine("Debug 2 Adress");
+            Console.ReadLine();
+
             Console.WriteLine(
                 $"""
                 Select an Address Option:
@@ -187,6 +189,8 @@ public class CheckoutCommands : MenuBaseCommand
 
             while (true)
             {
+                System.Console.WriteLine("Debug 3 Adress");
+                Console.ReadLine();
                 var input = Console.ReadKey(true).Key;
 
                 switch (input)

@@ -68,12 +68,17 @@ public class AdminCommands : MenuBaseCommand
 
                     case ConsoleKey.D2: // Search Users
                         var searchCriteria = InputHandler.GetAdminSearchInput();
-                        var searchResults = await userService.SearchUsers(searchCriteria, currentUserId);
+                        var searchResults = await userService.SearchUsers(
+                            searchCriteria,
+                            currentUserId
+                        );
 
                         List<string> allResults = new List<string>();
                         foreach (var result in searchResults)
                         {
-                            allResults.Add($" - {result.FirstName} {result.LastName} ({result.Email})");
+                            allResults.Add(
+                                $" - {result.FirstName} {result.LastName} ({result.Email})"
+                            );
                         }
 
                         _adminMenu.EditContent(allResults, "All matching users:");

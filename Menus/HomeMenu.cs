@@ -78,10 +78,9 @@ public class HomeMenu : Menu
 
     public override void Display()
     {
+        Console.Clear();
         int boxWidth = 79;
         string optionText1 = "Select an option below:";
-
-        // Viktigt
 
         Console.WriteLine("┌" + new string('─', boxWidth) + "┐");
         Console.WriteLine(

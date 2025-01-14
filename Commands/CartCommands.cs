@@ -28,24 +28,16 @@ public class CartCommands : MenuBaseCommand
             cartService,
             orderService,
             paymentService
-        )
-    { }
+        ) { }
 
     public override async Task Execute()
     {
-        Guid currentUserId = SessionHandler.GetCurrentUserId();
-
-        _cartHandler = new CartHandler(cartService, currentUserId);
+        _cartHandler = new CartHandler(cartService);
         while (true)
         {
             baseMenu.EditContent(_menuContent);
             baseMenu.Display();
 
-            if (!int.TryParse(Console.ReadLine(), out int choice))
-            {
-                Console.WriteLine("Invalid input. Please enter a number.");
-                continue;
-            }
             var input = Console.ReadKey(true).Key;
 
             try

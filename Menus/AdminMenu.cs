@@ -9,6 +9,7 @@ public class AdminMenu : Menu
 
     public override void Display()
     {
+        Console.Clear();
         int boxWidth = 79;
 
         Console.WriteLine("┌" + new string('─', boxWidth) + "┐");
