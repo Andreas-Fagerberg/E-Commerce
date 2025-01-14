@@ -22,7 +22,6 @@ public class ProductHandler
     // This method handles showing and navigating through all products
     public async Task HandleShowProducts(List<Product>? products = null)
     {
-        
         index = 0;
         if (products is null && !searchMode)
         {
@@ -93,21 +92,19 @@ public class ProductHandler
         while (true)
         {
             _baseMenu.Display();
-            var key = CustomKeyReader.GetKeyOrBuffered();
+            var input = Console.ReadKey(true);
 
-            if (key.Key == ConsoleKey.Escape)
+            if (input.Key == ConsoleKey.Escape)
             {
-                break;
+                return;
             }
 
-            string fullLine = CustomKeyReader.GetBufferedLine();
-
-            if (!int.TryParse(fullLine, out int choice))
+            if (int.TryParse(input.KeyChar.ToString(), out int choice)) { }
+            if (choice > menuContent.Count)
             {
-                Utilities.WriteLineWithPause("You have to enter a number.");
+                Utilities.WriteLineWithPause("Please select a category from the list.");
                 continue;
             }
-
             if (Enum.TryParse<Category>(menuContent[choice - 1], out Category selectedCategory))
             {
                 var products = await _productService.SearchProducts(
@@ -126,8 +123,6 @@ public class ProductHandler
                     continue;
                 }
             }
-            Utilities.WriteLineWithPause("Please select a category from the list.");
-            continue;
         }
     }
 
@@ -179,7 +174,6 @@ public class ProductHandler
                     break;
                 case ConsoleKey.Enter:
                     await HandleProductSelection(currentPage[selectionTracker]);
-                    Console.ReadKey(true);
                     requiresRedraw = true;
                     break;
             }

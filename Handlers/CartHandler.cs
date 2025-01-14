@@ -126,13 +126,14 @@ public class CartHandler
                     break;
                 case ConsoleKey.Enter:
                     await HandleCartItemSelection(_cartItems[selectionTracker]);
-                    Console.ReadKey(true);
+                    _cartItems = _cartService.ConvertCartToList();
                     requiresRedraw = true;
                     break;
             }
 
             if (requiresRedraw)
             {
+                _cartMenu.EditContent(_cartItems);
                 _cartMenu.SetLine(selectionTracker);
                 _cartMenu.Display();
             }

@@ -39,10 +39,6 @@ namespace E_commerce_Databaser_i_ett_sammanhang
             {
                 UserCart[product.ProductId] = (quantity, product.Price, product.Name);
             }
-            System.Console.WriteLine(UserCart[product.ProductId].Name);
-            Console.ReadLine();
-
-
             await Task.CompletedTask;
         }
 

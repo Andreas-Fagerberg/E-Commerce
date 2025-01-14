@@ -74,6 +74,7 @@ public class CartMenu : Menu
 
     public void DisplayCartItems(CartItem cartItems)
     {
+        Console.Clear();
         int boxWidth = 79;
         string headerText = "Select an option below:";
 
