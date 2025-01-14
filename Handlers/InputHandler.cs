@@ -38,10 +38,10 @@ public static class InputHandler
     public static UserLoginDTO GetLoginInput()
     {
 
-        // string email = ReadAndValidateEmail();
-        string email = "a@b.se";
-        // string password = ReadAndValidatePassword();
-        string password = "password";
+        string email = ReadAndValidateEmail();
+        // string email = "a@b.se";
+        string password = ReadAndValidatePassword();
+        // string password = "password";
         return new UserLoginDTO
         {
             Email = email,
@@ -247,6 +247,8 @@ public static class InputHandler
         }
     }
 
+
+
     #region Helper Methods
 
     /// <summary>
@@ -301,7 +303,6 @@ public static class InputHandler
             {
                 return email;
             }
-
             Console.WriteLine("Invalid email format. Please ensure it includes '@' and a domain, e.g., user@example.com.");
         }
     }

@@ -38,7 +38,7 @@ public class LoginCommand : MenuBaseCommand
                 }
 
                 SessionHandler.CurrentUserId = loggedInUser.UserId;
-                Console.WriteLine($"Good to see you, {loggedInUser.FirstName} {loggedInUser.LastName}!");
+                Utilities.WriteLineWithPause($"Good to see you, {loggedInUser.FirstName} {loggedInUser.LastName}!");
 
                 // Determine if the user has admin privileges and set the appropriate HomeMenu
                 bool isAdmin = UserValidation.CheckIfAdmin(loggedInUser);
