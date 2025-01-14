@@ -92,7 +92,6 @@ public class ProductHandler
 
             // Search for products and display them using the same flow as ShowAllProducts
             var products = await _productService.SearchProducts(searchTerm);
-            Console.WriteLine(products[0].Name + "bitch");
             Console.ReadKey();
             await HandleShowProducts(products);
             return;

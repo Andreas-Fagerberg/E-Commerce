@@ -95,7 +95,7 @@ public class AdminCommands : MenuBaseCommand
                     case ConsoleKey.D4: // Create New Product
                         var newProduct = InputHandler.GetCreateProductInput();
                         await productService.CreateProduct(newProduct);
-                        Console.WriteLine("Product created successfully.");
+                        Utilities.WriteLineWithPause("Product created successfully.", 3000);
                         break;
 
                     case ConsoleKey.D5: // Remove Product
@@ -103,7 +103,7 @@ public class AdminCommands : MenuBaseCommand
                         var isRemoved = await productService.RemoveProduct(productId);
                         if (isRemoved)
                         {
-                            Console.WriteLine("Product removed successfully.");
+                            Utilities.WriteLineWithPause("Product removed successfully.", 3000);
                         }
                         else
                         {
