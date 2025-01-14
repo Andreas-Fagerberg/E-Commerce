@@ -55,6 +55,7 @@ public class ViewOrdersCommand : MenuBaseCommand
         Console.WriteLine($"Region: {address.Region}");
         Console.WriteLine($"Postal Code: {address.PostalCode}");
         Console.WriteLine($"Country: {address.Country}");
+        Console.WriteLine();
     }
 
 
