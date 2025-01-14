@@ -1,91 +1,75 @@
-﻿namespace E_commerce_Databaser_i_ett_sammanhang;
+﻿using System.Text;
+
+namespace E_commerce_Databaser_i_ett_sammanhang;
 
 public class CartMenu : Menu
 {
     // Keeps track of current page number
 
     // List containing all pages/lists with all products.
-    ICartService _cartService;
-    private Guid _userId;
     private List<CartItem> _cartItems = new List<CartItem>();
-    private string _headerText;
+    private string _headerText = string.Empty;
+    private readonly StringBuilder _buffer = new StringBuilder();
+    private int selectionTracker = 0;
+    private string _bottomText = string.Empty;
 
-    public CartMenu()
-    {
-        // _CartService = CartService;
-        // _userId = userId;
-        // _cartItems = new List<CartItem>();
-    }
+    public CartMenu() { }
 
     public override void Display()
     {
-        Console.Clear();
-        // Used to decide the size of the menu.
+        // Clear the buffer instead of the console
+        _buffer.Clear();
+
+        string displayRating;
+        List<CartItem> currentProducts = _cartItems;
         int boxWidth = 79;
 
-        Console.WriteLine("┌" + new string('─', boxWidth) + "┐");
-        Console.WriteLine(
+        // Build the entire display in memory first
+        _buffer.AppendLine("┌" + new string('─', boxWidth) + "┐");
+        _buffer.AppendLine(
             "│ " + _headerText + new string(' ', boxWidth - (_headerText.Length + 8)) + "AAAL © │"
         );
-        Console.WriteLine("├" + new string('─', boxWidth) + "┤");
-
-        Console.WriteLine(
+        _buffer.AppendLine("├" + new string('─', boxWidth) + "┤");
+        _buffer.AppendLine(
             "│ Name                                          │ Qty.   │ Price                │"
         );
 
-        int i = 0;
-        if (_cartItems.Count().Equals(0)) {}
-        foreach (var item in _cartItems)
+        // Build product rows
+        for (int i = 0; i < currentProducts.Count; i++)
         {
-            if (i < 9)
+            CartItem product = currentProducts[i];
+
+            // Store the row content
+            if (selectionTracker == i)
             {
-                Console.WriteLine(
-                    "│  "
-                        + (i + 1)
-                        + ". "
-                        + item.Name
-                        + new string(' ', 44 - item.Name.Length)
-                        + "│ "
-                        + item.Quantity.ToString()
-                        + new string(' ', 16 - item.Quantity.ToString().Length)
-                        + "│ "
-                        + item.Price
-                        + new string(' ', 16 - item.Price.ToString().Length)
-                        + "│"
-                );
-                i++;
-                continue;
+                string row =
+                    $" {(i < 9 ? " " : "")}{i + 1}. {product.Name}{new string(' ', 42 - product.Name!.Length)}│ {product.Quantity} {new string(' ', 5 - product.Quantity.ToString().Length)} │ {product.Price} {new string(' ', 15 - product.Price.ToString().Length)}SEK";
+                _buffer.AppendLine($"<SELECTED>{row}<SELECTED>");
             }
+            // If this is the selected row, we'll handle it specially during rendering
             else
             {
-                Console.WriteLine(
-                    "│ "
-                        + (i + 1)
-                        + ". "
-                        + item.Name
-                        + new string(' ', 44 - item.Name!.Length)
-                        + "│ "
-                        + item.Quantity.ToString()
-                        + new string(' ', 16 - item.Price.ToString().Length)
-                        + "│ "
-                        + item.Price
-                        + new string(' ', 16 - item.Price.ToString().Length)
-                        + "│"
-                );
-                i++;
+                string row =
+                    $"│{(i < 9 ? "  " : " ")}{i + 1}. {product.Name}{new string(' ', 42 - product.Name!.Length)}│ {product.Quantity} {new string(' ', 5 - product.Quantity.ToString().Length)} │ {product.Price} {new string(' ', 15 - product.Price.ToString().Length)}SEK  │";
+                _buffer.AppendLine(row);
             }
-
-            continue;
         }
-        Console.WriteLine(
-            """                                               
+
+        _buffer.AppendLine(
+            """
             │                                                                               │
-            │ ESC. Go back.                                                                 │
+            │ ESC. Go Back.                                           ENTER. Select Product │
             """
         );
-        Console.WriteLine("├" + new string('─', boxWidth) + "┤");
-        Console.WriteLine("│" + new string(' ', boxWidth) + "│");
-        Console.WriteLine("└" + new string('─', boxWidth) + "┘");
+
+        _buffer.AppendLine("├" + new string('─', boxWidth) + "┤");
+        _buffer.AppendLine(
+            "│ " + _bottomText + new string(' ', boxWidth - (_bottomText.Length + 1)) + "│"
+        );
+        _buffer.AppendLine("└" + new string('─', boxWidth) + "┘");
+
+        // Now render everything at once
+        RenderBuffer();
     }
 
     public void DisplayCartItems(CartItem cartItems)
@@ -102,27 +86,27 @@ public class CartMenu : Menu
         Console.WriteLine(
             "│ NAME: "
                 + cartItems.Name
-                + new string(' ', boxWidth - cartItems.Name!.Length + 8)
+                + new string(' ', boxWidth - (cartItems.Name.Length + 7))
                 + "│"
         );
 
         Console.WriteLine(
             "│ QUANTITY: "
                 + cartItems.Quantity
-                + new string(' ', boxWidth - cartItems.Quantity.ToString().Length + 12)
+                + new string(' ', boxWidth - (cartItems.Quantity.ToString().Length + 11))
                 + "│"
         );
 
         Console.WriteLine(
             "│ PRICE: "
                 + cartItems.Price
-                + new string(' ', boxWidth - cartItems.Price.ToString().Length + 9)
+                + " SEK"
+                + new string(' ', boxWidth - (cartItems.Price.ToString().Length + 12))
                 + "│"
         );
 
         Console.WriteLine(
             """
-
             │                                                                               │
             │  1. Change quantity.                                                          │
             │  2. Remove item from cart.                                                    │
@@ -137,10 +121,50 @@ public class CartMenu : Menu
     }
 
     // csharpier-ignore-start
-    public void EditContent(List<CartItem> allCartItems, string headerText = "Your Shopping Cart:")
+    public void EditContent(List<CartItem> allCartItems, string headerText = "Select a cart item below:")
     {
         _headerText = headerText;
         _cartItems = allCartItems;
     }
     // csharpier-ignore-end
+    private void RenderBuffer()
+    {
+        // Store cursor position and hide it during rendering
+        Console.CursorVisible = false;
+
+        // Clear console once
+        Console.SetCursorPosition(0, 0);
+        Console.Clear();
+
+        // Split buffer into lines
+        string[] lines = _buffer.ToString().Split(Environment.NewLine);
+
+        foreach (string line in lines)
+        {
+            if (line.StartsWith("<SELECTED>"))
+            {
+                // Extract the actual content between the markers
+                string content = line.Replace("<SELECTED>", "");
+                Console.Write("│ ");
+                Console.ForegroundColor = ConsoleColor.Black;
+                Console.BackgroundColor = ConsoleColor.White;
+                Console.Write(content);
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.BackgroundColor = ConsoleColor.Black;
+                Console.WriteLine(" │");
+            }
+            else
+            {
+                Console.WriteLine(line);
+            }
+        }
+
+        // Restore cursor visibility
+        Console.CursorVisible = true;
+    }
+
+    public void SetLine(int selectionTracker)
+    {
+        this.selectionTracker = selectionTracker;
+    }
 }

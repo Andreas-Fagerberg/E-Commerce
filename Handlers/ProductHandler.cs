@@ -7,6 +7,8 @@ public class ProductHandler
     private readonly ProductMenu _productMenu;
     private readonly BaseMenu _baseMenu;
     private List<List<Product>> _productLists = new List<List<Product>>();
+    public List<Product> currentPage = new List<Product>();
+    public bool searchMode = false;
     private int index = 0;
 
     public ProductHandler(IProductService productService, ICartService cartService)
@@ -29,50 +31,9 @@ public class ProductHandler
         {
             _productLists = await _productService.GetProductLists(products);
         }
+
         _productMenu.EditContent(_productLists);
-
-        while (true)
-        {
-            // Display current page of products using your existing menu
-            _productMenu.Display();
-
-            var key = CustomKeyReader.GetKeyOrBuffered();
-
-            if (key.Key == ConsoleKey.Escape)
-            {
-                break;
-            }
-
-            if (key.Key == ConsoleKey.LeftArrow || key.Key == ConsoleKey.RightArrow)
-            {
-                _productMenu.SetPage(key.Key);
-                index = _productMenu.GetPage();
-                continue;
-            }
-
-            // Get current page for product selection
-            var currentPage = _productLists[_productMenu.GetPage()];
-
-            // Handle selecting a specific product
-            string fullLine = CustomKeyReader.GetBufferedLine();
-
-            if (!int.TryParse(fullLine, out int choice))
-            {
-                Utilities.WriteLineWithPause("You have to enter a number.");
-                continue;
-            }
-
-            if (choice > 0 && choice <= currentPage.Count)
-            {
-                Product selectedProduct = currentPage[choice - 1];
-                await HandleProductSelection(selectedProduct);
-            }
-            else
-            {
-                Utilities.WriteLineWithPause("Please select a product from the list.");
-                continue;
-            }
-        }
+        await ProductSelection();
     }
 
     // This method handles product search functionality
@@ -80,6 +41,7 @@ public class ProductHandler
     {
         while (true)
         {
+            searchMode = true;
             Console.Clear();
             Console.Write("Enter search term: ");
             var searchTerm = Console.ReadLine();
@@ -92,9 +54,8 @@ public class ProductHandler
 
             // Search for products and display them using the same flow as ShowAllProducts
             var products = await _productService.SearchProducts(searchTerm);
-            Console.WriteLine(products[0].Name + "bitch");
-            Console.ReadKey();
             await HandleShowProducts(products);
+            searchMode = false;
             return;
         }
     }
@@ -124,13 +85,9 @@ public class ProductHandler
 
     public async Task HandleCategorySelection()
     {
-        var categories = Enum.GetValues(typeof(Category));
-        List<string> menuContent = new List<string>();
-        foreach (Category category in categories)
-        {
-            menuContent.Add(category.ToString());
-        }
-
+        searchMode = true;
+        var categories = Enum.GetValues<Category>();
+        var menuContent = categories.Select(c => c.ToString()).ToList();
         _baseMenu.EditContent(menuContent, "Select a category below");
 
         while (true)
@@ -151,14 +108,88 @@ public class ProductHandler
                 continue;
             }
 
-            if (choice > 0 && choice <= menuContent.Count)
+            if (Enum.TryParse<Category>(menuContent[choice - 1], out Category selectedCategory))
             {
-                var products = await _productService.SearchProducts(null, menuContent[choice]);
-                await HandleShowProducts(products);
-                return;
+                var products = await _productService.SearchProducts(
+                    null,
+                    selectedCategory.ToString()
+                );
+                if (products != null && products.Any())
+                {
+                    await HandleShowProducts(products);
+                    searchMode = false;
+                    return;
+                }
+                else
+                {
+                    Utilities.WriteLineWithPause("No products found in this category.");
+                    continue;
+                }
             }
             Utilities.WriteLineWithPause("Please select a category from the list.");
             continue;
+        }
+    }
+
+    public async Task ProductSelection()
+    {
+        int selectionTracker = 0;
+        if (!searchMode)
+        {
+            _productLists = await _productService.GetProductLists();
+            _productMenu.EditContent(_productLists);
+        }
+
+        // Initial render
+        currentPage = _productLists[_productMenu.GetPage()];
+        _productMenu.SetLine(selectionTracker);
+        _productMenu.Display();
+
+        while (true)
+        {
+            ConsoleKey input = Console.ReadKey(intercept: true).Key;
+            bool requiresRedraw = false;
+
+            switch (input)
+            {
+                case ConsoleKey.Escape:
+                    return;
+                case ConsoleKey.LeftArrow:
+                case ConsoleKey.RightArrow:
+                    _productMenu.SetPage(input);
+                    selectionTracker = 0;
+                    requiresRedraw = true;
+                    break;
+                case ConsoleKey.UpArrow:
+                    selectionTracker--;
+                    if (selectionTracker < 0)
+                    {
+                        selectionTracker = currentPage.Count - 1;
+                    }
+                    requiresRedraw = true;
+                    break;
+
+                case ConsoleKey.DownArrow:
+                    selectionTracker++;
+                    if (selectionTracker > 39 || selectionTracker > currentPage.Count - 1)
+                    {
+                        selectionTracker = 0;
+                    }
+                    requiresRedraw = true;
+                    break;
+                case ConsoleKey.Enter:
+                    await HandleProductSelection(currentPage[selectionTracker]);
+                    Console.ReadKey(true);
+                    requiresRedraw = true;
+                    break;
+            }
+
+            if (requiresRedraw)
+            {
+                currentPage = _productLists[_productMenu.GetPage()];
+                _productMenu.SetLine(selectionTracker);
+                _productMenu.Display();
+            }
         }
     }
 }

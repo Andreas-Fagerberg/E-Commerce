@@ -7,7 +7,7 @@ public static class CustomKeyReader
     public static ConsoleKeyInfo GetKeyOrBuffered()
     {
         // First read the new key
-        var key = Console.ReadKey();
+        var key = Console.ReadKey(true);
 
         // If it's not an arrow key, add to buffer and display
         if (key.Key != ConsoleKey.LeftArrow && key.Key != ConsoleKey.RightArrow)
@@ -22,6 +22,7 @@ public static class CustomKeyReader
     {
         string result = buffer;
         buffer = "";
+        Console.WriteLine(result);
         result += Console.ReadLine();
         return result;
     }

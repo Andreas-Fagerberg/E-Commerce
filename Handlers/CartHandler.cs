@@ -90,6 +90,55 @@ public class CartHandler
         }
     }
 
+    public async Task CartItemSelection()
+    {
+        int selectionTracker = 0;
+        _cartItems = _cartService.ConvertCartToList();
+        _cartMenu.EditContent(_cartItems);
+        _cartMenu.SetLine(selectionTracker);
+        _cartMenu.Display();
+
+        while (true)
+        {
+            ConsoleKey input = Console.ReadKey(true).Key;
+            bool requiresRedraw = false;
+
+            switch (input)
+            {
+                case ConsoleKey.Escape:
+                    return;
+                case ConsoleKey.UpArrow:
+                    selectionTracker--;
+                    if (selectionTracker < 0)
+                    {
+                        selectionTracker = _cartItems.Count - 1;
+                    }
+                    requiresRedraw = true;
+                    break;
+
+                case ConsoleKey.DownArrow:
+                    selectionTracker++;
+                    if (selectionTracker > 39 || selectionTracker > _cartItems.Count - 1)
+                    {
+                        selectionTracker = 0;
+                    }
+                    requiresRedraw = true;
+                    break;
+                case ConsoleKey.Enter:
+                    await HandleCartItemSelection(_cartItems[selectionTracker]);
+                    Console.ReadKey(true);
+                    requiresRedraw = true;
+                    break;
+            }
+
+            if (requiresRedraw)
+            {
+                _cartMenu.SetLine(selectionTracker);
+                _cartMenu.Display();
+            }
+        }
+    }
+
     // private async Task HandleCartItemRemoval(CartItem item) { }
     //   private int GetNumberFromKey(ConsoleKey key)
     //     {

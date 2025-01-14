@@ -81,7 +81,7 @@ public class LoginMenu : Menu
         Console.WriteLine(
             """
             │                                                                               │
-            │ ESC. Go Back.                                                                 │
+            │ ESC. Exit Application.                                                        │
             """
         );
 

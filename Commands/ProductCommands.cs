@@ -40,12 +40,12 @@ public class ProductCommands : MenuBaseCommand
             baseMenu.EditContent(_menuContent);
             baseMenu.Display();
 
-            ConsoleKey input = Console.ReadKey().Key;
+            ConsoleKey input = Console.ReadKey(true).Key;
 
             switch (input)
             {
                 case ConsoleKey.D1:
-                    await _productHandler.HandleShowProducts();
+                    await _productHandler.ProductSelection();
                     break;
                 case ConsoleKey.D2:
                     await _productHandler.HandleSearchProducts();

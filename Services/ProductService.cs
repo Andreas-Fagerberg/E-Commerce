@@ -48,6 +48,7 @@ public class ProductService : IProductService
             if (!string.IsNullOrWhiteSpace(category))
             {
                 var searchTerms = category.Trim().ToLower().Split(' ');
+
                 searchProduct = searchProduct.Where(p =>
                     searchTerms.All(term => p.Category.ToLower().Contains(term))
                 );
