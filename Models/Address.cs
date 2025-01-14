@@ -13,7 +13,6 @@ public class Address
     public required string PostalCode { get; set; }
     public required string Country { get; set; }
 
-    // Navigation property
     public User? User { get; set; }
 }
 

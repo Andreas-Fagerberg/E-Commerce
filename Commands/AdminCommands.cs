@@ -58,12 +58,14 @@ public class AdminCommands : MenuBaseCommand
                     case ConsoleKey.D1: // View All Users
                         var users = await userService.GetAllUsers(currentUserId);
                         List<string> allUsers = new List<string>();
+                        Console.WriteLine();
                         foreach (var user in users)
                         {
-                            allUsers.Add($" - {user.FirstName} {user.LastName} ({user.Email})");
+                            allUsers.Add($" - {user.FirstName} {user.LastName} ({user.Email}) ({user.UserId})");
                         }
                         _adminMenu.EditContent(allUsers, "All users: ");
                         _adminMenu.Display();
+                        Console.ReadLine();
                         break;
 
                     case ConsoleKey.D2: // Search Users
@@ -83,13 +85,14 @@ public class AdminCommands : MenuBaseCommand
 
                         _adminMenu.EditContent(allResults, "All matching users:");
                         _adminMenu.Display();
+                        Console.ReadLine();
 
                         break;
 
                     case ConsoleKey.D3: // Update User Role
                         var newRole = InputHandler.GetRoleUpdateInput();
                         await userService.UpdateUserRole(newRole, currentUserId);
-                        Console.WriteLine("User role updated successfully.");
+                        Utilities.WriteLineWithPause($"User role for updated successfully.");
                         break;
 
                     case ConsoleKey.D4: // Create New Product
