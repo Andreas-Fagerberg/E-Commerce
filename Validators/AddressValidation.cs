@@ -9,8 +9,6 @@ public class AddressValidation
     /// </summary>
     public static void ValidateAddress(RegisterAddressDTO dto)
     {
-        // CheckForValidUser should be handled in the Command layer.
-
         if (string.IsNullOrWhiteSpace(dto.Street) || dto.Street.Length > 100)
         {
             throw new ArgumentException("Street cannot be empty (max 100 characters).");

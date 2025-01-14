@@ -2,6 +2,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace E_commerce_Databaser_i_ett_sammanhang;
 
+/// <summary>
+/// Represents a service for managing payment-related operations.
+/// </summary>
 public class PaymentService : IPaymentService
 {
 
@@ -47,7 +50,9 @@ public class PaymentService : IPaymentService
         };
     }
 
-
+    /// <summary>
+    /// Processes payment for the specified order.
+    /// </summary>
     public async Task<string> ProcessPayment(Guid orderId, decimal totalAmount, PaymentMethod paymentMethod)
     {
         var invoiceCreationDto = new InvoiceCreationDTO

@@ -12,14 +12,13 @@ public class OrderService : IOrderService
     }
 
     /// <summary>
-    /// Creates a new order and returns the order details.
+    /// Creates a new order, saves it to the database and returns the order details.
     /// </summary>
     public async Task<OrderResponse> CreateOrder(CreateOrderDTO dto)
     {
         UserValidation.CheckForValidUser(dto.UserId);
         OrderValidation.ValidateOrder(dto);
 
-        // Extract all ProductIds from dto.Products and store them in a list.
         var productIds = dto.Products.Select(p => p.ProductId).ToList();
 
         var productPrices = await GetProductPrices(productIds);
@@ -33,7 +32,6 @@ public class OrderService : IOrderService
             totalCost += productPrices[product.ProductId] * product.Quantity;
         }
 
-        // Create and save the Order object to the database.
         var order = new Order
         {
             OrderId = Guid.NewGuid(),
@@ -55,16 +53,13 @@ public class OrderService : IOrderService
             );
         }
 
-        // Return the order response for accessibility.
         return new OrderResponse
         {
             OrderId = order.OrderId,
             CreatedAt = order.CreatedAt,
             Status = order.Status.ToString(),
-            TotalCost = totalCost,
+            TotalCost = totalCost
         };
-
-        // Possibly add more data for the order. E.g. products and their details unit price etc.
     }
 
     /// <summary>
@@ -73,7 +68,6 @@ public class OrderService : IOrderService
     /// </summary>
     public async Task<OrderResponse> GetOrderDetails(Guid orderId)
     {
-        // Fetch the order and related data
         var order = await ecommerceContext
             .Orders.Include(o => o.OrderProducts)
             .ThenInclude(op => op.Product)
@@ -84,7 +78,6 @@ public class OrderService : IOrderService
             throw new InvalidOperationException($"Order with ID {orderId} not found.");
         }
 
-        // Map product details
         var productDetails = order
             .OrderProducts.Select(op => new OrderProductResponse
             {
@@ -94,7 +87,6 @@ public class OrderService : IOrderService
             })
             .ToList();
 
-        // Create and return the OrderResponse
         return new OrderResponse
         {
             OrderId = order.OrderId,
@@ -113,7 +105,6 @@ public class OrderService : IOrderService
     {
         UserValidation.CheckForValidUser(userId);
 
-        // Fetch all orders for the User.
         var orders = await ecommerceContext
             .Orders.Where(o => o.UserId == userId)
             .OrderByDescending(o => o.CreatedAt)
@@ -123,7 +114,7 @@ public class OrderService : IOrderService
         {
             return new List<OrderResponse>();
         }
-        // Map orders to OrderResponse
+
         var orderResponses = orders
             .Select(order => new OrderResponse
             {
@@ -131,12 +122,16 @@ public class OrderService : IOrderService
                 CreatedAt = order.CreatedAt,
                 Status = order.Status.ToString(),
                 TotalCost = order.TotalCost,
-            })
-            .ToList();
+            }).ToList();
 
         return orderResponses;
     }
 
+
+    /// <summary>
+    /// Processes an order for the current user by creating the order, 
+    /// validating the products, and retrieving detailed order information.
+    /// </summary>
     public async Task<OrderResponse> ProcessOrder(Guid currentUserId, List<OrderProductDTO> orderProducts, PaymentMethod paymentMethod)
     {
         var createOrderDTO = new CreateOrderDTO

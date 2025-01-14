@@ -10,7 +10,7 @@ public interface IUserService
     void LogoutUser();
     Task<UserResponse> GetUser(Guid userId);
     Task<AddressResponse> SaveUserAddress(RegisterAddressDTO dto);
-    Task<AddressResponse> GetUserAddress(Guid userId);
+    Task<AddressResponse?> GetUserAddress(Guid userId);
     Task<AddressResponse> UpdateUserAddress(RegisterAddressDTO dto);
     Task<bool> HasAddress(Guid userId);
     Task<List<UserResponse>> GetAllUsers(Guid adminUserId);
