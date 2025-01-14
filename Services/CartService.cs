@@ -83,7 +83,7 @@ namespace E_commerce_Databaser_i_ett_sammanhang
             return UserCart;
         }
 
-        public async Task SaveCartToDatabase(Guid userId)
+        public async void SaveCartToDatabase(Guid userId)
         {
             var cartItems = UserCart.Select(item => new Cart
             {

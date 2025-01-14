@@ -1,107 +1,75 @@
+using System.Text;
+
 namespace E_commerce_Databaser_i_ett_sammanhang;
 
 public class ProductMenu : Menu
 {
-    // Keeps track of current page number
-    int index = 0;
-    bool noProducts = false;
-    string headerText = string.Empty;
-    string errorMessage = string.Empty;
-    string bottomText = string.Empty;
-    List<List<Product>> _productLists = new List<List<Product>>();
-
-    public ProductMenu() { }
-
-    // List containing all pages/lists with all products.
+    private readonly StringBuilder _buffer = new StringBuilder();
+    private int index = 0;
+    private int selectionTracker = 0;
+    private bool noProducts = false;
+    private string headerText = string.Empty;
+    private string errorMessage = string.Empty;
+    private string bottomText = string.Empty;
+    private List<List<Product>> _productLists = new List<List<Product>>();
 
     public override void Display()
     {
-        Console.Clear();
+        // Clear the buffer instead of the console
+        _buffer.Clear();
 
         string displayRating;
-        // List containing the current page/current products.
         List<Product> currentProducts = _productLists[index];
-
-        // Used to decide the size of the menu.
         int boxWidth = 79;
 
-        Console.WriteLine("┌" + new string('─', boxWidth) + "┐");
-        Console.WriteLine(
+        // Build the entire display in memory first
+        _buffer.AppendLine("┌" + new string('─', boxWidth) + "┐");
+        _buffer.AppendLine(
             "│ " + headerText + new string(' ', boxWidth - (headerText.Length + 8)) + "AAAL © │"
         );
-        Console.WriteLine("├" + new string('─', boxWidth) + "┤");
-        Console.WriteLine(
-            "│ Name:                                           │ Price:          │ Rating:   │"
+        _buffer.AppendLine("├" + new string('─', boxWidth) + "┤");
+        _buffer.AppendLine(
+            "│ Name:                                        │ Price:             │ Rating:   │"
         );
 
-        int i = 0;
-        // if (noProducts)
-        // {
-        //     Console.WriteLine("├" + new string('─', boxWidth) + "┤");
-        //     Console.WriteLine(
-        //         "│ "
-        //             + errorMessage
-        //             + new string(' ', boxWidth - (errorMessage.Length + 8))
-        //             + "AAAL © │"
-        //     );
-        //     Console.WriteLine("├" + new string('─', boxWidth) + "┤");
-        // }
-
-        foreach (Product product in currentProducts)
+        // Build product rows
+        for (int i = 0; i < currentProducts.Count; i++)
         {
+            Product product = currentProducts[i];
             displayRating = new string('★', product.Rating) + new string('☆', 5 - product.Rating);
 
-            if (i < 9)
+            // Store the row content
+            if (selectionTracker == i)
             {
-                Console.WriteLine(
-                    "│  "
-                        + (i + 1)
-                        + ". "
-                        + product.Name
-                        + new string(' ', 44 - product.Name!.Length)
-                        + "│ "
-                        + product.Price
-                        + new string(' ', 16 - product.Price.ToString().Length)
-                        + "│ "
-                        + displayRating
-                        + new string(' ', 10 - displayRating.Length)
-                        + "│"
-                );
-                i++;
-                continue;
+                string row =
+                    $" {(i < 9 ? " " : "")}{i + 1}. {product.Name}{new string(' ', 41 - product.Name!.Length)}│ {product.Price} {new string(' ', 14 - product.Price.ToString().Length)}SEK │ {displayRating}{new string(' ', 8 - displayRating.Length)}";
+                _buffer.AppendLine($"<SELECTED>{row}<SELECTED>");
             }
-
-            Console.WriteLine(
-                "│ "
-                    + (i + 1)
-                    + ". "
-                    + product.Name
-                    + new string(' ', 44 - product.Name!.Length)
-                    + "│ "
-                    + product.Price
-                    + new string(' ', 16 - product.Price.ToString().Length)
-                    + "│ "
-                    + displayRating
-                    + new string(' ', 10 - displayRating.Length)
-                    + "│"
-            );
-            i++;
-            continue;
+            // If this is the selected row, we'll handle it specially during rendering
+            else
+            {
+                string row =
+                    $"│{(i < 9 ? "  " : " ")}{i + 1}. {product.Name}{new string(' ', 41 - product.Name!.Length)}│ {product.Price} {new string(' ', 14 - product.Price.ToString().Length)}SEK │ {displayRating}{new string(' ', 9 - displayRating.Length)} │";
+                _buffer.AppendLine(row);
+            }
         }
-        Console.WriteLine(
+
+        _buffer.AppendLine(
             """
             │                                                                               │
-            │ ESC. Go back.                                                                 │
+            │ ESC. Go Back.                                           ENTER. Select product │
             """
         );
 
-        Console.WriteLine("├" + new string('─', boxWidth) + "┤");
-        Console.WriteLine(
+        _buffer.AppendLine("├" + new string('─', boxWidth) + "┤");
+        _buffer.AppendLine(
             "│ " + bottomText + new string(' ', boxWidth - (bottomText.Length + 1)) + "│"
         );
-        Console.WriteLine("└" + new string('─', boxWidth) + "┘");
-    }
+        _buffer.AppendLine("└" + new string('─', boxWidth) + "┘");
 
+        // Now render everything at once
+        RenderBuffer();
+    }
     public void DisplayProduct(Product product)
     {
         Console.Clear();
@@ -118,32 +86,33 @@ public class ProductMenu : Menu
         Console.WriteLine("├" + new string('─', boxWidth) + "┤");
 
         Console.WriteLine(
-            "│ NAME: " + product.Name + new string(' ', boxWidth - product.Name!.Length + 8) + "│"
+            "│ NAME: " + product.Name + new string(' ', boxWidth - (product.Name.Length + 7)) + "│"
         );
 
         Console.WriteLine(
             "│ DESCRIPTION: "
                 + product.Description
-                + new string(' ', boxWidth - product.Description!.Length + 15)
+                + new string(' ', boxWidth - (product.Description.Length + 14))
                 + "│"
         );
 
         Console.WriteLine(
             "│ PRICE: "
                 + product.Price
-                + new string(' ', boxWidth - product.Price.ToString().Length + 9)
+                + " SEK"
+                + new string(' ', boxWidth - (product.Price.ToString().Length + 12))
                 + "│"
         );
 
         Console.WriteLine(
-            "│ RATING: " + displayRating + new string(' ', 16 - displayRating.Length + 10) + "│"
+            "│ RATING: " + displayRating + new string(' ', boxWidth - (displayRating.Length + 9)) + "│"
         );
 
         // TODO: Should we set a custom message for available?
         Console.WriteLine(
             "│ IN STOCK: "
                 + product.Available
-                + new string(' ', boxWidth - product.Available!.ToString().Length + 12)
+                + new string(' ', boxWidth - (product.Available.ToString().Length + 11))
                 + "│"
         );
 
@@ -159,6 +128,42 @@ public class ProductMenu : Menu
         Console.WriteLine("├" + new string('─', boxWidth) + "┤");
         Console.WriteLine("│" + new string(' ', boxWidth) + "│");
         Console.WriteLine("└" + new string('─', boxWidth) + "┘");
+    }
+
+    private void RenderBuffer()
+    {
+        // Store cursor position and hide it during rendering
+        Console.CursorVisible = false;
+
+        // Clear console once
+        Console.SetCursorPosition(0, 0);
+        Console.Clear();
+
+        // Split buffer into lines
+        string[] lines = _buffer.ToString().Split(Environment.NewLine);
+
+        foreach (string line in lines)
+        {
+            if (line.StartsWith("<SELECTED>"))
+            {
+                // Extract the actual content between the markers
+                string content = line.Replace("<SELECTED>", "");
+                Console.Write("│ ");
+                Console.ForegroundColor = ConsoleColor.Black;
+                Console.BackgroundColor = ConsoleColor.White;
+                Console.Write(content);
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.BackgroundColor = ConsoleColor.Black;
+                Console.WriteLine(" │");
+            }
+            else
+            {
+                Console.WriteLine(line);
+            }
+        }
+
+        // Restore cursor visibility
+        Console.CursorVisible = true;
     }
 
     public void EditContent(List<List<Product>>? productLists = null)
@@ -188,6 +193,11 @@ public class ProductMenu : Menu
         {
             index++;
         }
+    }
+
+    public void SetLine(int selectionTracker)
+    {
+        this.selectionTracker = selectionTracker;
     }
 
     public int GetPage()

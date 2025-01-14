@@ -1,6 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-
 namespace E_commerce_Databaser_i_ett_sammanhang;
 
 public class CartCommands : MenuBaseCommand
@@ -45,7 +42,7 @@ public class CartCommands : MenuBaseCommand
                 switch (input)
                 {
                     case ConsoleKey.D1:
-                        await _cartHandler.HandleShowCart();
+                        await _cartHandler.CartItemSelection();
                         break;
                     case ConsoleKey.Escape:
                         return;
