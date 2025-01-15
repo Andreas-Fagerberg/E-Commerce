@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace E_commerce_Databaser_i_ett_sammanhang
 {
@@ -20,7 +16,7 @@ namespace E_commerce_Databaser_i_ett_sammanhang
         );
 
         Task<Dictionary<int, (int Quantity, decimal Price, string Name)>> UpdateProductQuantity(
-            CartItem cartItem, 
+            CartItem cartItem,
             int quantity
         );
 
