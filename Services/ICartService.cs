@@ -19,7 +19,8 @@ namespace E_commerce_Databaser_i_ett_sammanhang
             CartItem cartItem,
             int quantity
         );
-
+        
+        public void RemoveAllItems(Guid userId);
         List<CartItem> ConvertCartToList();
 
         Task SaveCartToDatabase(Guid userId);

@@ -1,13 +1,14 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace E_commerce_Databaser_i_ett_sammanhang
+namespace E_commerce_Databaser_i_ett_sammanhang;
+
 // If items in cart is changed to 0 remove said item or dont give the option to 0 and rather give the option to remove the item itself.
 //använd dictionary för att hantera quantity, kolla listan, finns redan item i dictionary plussa på.
 //Kolla cart från databasen efter inlogg.
 //skapa command för att populera lista som sen kopplas till dictionary. Kan ha flera, tex en där alla items finns, en där dne försöker lägga in items som är slut, etc.
 //Lägga till felhantering
 //Kanske ta bort listan, lägga till direkt i dictionary.
-{
+
     // csharpier-ignore-start
     public class CartService : ICartService
     {
@@ -20,6 +21,19 @@ namespace E_commerce_Databaser_i_ett_sammanhang
             UserCart = new Dictionary<int, (int Quantity, decimal Price, string Name)>();
             _context = context;
         }
+
+
+          public async void RemoveAllItems(Guid userId)
+          {
+            UserCart.Clear();
+             var existingItems = await _context.Carts
+            .Where(c => c.UserId == userId)
+            .ToListAsync();
+
+            _context.Carts.RemoveRange(existingItems);
+
+          }
+
 
         //Called when adding a product to the cart, updates quantity if item already exist.
 
@@ -138,15 +152,15 @@ namespace E_commerce_Databaser_i_ett_sammanhang
 
         }
            catch (Exception ex)
-{
-    Console.WriteLine($"Failed to save cart: {ex.Message}");
-    if (ex.InnerException != null)
-    {
+        {
+        Console.WriteLine($"Failed to save cart: {ex.Message}");
+       if (ex.InnerException != null)
+       {
         Console.WriteLine($"Inner Exception: {ex.InnerException.Message}");
-    }
-    Console.WriteLine(ex.StackTrace);
-}
-        }
+       }
+         Console.WriteLine(ex.StackTrace);
+         }
+         }
 
         //Method that can be used to sum total cost in cart.
 
@@ -164,5 +178,7 @@ namespace E_commerce_Databaser_i_ett_sammanhang
                 })
                 .ToList();
         }
-    }
+
+
+
 }
