@@ -33,9 +33,20 @@ public class RegisterCommand : MenuBaseCommand
                 var registrationDetails = InputHandler.GetRegistrationInput();
                 var response = await userService.RegisterUser(registrationDetails);
 
-                Console.WriteLine($"User registered successfully!");
-                Console.WriteLine($"Welcome, {response.FirstName} {response.LastName}");
-                Console.ReadLine();
+                SessionHandler.CurrentUserId = response.UserId;
+
+                Utilities.WriteLineWithPause($"User registered successfully!");
+                Utilities.WriteLineWithPause($"Welcome, {response.FirstName} {response.LastName}");
+
+                menuService.SetMenu(
+                    new HomeMenu(
+                        userService,
+                        menuService,
+                        productService,
+                        cartService,
+                        orderService,
+                        paymentService,
+                        false));
                 break;
             }
             catch (Exception ex)
