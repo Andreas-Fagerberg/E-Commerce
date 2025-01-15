@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace E_commerce_Databaser_i_ett_sammanhang.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitialTest : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -39,7 +39,7 @@ namespace E_commerce_Databaser_i_ett_sammanhang.Migrations
                     LastName = table.Column<string>(type: "character varying(75)", maxLength: 75, nullable: false),
                     Email = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     PasswordHash = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    Role = table.Column<int>(type: "integer", nullable: false, defaultValue: 0),
+                    Role = table.Column<string>(type: "text", nullable: false, defaultValueSql: "'User'"),
                     CreatedAt = table.Column<DateTime>(type: "timestamp(0) with time zone", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP")
                 },
                 constraints: table =>
@@ -79,9 +79,9 @@ namespace E_commerce_Databaser_i_ett_sammanhang.Migrations
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     ProductId = table.Column<int>(type: "integer", nullable: false),
-                    Quantity = table.Column<int>(type: "integer", precision: 10, nullable: false, defaultValue: 0),
-                    Price = table.Column<decimal>(type: "numeric", nullable: false),
-                    TotalPrice = table.Column<decimal>(type: "numeric(10,2)", precision: 10, scale: 2, nullable: false, defaultValue: 0m)
+                    Quantity = table.Column<int>(type: "integer", nullable: false, defaultValue: 1),
+                    Price = table.Column<decimal>(type: "numeric(10,2)", nullable: false),
+                    TotalPrice = table.Column<decimal>(type: "numeric", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -185,14 +185,12 @@ namespace E_commerce_Databaser_i_ett_sammanhang.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Carts_ProductId",
                 table: "Carts",
-                column: "ProductId",
-                unique: true);
+                column: "ProductId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Carts_UserId",
                 table: "Carts",
-                column: "UserId",
-                unique: true);
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Invoices_OrderId",

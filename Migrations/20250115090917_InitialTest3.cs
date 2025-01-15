@@ -5,34 +5,32 @@
 namespace E_commerce_Databaser_i_ett_sammanhang.Migrations
 {
     /// <inheritdoc />
-    public partial class Test1 : Migration
+    public partial class InitialTest3 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterColumn<string>(
-                name: "Role",
-                table: "Users",
-                type: "text",
+            migrationBuilder.AlterColumn<int>(
+                name: "Quantity",
+                table: "Carts",
+                type: "integer",
                 nullable: false,
-                defaultValueSql: "'User'",
                 oldClrType: typeof(int),
                 oldType: "integer",
-                oldDefaultValue: 0);
+                oldDefaultValue: 1);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<int>(
-                name: "Role",
-                table: "Users",
+                name: "Quantity",
+                table: "Carts",
                 type: "integer",
                 nullable: false,
-                defaultValue: 0,
-                oldClrType: typeof(string),
-                oldType: "text",
-                oldDefaultValueSql: "'User'");
+                defaultValue: 1,
+                oldClrType: typeof(int),
+                oldType: "integer");
         }
     }
 }

@@ -10,6 +10,6 @@ public class Product
     public required int Rating { get; set; }
     public required bool Available = false;
     public OrderProduct OrderProduct { get; set; }
-    public Cart? Cart { get; set; } // Build a relationsship
+    public ICollection<Cart> Carts { get; set; } = new List<Cart>(); // Build a relationsship
     // between OrderProduct and Product (Many-to-One)
 }

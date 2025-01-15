@@ -67,9 +67,6 @@ public class EcommerceContext : DbContext
                 .HasConversion<string>()
                 .HasDefaultValueSql("'User'");
 
-
-
-
             user.Property(u => u.CreatedAt)
                 .IsRequired()
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
@@ -82,9 +79,9 @@ public class EcommerceContext : DbContext
                 .IsRequired(false)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            user.HasOne(u => u.Carts)
+            user.HasMany(u => u.Carts)
                 .WithOne(c => c.User)
-                .HasForeignKey<Cart>(c => c.UserId)
+                .HasForeignKey(c => c.UserId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Cascade);
         });
@@ -213,30 +210,32 @@ public class EcommerceContext : DbContext
         });
         builder.Entity<Cart>(carts =>
         {
-           
+
             carts.HasKey(u => u.CartId);
 
             carts.Property(c => c.CartId)
                 .UseIdentityColumn();
 
-            carts.Property(c => c.Quantity)
-                .IsRequired()
-                .HasPrecision(10)
-                .HasDefaultValue(0);
+            carts.Property(c => c.Name);
 
-        
+            carts.Property(c => c.Quantity)
+                .IsRequired();
+
+            carts.Property(c => c.Price)
+             .IsRequired()
+             .HasColumnType("decimal(10, 2)");
 
             carts.HasOne(c => c.User)
-                .WithOne(u => u.Carts)
-                .HasForeignKey<Cart>(c => c.UserId)
+                .WithMany(u => u.Carts)
+                .HasForeignKey(c => c.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             carts.HasOne(c => c.Product)
-                .WithOne(p => p.Cart)
-                .HasForeignKey<Cart>(c => c.ProductId)
+                .WithMany(p => p.Carts)
+                .HasForeignKey(c => c.ProductId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-    
+
         });
 
         builder.Entity<Product>(product =>

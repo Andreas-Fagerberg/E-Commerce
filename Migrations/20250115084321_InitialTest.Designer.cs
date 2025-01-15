@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace E_commerce_Databaser_i_ett_sammanhang.Migrations
 {
     [DbContext(typeof(EcommerceContext))]
-    [Migration("20250113095235_Test1")]
-    partial class Test1
+    [Migration("20250115084321_InitialTest")]
+    partial class InitialTest
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -80,33 +80,27 @@ namespace E_commerce_Databaser_i_ett_sammanhang.Migrations
                         .HasColumnType("text");
 
                     b.Property<decimal>("Price")
-                        .HasColumnType("numeric");
+                        .HasColumnType("decimal(10, 2)");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("integer");
 
                     b.Property<int>("Quantity")
                         .ValueGeneratedOnAdd()
-                        .HasPrecision(10)
                         .HasColumnType("integer")
-                        .HasDefaultValue(0);
+                        .HasDefaultValue(1);
 
                     b.Property<decimal>("TotalPrice")
-                        .ValueGeneratedOnAdd()
-                        .HasPrecision(10, 2)
-                        .HasColumnType("numeric(10,2)")
-                        .HasDefaultValue(0m);
+                        .HasColumnType("numeric");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
                     b.HasKey("CartId");
 
-                    b.HasIndex("ProductId")
-                        .IsUnique();
+                    b.HasIndex("ProductId");
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
+                    b.HasIndex("UserId");
 
                     b.ToTable("Carts");
                 });
@@ -311,14 +305,14 @@ namespace E_commerce_Databaser_i_ett_sammanhang.Migrations
             modelBuilder.Entity("E_commerce_Databaser_i_ett_sammanhang.Cart", b =>
                 {
                     b.HasOne("E_commerce_Databaser_i_ett_sammanhang.Product", "Product")
-                        .WithOne("Cart")
-                        .HasForeignKey("E_commerce_Databaser_i_ett_sammanhang.Cart", "ProductId")
+                        .WithMany("Carts")
+                        .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("E_commerce_Databaser_i_ett_sammanhang.User", "User")
-                        .WithOne("Cart")
-                        .HasForeignKey("E_commerce_Databaser_i_ett_sammanhang.Cart", "UserId")
+                        .WithMany("Carts")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -381,7 +375,7 @@ namespace E_commerce_Databaser_i_ett_sammanhang.Migrations
 
             modelBuilder.Entity("E_commerce_Databaser_i_ett_sammanhang.Product", b =>
                 {
-                    b.Navigation("Cart");
+                    b.Navigation("Carts");
 
                     b.Navigation("OrderProduct")
                         .IsRequired();
@@ -391,7 +385,7 @@ namespace E_commerce_Databaser_i_ett_sammanhang.Migrations
                 {
                     b.Navigation("Address");
 
-                    b.Navigation("Cart");
+                    b.Navigation("Carts");
 
                     b.Navigation("Orders");
                 });

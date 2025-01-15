@@ -69,11 +69,23 @@ namespace E_commerce_Databaser_i_ett_sammanhang
 
         public async Task<Dictionary<int, (int Quantity, decimal Price, string Name)>> GetShoppingCart(Guid userId)
         {
-            var dbCart = await _context.Carts.Include (c => c.Product).Where(sc => sc.UserId == userId).ToListAsync();
+            var dbCart = await _context.Carts.AsNoTracking().Include (c => c.Product).Where(sc => sc.UserId == userId).ToListAsync();
             UserCart.Clear();
             foreach (var item in dbCart)
             {
-                UserCart[item.ProductId] = (item.Quantity, item.Price, item.Name);
+                Console.WriteLine($"Retrieved: ProductId={item.ProductId}, Quantity={item.Quantity}, Price={item.Price}, Name={item.Name}");
+                if(UserCart.ContainsKey(item.ProductId))
+                {
+                    var existingItem = UserCart[item.ProductId];
+                    UserCart[item.ProductId] = (existingItem.Quantity, item.Price, item.Name);
+
+                }
+                else
+                {
+                    UserCart[item.ProductId] = (item.Quantity, item.Price, item.Name);
+                }
+
+
             }
 
             return UserCart;
@@ -82,26 +94,58 @@ namespace E_commerce_Databaser_i_ett_sammanhang
         public async Task SaveCartToDatabase(Guid userId)
         {
             try {
-           
+                 var existingItems = await _context.Carts
+            .Where(c => c.UserId == userId)
+            .ToListAsync();
 
-            var cartItems = UserCart.Select(item => new Cart
+            // _context.Carts.RemoveRange(existingItems);
+
+            var cartItemsToAdd = new List<Cart>();
+           foreach (var item in UserCart)
+        {
+           var existingCartItem = existingItems.FirstOrDefault(c => c.UserId == userId && c.ProductId == item.Key);
+            if (existingCartItem != null)
             {
-                UserId = userId,
-                ProductId = item.Key,
-                Quantity = item.Value.Quantity,
-                Price = item.Value.Price,
-                TotalPrice = item.Value.Quantity * item.Value.Price,
-            });
+
+                 existingCartItem.Quantity = item.Value.Quantity;
+                existingCartItem.Price = item.Value.Price;
+            }
+            else
+            {
+
+           var cartItems = new Cart
+                {
+                    UserId = userId,
+                    ProductId = item.Key,
+                    Quantity = item.Value.Quantity,
+                    Name = item.Value.Name,
+                    Price = item.Value.Price,
+                    TotalPrice = item.Value.Quantity * item.Value.Price // Calculate the TotalPrice
+                };
+
 
             await _context.Carts.AddRangeAsync(cartItems);
+            }
+        }
+         var itemsToRemove = existingItems.Where(c => !UserCart.ContainsKey(c.ProductId)).ToList();
+        if (itemsToRemove.Any())
+        {
+            _context.Carts.RemoveRange(itemsToRemove);
+        }
             await _context.SaveChangesAsync();
 
             UserCart.Clear();
-            }
-            catch
-            {
-                Console.WriteLine("Failed to save cart");
-            }
+
+        }
+           catch (Exception ex)
+{
+    Console.WriteLine($"Failed to save cart: {ex.Message}");
+    if (ex.InnerException != null)
+    {
+        Console.WriteLine($"Inner Exception: {ex.InnerException.Message}");
+    }
+    Console.WriteLine(ex.StackTrace);
+}
         }
 
         //Method that can be used to sum total cost in cart.

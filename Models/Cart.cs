@@ -12,7 +12,7 @@ public class Cart
     public decimal Price { get; set; }
     public decimal TotalPrice { get; set; }
     public User? User { get; set; }
-    public Product Product { get; set; }
+    public Product Product { get; set; } 
 
     // public ShoppingCart(Guid userId, int productId, int quantity, decimal price, decimal totalPrice)
     // {
