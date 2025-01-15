@@ -109,10 +109,11 @@ public class ProductMenu : Menu
         );
 
         // TODO: Should we set a custom message for available?
+        string stockStatus = product.Available ? "Yes" : "No";
         Console.WriteLine(
             "│ IN STOCK: "
-                + product.Available
-                + new string(' ', boxWidth - (product.Available.ToString().Length + 11))
+                + stockStatus
+                + new string(' ', boxWidth - (stockStatus.Length + 11))
                 + "│"
         );
 
