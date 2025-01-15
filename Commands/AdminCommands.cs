@@ -63,7 +63,6 @@ public class AdminCommands : MenuBaseCommand
                         Console.WriteLine();
                         foreach (var user in users)
                         {
-
                             allUsers.Add($" NAME: {user.FirstName} {user.LastName}");
                             allUsers.Add($" EMAIL: {user.Email}");
                             allUsers.Add($" ROLE: {user.Role}");

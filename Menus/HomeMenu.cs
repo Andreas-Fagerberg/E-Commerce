@@ -14,13 +14,13 @@ public class HomeMenu : Menu
         bool admin
     )
     {
-        _menuContent = new List<string> { "Products", "Cart", "Checkout" };
+        _menuContent = new List<string> { "Products", "Cart", "Checkout", "Orders" };
         if (admin)
         {
             _menuContent.Add("Admin Controls");
             AddCommand(
                 new AdminCommands(
-                    ConsoleKey.D4,
+                    ConsoleKey.D5,
                     userService,
                     menuService,
                     productService,
@@ -63,6 +63,19 @@ public class HomeMenu : Menu
                 paymentService
             )
         );
+
+        AddCommand(
+            new ViewOrdersCommand(
+                ConsoleKey.D4,
+                userService,
+                menuService,
+                productService,
+                cartService,
+                orderService,
+                paymentService
+            )
+        );
+
         AddCommand(
             new LogoutCommand(
                 ConsoleKey.Escape,
