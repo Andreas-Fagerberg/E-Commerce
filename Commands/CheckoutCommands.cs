@@ -82,7 +82,9 @@ public class CheckoutCommands : MenuBaseCommand
         PaymentMethod paymentMethod = SelectPaymentMethod(input);
 
         // 3. Retrieve Cart Data
+        await cartService.SaveCartToDatabase(currentUserId);
         var cartData = await cartService.GetShoppingCart(currentUserId);
+
         if (!cartData.Any())
         {
             Console.WriteLine("Your cart is empty. Add items before checking out.");
@@ -140,7 +142,7 @@ public class CheckoutCommands : MenuBaseCommand
         PaymentMethod paymentMethod;
         while (true)
         {
-            
+
 
             switch (input)
             {

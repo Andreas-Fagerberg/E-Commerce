@@ -43,6 +43,7 @@ public class ViewOrdersCommand : MenuBaseCommand
 
         pageInformation.Add($"Name: {userResponse.FirstName} {userResponse.LastName}");
         pageInformation.Add($"Email: {userResponse.Email}");
+        pageInformation.Add("");
 
         if (addressResponse == null)
         {
@@ -51,12 +52,14 @@ public class ViewOrdersCommand : MenuBaseCommand
         }
         else
         {
+            pageInformation.Add("");
             pageInformation.Add("Address Information:");
             pageInformation.Add($"Street: {addressResponse.Street}");
             pageInformation.Add($"City: {addressResponse.City}");
             pageInformation.Add($"Region: {addressResponse.Region}");
             pageInformation.Add($"Postal Code: {addressResponse.PostalCode}");
             pageInformation.Add($"Country: {addressResponse.Country}");
+            pageInformation.Add("");
         }
 
         foreach (var order in orderResponses)
@@ -67,6 +70,7 @@ public class ViewOrdersCommand : MenuBaseCommand
                 pageInformation.Add("");
                 break;
             }
+            Console.WriteLine();
             pageInformation.Add($"Order ID: {order.OrderId}");
             pageInformation.Add($"Created At: {order.CreatedAt}");
             pageInformation.Add($"Status: {order.Status}");

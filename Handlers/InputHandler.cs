@@ -33,11 +33,11 @@ public static class InputHandler
     /// </summary>
     public static UserLoginDTO GetLoginInput()
     {
-        // string email = ReadAndValidateEmail();
+        string email = ReadAndValidateEmail();
         // string email = "a@b.se";
-        string email = "mike@mike.se";
-        // string password = ReadAndValidatePassword();
-        string password = "password";
+        // string email = "mike@mike.se";
+        string password = ReadAndValidatePassword();
+        // string password = "password";
         return new UserLoginDTO
         {
             Email = email,
