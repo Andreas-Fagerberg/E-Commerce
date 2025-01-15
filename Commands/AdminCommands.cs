@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace E_commerce_Databaser_i_ett_sammanhang;
 
 public class AdminCommands : MenuBaseCommand
@@ -112,17 +110,27 @@ public class AdminCommands : MenuBaseCommand
 
                     case ConsoleKey.D4: // Create New Product
                         var newProduct = InputHandler.GetCreateProductInput();
+                        if (newProduct is null)
+                        {
+                            return;
+                        }
                         await productService.CreateProduct(newProduct);
                         Utilities.WriteLineWithPause("Product created successfully.", 3000);
                         break;
 
                     case ConsoleKey.D5: // Remove Product
-                        int productId = await InputHandler.GetProductIdToRemove(productService);
+                        var productId = await InputHandler.GetProductIdToRemove(productService);
+                        if (productId is null)
+                        {
+                            return;
+                        }
                         if (productId == 0)
                         {
                             break;
                         }
+
                         var isRemoved = await productService.RemoveProduct(productId);
+
                         if (isRemoved)
                         {
                             Utilities.WriteLineWithPause("Product removed successfully.", 3000);
