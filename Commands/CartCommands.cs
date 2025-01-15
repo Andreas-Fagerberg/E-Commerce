@@ -47,7 +47,7 @@ public class CartCommands : MenuBaseCommand
                     case ConsoleKey.Escape:
                         return;
                     default:
-                        Console.WriteLine("Please select an option.");
+                        Utilities.WriteLineWithPause("Please select a valid option.");
                         break;
                 }
             }

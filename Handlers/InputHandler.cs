@@ -177,10 +177,27 @@ public static class InputHandler
         }
     }
 
-    public static Product GetCreateProductInput()
+    public static Product? GetCreateProductInput()
     {
-        Console.WriteLine("\nCreate New Product");
+        Console.WriteLine(
+            """
 
+            Press any key to continue.
+
+            Esc. Go Back.
+            """
+        );
+
+        ConsoleKey input = Console.ReadKey(true).Key;
+        switch (input)
+        {
+            case ConsoleKey.Escape:
+                return null;
+            default:
+                break;
+        }
+
+        Console.WriteLine(" Create New Product");
         string name = ReadNonEmptyStrings("Product Name", "Product name cannot be empty");
         string category = ReadNonEmptyStrings("Category", "Category cannot be empty");
         string description = ReadNonEmptyStrings("Description", "Description cannot be empty");
@@ -222,10 +239,27 @@ public static class InputHandler
         };
     }
 
-    public static async Task<int> GetProductIdToRemove(IProductService productService)
+    public static async Task<int?> GetProductIdToRemove(IProductService productService)
     {
         while (true)
         {
+            Console.WriteLine(
+                """
+
+                Press any key to continue.
+
+                Esc. Go Back.
+                """
+            );
+
+            ConsoleKey input = Console.ReadKey(true).Key;
+            switch (input)
+            {
+                case ConsoleKey.Escape:
+                    return null;
+                default:
+                    break;
+            }
             Console.Write("Enter the product name: ");
             var productName = Console.ReadLine();
 
@@ -282,7 +316,6 @@ public static class InputHandler
             }
 
             Console.WriteLine(errorMessage);
-            ;
         }
     }
 

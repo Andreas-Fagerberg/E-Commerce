@@ -80,7 +80,7 @@ public class ProductService : IProductService
         }
     }
 
-    public async Task<bool> RemoveProduct(int productId)
+    public async Task<bool> RemoveProduct(int? productId)
     {
         try
         {
