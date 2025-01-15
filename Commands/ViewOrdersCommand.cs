@@ -3,6 +3,9 @@ namespace E_commerce_Databaser_i_ett_sammanhang;
 
 public class ViewOrdersCommand : MenuBaseCommand
 {
+    private readonly OrderMenu _orderMenu;
+
+
     public ViewOrdersCommand(
         ConsoleKey triggerkey,
         IUserService userService,
@@ -21,59 +24,57 @@ public class ViewOrdersCommand : MenuBaseCommand
             orderService,
             paymentService
         )
-    { }
+    {
 
+        _orderMenu = new OrderMenu();
+
+    }
 
     public override async Task Execute()
     {
         Guid currentUserId = SessionHandler.GetCurrentUserId();
 
-
         var userResponse = await userService.GetUser(currentUserId);
         var addressResponse = await userService.GetUserAddress(currentUserId);
         List<OrderResponse> orderResponses = await orderService.GetUserOrders(currentUserId);
 
-        PrintUserInfo(userResponse, addressResponse!);
-        PrintOrders(orderResponses);
-    }
-
-    // MOVE BELOW TO THE ORDER MENU OR SOMETHING? :) :)
-    private void PrintUserInfo(UserResponse user, AddressResponse address)
-    {
-        Console.WriteLine($"Name: {user.FirstName} {user.LastName}");
-        Console.WriteLine($"Email: {user.Email}");
-
-        if (address == null)
-        {
-            Console.WriteLine("No address saved.");
-            return;
-        }
-
-        Console.WriteLine("Address Information:");
-        Console.WriteLine($"Street: {address.Street}");
-        Console.WriteLine($"City: {address.City}");
-        Console.WriteLine($"Region: {address.Region}");
-        Console.WriteLine($"Postal Code: {address.PostalCode}");
-        Console.WriteLine($"Country: {address.Country}");
+        List<string> pageInformation = new List<string>();
         Console.WriteLine();
-    }
 
+        pageInformation.Add($"Name: {userResponse.FirstName} {userResponse.LastName}");
+        pageInformation.Add($"Email: {userResponse.Email}");
 
-    private void PrintOrders(List<OrderResponse> orderResponses)
-    {
-        if (orderResponses.Any() == false)
+        if (addressResponse == null)
         {
-            Utilities.WriteLineWithPause("You have no orders.");
-            return;
+            pageInformation.Add("No address saved.");
+            pageInformation.Add("");
+        }
+        else
+        {
+            pageInformation.Add("Address Information:");
+            pageInformation.Add($"Street: {addressResponse.Street}");
+            pageInformation.Add($"City: {addressResponse.City}");
+            pageInformation.Add($"Region: {addressResponse.Region}");
+            pageInformation.Add($"Postal Code: {addressResponse.PostalCode}");
+            pageInformation.Add($"Country: {addressResponse.Country}");
         }
 
         foreach (var order in orderResponses)
         {
-            Console.WriteLine($"Order ID: {order.OrderId}");
-            Console.WriteLine($"Created At: {order.CreatedAt}");
-            Console.WriteLine($"Status: {order.Status}");
-            Console.WriteLine($"Total Cost: {order.TotalCost:C}");
+            if (orderResponses == null)
+            {
+                pageInformation.Add("You have no order history.");
+                pageInformation.Add("");
+                break;
+            }
+            pageInformation.Add($"Order ID: {order.OrderId}");
+            pageInformation.Add($"Created At: {order.CreatedAt}");
+            pageInformation.Add($"Status: {order.Status}");
+            pageInformation.Add($"Total Cost: {order.TotalCost:C}");
         }
-    }
 
+        _orderMenu.EditContent(pageInformation, "Your orders");
+        _orderMenu.Display();
+        Console.ReadLine();
+    }
 }
