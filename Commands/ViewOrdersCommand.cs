@@ -43,17 +43,14 @@ public class ViewOrdersCommand : MenuBaseCommand
 
         pageInformation.Add($"Name: {userResponse.FirstName} {userResponse.LastName}");
         pageInformation.Add($"Email: {userResponse.Email}");
-        pageInformation.Add("");
 
         if (addressResponse == null)
         {
             pageInformation.Add("No address saved.");
-            pageInformation.Add("");
         }
         else
         {
             pageInformation.Add("");
-            pageInformation.Add("Address Information:");
             pageInformation.Add($"Street: {addressResponse.Street}");
             pageInformation.Add($"City: {addressResponse.City}");
             pageInformation.Add($"Region: {addressResponse.Region}");
@@ -75,6 +72,7 @@ public class ViewOrdersCommand : MenuBaseCommand
             pageInformation.Add($"Created At: {order.CreatedAt}");
             pageInformation.Add($"Status: {order.Status}");
             pageInformation.Add($"Total Cost: {order.TotalCost:C}");
+            pageInformation.Add("");
         }
 
         _orderMenu.EditContent(pageInformation, "Your orders");

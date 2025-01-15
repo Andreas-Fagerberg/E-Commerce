@@ -46,11 +46,6 @@ public class CheckoutCommands : MenuBaseCommand
 
         // 1. Retrieve Address
         var address = await HandleAddressOptions(currentUserId);
-        // if (address == null)
-        // {
-        //     Console.WriteLine("Checkout cancelled. No address selected.");
-        //     return;
-        // }
         if (address is null)
         {
             return;
@@ -132,9 +127,13 @@ public class CheckoutCommands : MenuBaseCommand
             ExceptionHandler.Handle(ex);
             Console.ReadLine();
         }
+        Utilities.WriteLineWithPause("Checkout completed successfully.", 2000);
 
-        Console.WriteLine("Checkout completed successfully.");
+        cartService.RemoveAllItems(currentUserId);
     }
+
+
+
 
     #region Helper Methods
     private static PaymentMethod SelectPaymentMethod(ConsoleKey input)
