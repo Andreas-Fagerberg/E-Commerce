@@ -39,7 +39,7 @@ public class LoginCommand : MenuBaseCommand
 
                 SessionHandler.CurrentUserId = loggedInUser.UserId;
                 await cartService.GetShoppingCart(SessionHandler.GetCurrentUserId());
-                Utilities.WriteLineWithPause($"Good to see you, {loggedInUser.FirstName} {loggedInUser.LastName}!");
+                Utilities.WriteLineWithPause($"Good to see you, {loggedInUser.FirstName} {loggedInUser.LastName}!", 2000);
 
 
                 // Determine if the user has admin privileges and set the appropriate HomeMenu

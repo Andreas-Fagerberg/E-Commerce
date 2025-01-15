@@ -34,7 +34,7 @@ public class RegisterCommand : MenuBaseCommand
                 SessionHandler.CurrentUserId = response.UserId;
 
                 Utilities.WriteLineWithPause($"User registered successfully!");
-                Utilities.WriteLineWithPause($"Welcome, {response.FirstName} {response.LastName}");
+                Utilities.WriteLineWithPause($"Welcome, {response.FirstName} {response.LastName}", 2000);
 
                 menuService.SetMenu(
                     new HomeMenu(
