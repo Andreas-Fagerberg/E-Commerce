@@ -79,7 +79,8 @@ public class ProductService : IProductService
             throw new Exception(" Failed to create product", ex);
         }
     }
-    public async Task<bool> RemoveProduct(int productId)
+
+    public async Task<bool> RemoveProduct(int? productId)
     {
         try
         {

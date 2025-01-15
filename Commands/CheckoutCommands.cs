@@ -51,6 +51,10 @@ public class CheckoutCommands : MenuBaseCommand
         //     Console.WriteLine("Checkout cancelled. No address selected.");
         //     return;
         // }
+        if (address is null)
+        {
+            return;
+        }
 
         Utilities.WriteLineWithPause("Proceeding to the next step...");
 
@@ -58,12 +62,24 @@ public class CheckoutCommands : MenuBaseCommand
         Console.WriteLine(
             """
             Select a payment option:
-            [1] Pay Now
-            [2] Pay Later
+            1. Pay Now
+            2. Pay Later
+
+            ESC. Go Back.
             """
         );
 
-        PaymentMethod paymentMethod = SelectPaymentMethod();
+        input = Console.ReadKey(true).Key;
+
+        switch (input)
+        {
+            case ConsoleKey.Escape:
+                return;
+            default:
+                break;
+        }
+
+        PaymentMethod paymentMethod = SelectPaymentMethod(input);
 
         // 3. Retrieve Cart Data
         var cartData = await cartService.GetShoppingCart(currentUserId);
@@ -119,12 +135,12 @@ public class CheckoutCommands : MenuBaseCommand
     }
 
     #region Helper Methods
-    private static PaymentMethod SelectPaymentMethod()
+    private static PaymentMethod SelectPaymentMethod(ConsoleKey input)
     {
         PaymentMethod paymentMethod;
         while (true)
         {
-            var input = Console.ReadKey(true).Key;
+            
 
             switch (input)
             {
@@ -186,8 +202,10 @@ public class CheckoutCommands : MenuBaseCommand
             Console.WriteLine(
                 $"""
                 Select an Address Option:
-                [1] Use existing address
-                [2] Update address
+                1. Use existing address
+                2. Update address
+
+                ESC. Go Back.
 
                 Current Address:
                 {existingAddress.Street}, 
@@ -205,6 +223,8 @@ public class CheckoutCommands : MenuBaseCommand
 
                 switch (input)
                 {
+                    case ConsoleKey.Escape:
+                        return null;
                     case ConsoleKey.D1:
                         return existingAddress;
 

@@ -54,7 +54,7 @@ public class BaseMenu : Menu
             Console.WriteLine(
                 """
                 │                                                                               │
-                │ ESC. Go back.                                                                 │
+                │ ESC. Go Back.                                                                 │
                 """
             );
         }
