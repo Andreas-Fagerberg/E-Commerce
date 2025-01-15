@@ -33,10 +33,11 @@ public static class InputHandler
     /// </summary>
     public static UserLoginDTO GetLoginInput()
     {
-        string email = ReadAndValidateEmail();
+        // string email = ReadAndValidateEmail();
         // string email = "a@b.se";
-        string password = ReadAndValidatePassword();
-        // string password = "password";
+        string email = "mike@mike.se";
+        // string password = ReadAndValidatePassword();
+        string password = "password";
         return new UserLoginDTO
         {
             Email = email,
@@ -179,14 +180,7 @@ public static class InputHandler
 
     public static Product? GetCreateProductInput()
     {
-        Console.WriteLine(
-            """
-
-            Press any key to continue.
-
-            Esc. Go Back.
-            """
-        );
+        Console.WriteLine("Esc to go back or press Enter to continue.");
 
         ConsoleKey input = Console.ReadKey(true).Key;
         switch (input)
@@ -197,7 +191,7 @@ public static class InputHandler
                 break;
         }
 
-        Console.WriteLine(" Create New Product");
+        Console.WriteLine("Create New Product");
         string name = ReadNonEmptyStrings("Product Name", "Product name cannot be empty");
         string category = ReadNonEmptyStrings("Category", "Category cannot be empty");
         string description = ReadNonEmptyStrings("Description", "Description cannot be empty");
@@ -243,14 +237,7 @@ public static class InputHandler
     {
         while (true)
         {
-            Console.WriteLine(
-                """
-
-                Press any key to continue.
-
-                Esc. Go Back.
-                """
-            );
+            Console.WriteLine("Esc to go back or press Enter to continue.");
 
             ConsoleKey input = Console.ReadKey(true).Key;
             switch (input)

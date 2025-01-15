@@ -26,8 +26,6 @@ public class RegisterCommand : MenuBaseCommand
     {
         while (true)
         {
-            var input = Console.ReadKey(true).Key;
-
             try
             {
                 var registrationDetails = InputHandler.GetRegistrationInput();
