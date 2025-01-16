@@ -105,42 +105,19 @@ public class ProductService : IProductService
 
     public async Task<List<List<Product>>> GetProductLists(List<Product>? products = null)
     {
-        List<Product> tempProducts = new List<Product>();
-        if (products is null)
+        var tempProducts = products ?? await GetAllProducts();
+
+        const int batchSize = 40;
+
+        if (tempProducts.Count <= batchSize)
         {
-            tempProducts = await GetAllProducts();
-        }
-        else
-        {
-            tempProducts = products;
-        }
-        List<List<Product>> splitProducts = new List<List<Product>>();
-        List<Product> tempList = new List<Product>();
-        int i = 0;
-        if (tempProducts.Count < 40)
-        {
-            foreach (Product product in tempProducts)
-            {
-                tempList.Add(product);
-            }
-            splitProducts.Add(tempList);
-        }
-        else
-        {
-            foreach (Product product in tempProducts)
-            {
-                if (i >= 39)
-                {
-                    tempList.Add(product);
-                    splitProducts.Add(tempList);
-                    i = 0;
-                    tempList.Clear();
-                }
-                tempList.Add(product);
-                i++;
-            }
+            return new List<List<Product>> { new List<Product>(tempProducts) };
         }
 
-        return new List<List<Product>>(splitProducts.ToList());
+        return tempProducts
+            .Select((product, index) => new { product, index })
+            .GroupBy(x => x.index / batchSize)
+            .Select(g => g.Select(x => x.product).ToList())
+            .ToList();
     }
 }

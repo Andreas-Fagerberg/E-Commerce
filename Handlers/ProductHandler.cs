@@ -149,8 +149,8 @@ public class ProductHandler
             {
                 case ConsoleKey.Escape:
                     return;
-                case ConsoleKey.LeftArrow:
-                case ConsoleKey.RightArrow:
+                case ConsoleKey.LeftArrow
+                or ConsoleKey.RightArrow:
                     _productMenu.SetPage(input);
                     selectionTracker = 0;
                     requiresRedraw = true;
