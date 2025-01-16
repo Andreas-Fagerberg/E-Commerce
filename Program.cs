@@ -27,6 +27,7 @@ class Program
 
         while (true)
         {
+            StartUpScreen.Display();
             Console.Clear();
             menuService.GetMenu().Display();
             ConsoleKey input = Console.ReadKey(true).Key;
