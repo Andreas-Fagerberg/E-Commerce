@@ -19,8 +19,7 @@ public class LoginCommand : MenuBaseCommand
             cartService,
             orderService,
             paymentService
-        )
-    { }
+        ) { }
 
     public override async Task Execute()
     {
@@ -39,8 +38,10 @@ public class LoginCommand : MenuBaseCommand
 
                 SessionHandler.CurrentUserId = loggedInUser.UserId;
                 await cartService.GetShoppingCart(SessionHandler.GetCurrentUserId());
-                Utilities.WriteLineWithPause($"Good to see you, {loggedInUser.FirstName} {loggedInUser.LastName}!", 2000);
-
+                Utilities.WriteLineWithPause(
+                    $"Good to see you, {loggedInUser.FirstName} {loggedInUser.LastName}!",
+                    2000
+                );
 
                 // Determine if the user has admin privileges and set the appropriate HomeMenu
                 bool isAdmin = UserValidation.CheckIfAdmin(loggedInUser);
@@ -53,7 +54,9 @@ public class LoginCommand : MenuBaseCommand
                         cartService,
                         orderService,
                         paymentService,
-                        isAdmin));
+                        isAdmin
+                    )
+                );
 
                 // Exit the loop after a successful login and menu setup.
                 break;

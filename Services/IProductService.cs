@@ -1,4 +1,5 @@
 namespace E_commerce_Databaser_i_ett_sammanhang;
+
 public interface IProductService
 {
     Task<List<Product>> GetAllProducts();
@@ -7,4 +8,3 @@ public interface IProductService
     Task<bool> RemoveProduct(int? productId);
     Task<List<List<Product>>> GetProductLists(List<Product>? products = null);
 }
-

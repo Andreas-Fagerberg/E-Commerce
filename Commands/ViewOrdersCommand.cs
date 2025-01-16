@@ -1,10 +1,8 @@
-
 namespace E_commerce_Databaser_i_ett_sammanhang;
 
 public class ViewOrdersCommand : MenuBaseCommand
 {
     private readonly OrderMenu _orderMenu;
-
 
     public ViewOrdersCommand(
         ConsoleKey triggerkey,
@@ -14,8 +12,8 @@ public class ViewOrdersCommand : MenuBaseCommand
         ICartService cartService,
         IOrderService orderService,
         IPaymentService paymentService
-        )
-            : base(
+    )
+        : base(
             triggerkey,
             userService,
             menuService,
@@ -25,9 +23,7 @@ public class ViewOrdersCommand : MenuBaseCommand
             paymentService
         )
     {
-
         _orderMenu = new OrderMenu();
-
     }
 
     public override async Task Execute()
@@ -67,7 +63,6 @@ public class ViewOrdersCommand : MenuBaseCommand
                 pageInformation.Add("");
                 break;
             }
-            Console.WriteLine();
             pageInformation.Add($"Order ID: {order.OrderId}");
             pageInformation.Add($"Created At: {order.CreatedAt}");
             pageInformation.Add($"Status: {order.Status}");
@@ -77,6 +72,7 @@ public class ViewOrdersCommand : MenuBaseCommand
 
         _orderMenu.EditContent(pageInformation, "Your orders");
         _orderMenu.Display();
+        Console.WriteLine("Press any key to return to the menu");
         Console.ReadLine();
     }
 }

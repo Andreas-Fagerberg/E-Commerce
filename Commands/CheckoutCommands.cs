@@ -132,17 +132,12 @@ public class CheckoutCommands : MenuBaseCommand
         cartService.RemoveAllItems(currentUserId);
     }
 
-
-
-
     #region Helper Methods
     private static PaymentMethod SelectPaymentMethod(ConsoleKey input)
     {
         PaymentMethod paymentMethod;
         while (true)
         {
-
-
             switch (input)
             {
                 case ConsoleKey.D1:

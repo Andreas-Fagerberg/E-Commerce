@@ -1,10 +1,9 @@
-
 namespace E_commerce_Databaser_i_ett_sammanhang;
 
 public class AddressValidation
 {
     /// <summary>
-    /// Validates user address data, including street, 
+    /// Validates user address data, including street,
     /// city, region, postal code and country.
     /// </summary>
     public static void ValidateAddress(RegisterAddressDTO dto)
@@ -37,13 +36,10 @@ public class AddressValidation
         ValidatePostalCode(dto.PostalCode, dto.Country);
     }
 
-
-
-
     #region Helper Methods
 
     /// <summary>
-    /// Validates a postal code based on its general format and country-specific rules, 
+    /// Validates a postal code based on its general format and country-specific rules,
     /// falling back to generic validation for unsupported countries.
     /// </summary>
     public static void ValidatePostalCode(string postalCode, string? country = null)
@@ -122,6 +118,6 @@ public class AddressValidation
             Console.WriteLine($"Notice: General validation applied for postal code '{postalCode}' in unsupported country.");
         }
     }
-
 }
-#endregion
+
+    #endregion

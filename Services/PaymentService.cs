@@ -7,8 +7,8 @@ namespace E_commerce_Databaser_i_ett_sammanhang;
 /// </summary>
 public class PaymentService : IPaymentService
 {
-
     private readonly EcommerceContext ecommerceContext;
+
     public PaymentService(EcommerceContext ecommerceContext)
     {
         this.ecommerceContext = ecommerceContext;
@@ -28,15 +28,15 @@ public class PaymentService : IPaymentService
             OrderId = dto.OrderId,
             TotalAmount = dto.TotalAmount,
             PaymentMethod = dto.PaymentMethod,
-            PaymentStatus = dto.PaymentMethod == PaymentMethod.PayNow
-                ? PaymentStatus.Paid
-                : PaymentStatus.Pending,
+            PaymentStatus =
+                dto.PaymentMethod == PaymentMethod.PayNow
+                    ? PaymentStatus.Paid
+                    : PaymentStatus.Pending,
             CreatedAt = DateTime.UtcNow
         };
 
         await ecommerceContext.AddAsync(invoice);
         await ecommerceContext.SaveChangesAsync();
-
 
         return new InvoiceResponse
         {
@@ -53,13 +53,17 @@ public class PaymentService : IPaymentService
     /// <summary>
     /// Processes payment for the specified order.
     /// </summary>
-    public async Task<string> ProcessPayment(Guid orderId, decimal totalAmount, PaymentMethod paymentMethod)
+    public async Task<string> ProcessPayment(
+        Guid orderId,
+        decimal totalAmount,
+        PaymentMethod paymentMethod
+    )
     {
         var invoiceCreationDto = new InvoiceCreationDTO
         {
             OrderId = orderId,
             TotalAmount = totalAmount,
-            PaymentMethod = paymentMethod
+            PaymentMethod = paymentMethod,
         };
 
         try
@@ -75,8 +79,6 @@ public class PaymentService : IPaymentService
             throw new InvalidOperationException("Invoice creation failed.", ex);
         }
     }
-
-
 
     #region Helper Methods
 

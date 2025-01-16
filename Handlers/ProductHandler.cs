@@ -78,7 +78,7 @@ public class ProductHandler
                 return;
             }
 
-            Utilities.WriteLineWithPause("Please select an option.");
+            Utilities.WriteLineWithPause("Please select an option.", 500);
         }
     }
 
@@ -186,5 +186,4 @@ public class ProductHandler
             }
         }
     }
-   
 }

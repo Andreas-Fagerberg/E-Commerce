@@ -93,7 +93,6 @@ public class AdminCommands : MenuBaseCommand
                         _adminMenu.Display();
                         Console.ReadKey();
 
-
                         break;
 
                     case ConsoleKey.D3: // Update User Role

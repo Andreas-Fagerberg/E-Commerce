@@ -41,7 +41,6 @@ public class LogoutCommand : MenuBaseCommand
         return Task.CompletedTask;
     }
 
-    // Suggestion: Move elsewhere.
     private void ResetToLoginMenu()
     {
         menuService.SetMenu(

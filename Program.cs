@@ -1,6 +1,4 @@
-﻿using Npgsql.Replication;
-
-namespace E_commerce_Databaser_i_ett_sammanhang;
+﻿namespace E_commerce_Databaser_i_ett_sammanhang;
 
 class Program
 {
@@ -24,10 +22,19 @@ class Program
                 paymentService
             )
         );
+        try
+        {
+            StartUpScreen.Display();
+        }
+        catch
+        {
+            System.Console.WriteLine(
+                "This would have been an awesome intro to our presentation <3"
+            );
+        }
 
         while (true)
         {
-            StartUpScreen.Display();
             Console.Clear();
             menuService.GetMenu().Display();
             ConsoleKey input = Console.ReadKey(true).Key;

@@ -16,5 +16,5 @@ public interface IUserService
     Task<List<UserResponse>> GetAllUsers(Guid adminUserId);
     Task<List<UserResponse>> SearchUsers(AdminUserSearchDTO dto, Guid adminUserId);
     Task UpdateUserRole(UpdateUserRoleDTO dto, Guid adminUserId);
-    Task<User> ValidateAdminUser(Guid userId); // Validation method that includes a database operation.
+    Task<User> ValidateAdminUser(Guid userId);
 }

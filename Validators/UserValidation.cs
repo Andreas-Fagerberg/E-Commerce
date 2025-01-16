@@ -5,7 +5,6 @@ namespace E_commerce_Databaser_i_ett_sammanhang;
 /// </summary>
 public static class UserValidation
 {
-
     /// <summary>
     /// Validates that a user is currently logged in by checking their unique identifier.
     /// This method should be called in any operations or commands that require user authorization.
@@ -60,7 +59,6 @@ public static class UserValidation
         }
     }
 
-
     /// <summary>
     /// Validates user login credentials, including email format and password requirements.
     /// </summary>
@@ -84,7 +82,6 @@ public static class UserValidation
         ValidatePassword(dto.Password);
     }
 
-
     /// <summary>
     /// Validates a password, ensuring it meets length and non-empty requirements.
     /// </summary>
@@ -101,7 +98,6 @@ public static class UserValidation
         }
     }
 
-
     /// <summary>
     /// Checks whether an email address is in a valid format.
     /// </summary>
@@ -117,7 +113,6 @@ public static class UserValidation
             return false;
         }
     }
-
 
     /// <summary>
     /// Checks whether a name contains only letters, spaces, or hyphens.
@@ -136,7 +131,4 @@ public static class UserValidation
     /// <summary>
     /// Checks if the user is an Admin or a regular user.
     /// </summary>
-
-
-
 }

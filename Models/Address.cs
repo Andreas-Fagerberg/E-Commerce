@@ -15,4 +15,3 @@ public class Address
 
     public User? User { get; set; }
 }
-
