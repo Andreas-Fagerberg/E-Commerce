@@ -108,7 +108,6 @@ public class ProductMenu : Menu
             "│ RATING: " + displayRating + new string(' ', boxWidth - (displayRating.Length + 9)) + "│"
         );
 
-        // TODO: Should we set a custom message for available?
         string stockStatus = product.Available ? "Yes" : "No";
         Console.WriteLine(
             "│ IN STOCK: "
