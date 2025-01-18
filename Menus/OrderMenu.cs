@@ -30,13 +30,7 @@ public class OrderMenu : Menu
                 );
                 break;
             }
-            // if (i == 5)
-            // {
-            //     i = 1;
-            //     Console.WriteLine(
-            //         "│ ───────────────────────────────────────────────────────────────────────────── │"
-            //     );
-            // }
+          
             Console.WriteLine("│ " + item + new string(' ', boxWidth - (item.Length + 1)) + "│"); // Add space if needed
             i++;
             continue;
