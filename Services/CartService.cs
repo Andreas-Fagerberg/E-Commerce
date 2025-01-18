@@ -105,7 +105,7 @@ namespace E_commerce_Databaser_i_ett_sammanhang;
             .Where(c => c.UserId == userId)
             .ToListAsync();
 
-           var cartItemsToAdd = new List<Cart>();
+         
            foreach (var item in UserCart)
         {
            var existingCartItem = existingItems.FirstOrDefault(c => c.UserId == userId && c.ProductId == item.Key);
