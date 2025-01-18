@@ -36,38 +36,3 @@ public class StartUpScreen
 }
 
 
-// //  Box Drawing Characters (Unicode):
-
-//     ─ (U+2500) – Horizontal line (top, middle, bottom).
-//     │ (U+2502) – Vertical line (left, right).
-//     ┌ (U+250C) – Top-left corner.
-//     ┐ (U+2510) – Top-right corner.
-//     └ (U+2514) – Bottom-left corner.
-//     ┘ (U+2518) – Bottom-right corner.
-//     ├ (U+251C) – Left intersection (vertical and horizontal).
-//     ┤ (U+2524) – Right intersection (vertical and horizontal).
-//     ┬ (U+252C) – Top intersection (horizontal and vertical).
-//     ┴ (U+2534) – Bottom intersection (horizontal and vertical).
-//     ┼ (U+253C) – Center intersection (both vertical and horizontal).
-
-//        _____
-//      / __  |
-//     / /__| |
-//    / /___| |
-//   / /    | |
-//  /_/     |_/
-
-
-//      _____   _
-//     / __  | | |
-//    / /__| | | |
-//   / /___| | | |
-//  / /    | | | |_______
-// /_/     |_/ \_________/
-
-//  _____   _   _   ____  _    _  _____ _______ _____  _____ ______  _____ 
-// |_   _| | \ | | | __ \| |  | |/ ____|__   __|  __ \|_   _|  ____|/ ____|
-//   | |   |  \| | |  | | |  | | (___    | |  | |__) | | | | |__  | (___  
-//   | |   | . ` | |  | | |  | |\___ \   | |  |  _  /  | | |  __|  \___ \ 
-//  _| |_  | |\  | |__| | |__| |____) |  | |  | | \ \ _| |_| |____ ____) |
-// |_____| |_| \_|_____/ \____/|_____/   |_|  |_|  \_\_____|______|_____/ 
